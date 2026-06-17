@@ -1,0 +1,40 @@
+return {
+    {
+        "stevearc/conform.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        keys = {
+            {
+                "<leader>cf",
+                function()
+                    require("conform").format({ async = true, lsp_fallback = true, stop_after_first = true })
+                end,
+                desc = "Format file",
+            },
+        },
+        opts = {
+            notify_on_error = false,
+            default_format_opts = {
+                stop_after_first = true,
+            },
+            formatters_by_ft = {
+                lua = { "stylua" },
+                javascript = { "prettierd", "prettier" },
+                typescript = { "prettierd", "prettier" },
+                javascriptreact = { "prettierd", "prettier" },
+                typescriptreact = { "prettierd", "prettier" },
+                json = { "prettierd", "prettier" },
+                yaml = { "prettierd", "prettier" },
+                markdown = { "prettierd", "prettier" },
+                ["*"] = { "trim_whitespace" },
+            },
+            format_on_save = {
+                lsp_fallback = true,
+                timeout_ms = 500,
+                stop_after_first = true,
+            },
+        },
+        config = function(_, opts)
+            require("conform").setup(opts)
+        end,
+    },
+}
