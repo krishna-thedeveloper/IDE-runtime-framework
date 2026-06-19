@@ -19,7 +19,7 @@ return {
                     "jsonls",
                     "yamlls",
                 },
-                automatic_enable = false,
+                automatic_installation = false,
             })
         end,
     },
