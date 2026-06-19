@@ -44,14 +44,14 @@ return {
             vim.api.nvim_create_autocmd(opts.events, {
                 group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
                 callback = function()
-                    local names = available(lint._resolve_linter_by_ft(vim.bo.filetype))
+                    local names = available(lint.linters_by_ft[vim.bo.filetype] or {})
                     if #names == 0 then
                         return
                     end
                     if lint_timer then
                         lint_timer:stop()
                     end
-                    lint_timer = vim.uv.new_timer()
+                    lint_timer = (vim.uv or vim.loop).new_timer()
                     lint_timer:start(100, 0, vim.schedule_wrap(function()
                         lint.try_lint(vim.list_extend({}, names))
                     end))
