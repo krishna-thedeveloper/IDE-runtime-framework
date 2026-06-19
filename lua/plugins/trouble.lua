@@ -1,6 +1,7 @@
 return {
     {
         "folke/trouble.nvim",
+        dependencies = { "folke/which-key.nvim" },
         cmd = "Trouble",
         keys = {
             { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },

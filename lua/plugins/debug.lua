@@ -4,6 +4,7 @@ return {
         dependencies = {
             "rcarriga/nvim-dap-ui",
             "nvim-neotest/nvim-nio",
+            "folke/which-key.nvim",
         },
         keys = {
             { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },

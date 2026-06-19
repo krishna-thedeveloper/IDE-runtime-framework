@@ -2,6 +2,7 @@ return {
     {
         "folke/persistence.nvim",
         event = "BufReadPre",
+        dependencies = { "folke/which-key.nvim" },
         opts = {
             dir = vim.fn.stdpath("state") .. "/sessions/",
             need = 1,
