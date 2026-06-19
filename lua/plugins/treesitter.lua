@@ -44,7 +44,7 @@ return {
                         end
                     end
                     if #to_install > 0 then
-                        TS.install(to_install, { summary = true })
+                        pcall(TS.install, to_install, { summary = true })
                     end
                 end,
             })
