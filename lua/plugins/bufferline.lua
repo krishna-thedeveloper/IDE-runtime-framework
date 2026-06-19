@@ -42,6 +42,8 @@ return {
                 enforce_regular_tabs = true,
                 always_show_bufferline = true,
                 diagnostics = "nvim_lsp",
+                diagnostics_update_in_insert = false,
+                diagnostics_update_on_event = true,
                 diagnostics_indicator = function(count, level, _)
                     local icon = level:match("error") and " " or " "
                     return count > 0 and icon or ""
