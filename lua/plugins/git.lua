@@ -50,11 +50,11 @@ return {
                     map("n", "<leader>gr", gs.reset_hunk, "Reset Hunk")
 
                     map("v", "<leader>gs", function()
-                        gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                        gs.stage_hunk({ vim.fn.line("'<"), vim.fn.line("'>") })
                     end, "Stage Selected Hunk")
 
                     map("v", "<leader>gr", function()
-                        gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+                        gs.reset_hunk({ vim.fn.line("'<"), vim.fn.line("'>") })
                     end, "Reset Selected Hunk")
 
                     map("n", "<leader>gS", gs.stage_buffer, "Stage Buffer")
