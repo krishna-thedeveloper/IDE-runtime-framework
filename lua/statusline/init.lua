@@ -1,8 +1,6 @@
 local M = {}
 
 local palette = require("themes").palette
-local heirline = require("heirline")
-local conditions = require("heirline.conditions")
 
 local ViMode = {
     static = {
@@ -103,7 +101,7 @@ local FileNameBlock = {
 }
 
 local GitBranch = {
-    condition = conditions.is_git_repo,
+    condition = function() return require("heirline.conditions").is_git_repo end,
     init = function(self)
         local gitsigns = package.loaded.gitsigns
         if gitsigns then
@@ -123,7 +121,7 @@ local GitBranch = {
 }
 
 local GitChanges = {
-    condition = conditions.is_git_repo,
+    condition = function() return require("heirline.conditions").is_git_repo end,
     init = function(self)
         local gitsigns = package.loaded.gitsigns
         if gitsigns then
@@ -183,7 +181,7 @@ local Diagnostics = {
 }
 
 local LSPActive = {
-    condition = conditions.lsp_attached,
+    condition = function() return require("heirline.conditions").lsp_attached end,
     update = { "LspAttach", "LspDetach" },
     provider = function()
         local clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -278,9 +276,12 @@ function M.set_layout(name)
         return
     end
 
+    local hl = require("heirline")
+    local cond = require("heirline.conditions")
+
     local active = make_layout(layout.active)
     local special = prepend_condition(make_layout(layout.special or layout.active), function()
-        return conditions.buffer_matches({
+        return cond.buffer_matches({
             buftype = { "terminal", "nofile", "prompt", "help" },
             filetype = { "Trouble", "noice", "neo-tree", "lazy" },
         })
@@ -289,10 +290,10 @@ function M.set_layout(name)
         vim.list_extend(make_layout(layout.inactive or layout.active), {
             { provider = " Inactive ", hl = function() return { fg = palette.gray } end },
         }),
-        conditions.is_not_active
+        cond.is_not_active
     )
 
-    heirline.setup({ statusline = { special, inactive, active } })
+    hl.setup({ statusline = { special, inactive, active } })
 end
 
 function M.layout_names()
@@ -303,7 +304,5 @@ function M.layout_names()
     table.sort(names)
     return names
 end
-
-M.set_layout("full")
 
 return M

@@ -132,24 +132,36 @@ function M.save(name)
     end
 end
 
-function M.setup()
-    local name = M.get_active_name()
-    for i, pname in ipairs(profile_order) do
-        if pname == name then
-            current_idx = i
-            break
-        end
+function M.get_current_name()
+    if current_idx then
+        return profile_order[current_idx]
     end
+    return M.get_active_name()
+end
 
+function M.setup()
+    local name = M.get_current_name()
     local profile = profiles[name]
     if not profile then
         return
     end
-
     require("statusline").set_layout(profile.statusline)
     vim.opt.showtabline = profile.bufferline and 2 or 0
 end
 
 vim.keymap.set("n", "<leader>uc", M.cycle, { desc = "Cycle density" })
+
+local did_restore = false
+
+vim.schedule(function()
+    pcall(function()
+        local name = M.get_active_name()
+        if not did_restore and name ~= "full" then
+            did_restore = true
+            M.apply(name)
+        end
+        did_restore = true
+    end)
+end)
 
 return M
