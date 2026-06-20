@@ -1,4 +1,7 @@
 require("themes")
+require("managers.density")
+require("managers.focus")
+require("managers.notifications")
 
 vim.keymap.set("n", "<leader>w", "<cmd>update<CR>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Close window" })

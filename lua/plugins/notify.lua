@@ -128,7 +128,14 @@ return {
             format = {},
         },
         config = function(_, opts)
-            require("noice").setup(opts)
+            local ok, notifications = pcall(require, "managers.notifications")
+            if ok then
+                local name = notifications.get_active_name()
+                local preset = notifications.get_preset(name)
+                require("noice").setup(preset and preset.opts or opts)
+            else
+                require("noice").setup(opts)
+            end
         end,
     },
 }
