@@ -50,25 +50,25 @@ return {
                 update = { "ModeChanged" },
             }
 
-            local function get_file_icon()
-                local ok, devicons = pcall(require, "nvim-web-devicons")
-                if ok then
-                    local icon, color = devicons.get_icon_colors_by_filetype(vim.bo.filetype)
-                    if icon then
-                        return icon, color
-                    end
-                end
-                return "", palette.gray
-            end
-
             local FileIcon = {
-                provider = function()
-                    local icon = get_file_icon()
-                    return icon .. " "
+                init = function(self)
+                    local ok, devicons = pcall(require, "nvim-web-devicons")
+                    if ok then
+                        local icon, color = devicons.get_icon_colors_by_filetype(vim.bo.filetype)
+                        if icon then
+                            self.icon = icon
+                            self.fg = color
+                            return
+                        end
+                    end
+                    self.icon = ""
+                    self.fg = palette.gray
                 end,
-                hl = function()
-                    local _, color = get_file_icon()
-                    return { fg = color }
+                provider = function(self)
+                    return self.icon .. " "
+                end,
+                hl = function(self)
+                    return { fg = self.fg }
                 end,
             }
 
