@@ -63,6 +63,19 @@ function M.apply(name)
         return
     end
 
+    for i, pname in ipairs(profile_order) do
+        if pname == name then
+            current_idx = i
+            break
+        end
+    end
+    M.save(name)
+
+    local ok_focus, focus = pcall(require, "managers.focus")
+    if ok_focus and focus.is_active() then
+        return
+    end
+
     require("statusline").set_layout(profile.statusline)
 
     vim.opt.showtabline = profile.bufferline and 2 or 0
@@ -103,7 +116,6 @@ function M.apply(name)
     vim.cmd("redrawstatus!")
 
     vim.notify("Density: " .. profile.label, vim.log.levels.INFO)
-    M.save(name)
 end
 
 function M.cycle()
