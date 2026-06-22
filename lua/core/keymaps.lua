@@ -1,9 +1,3 @@
-require("themes")
-require("managers.density")
-require("managers.focus")
-require("managers.notifications")
-require("managers.completion")
-
 local picker = require("managers.picker")
 
 vim.keymap.set("n", "<leader>w", "<cmd>update<CR>", { desc = "Save file" })

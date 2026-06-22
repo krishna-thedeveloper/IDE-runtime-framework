@@ -218,7 +218,7 @@ events.on("notifications_apply", function(data)
 end)
 
 function M.select()
-    require("managers.select").select(preset_order, {
+    vim.ui.select(preset_order, {
         prompt = "Select notifications preset",
         format_item = function(item)
             local label = deltas[item].label
@@ -234,16 +234,18 @@ function M.select()
     end)
 end
 
-vim.keymap.set("n", "<leader>nn", M.cycle, { desc = "Cycle notification preset" })
-vim.keymap.set("n", "<leader>sn", M.select, { desc = "Select notification preset" })
+function M.setup()
+  vim.keymap.set("n", "<leader>nn", M.cycle, { desc = "Cycle notification preset" })
+  vim.keymap.set("n", "<leader>sn", M.select, { desc = "Select notification preset" })
 
-vim.schedule(function()
-  pcall(function()
-    local name = M.get_active_name()
-    if name ~= "rich" then
-      M.apply(name)
-    end
+  vim.schedule(function()
+    pcall(function()
+      local name = M.get_active_name()
+      if name ~= "rich" then
+        M.apply(name)
+      end
+    end)
   end)
-end)
+end
 
 return M

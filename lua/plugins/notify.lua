@@ -37,6 +37,7 @@ return {
         end,
         config = function(_, opts)
             require("noice").setup(opts)
+            require("managers.notifications").setup()
         end,
     },
 }

@@ -134,10 +134,14 @@ function M.setup()
   end
   require("statusline").set_layout(profile.statusline)
   vim.opt.showtabline = profile.bufferline and 2 or 0
+
+  require("managers.focus").setup()
+  vim.keymap.set("n", "<leader>uc", M.cycle, { desc = "Cycle density" })
+  vim.keymap.set("n", "<leader>sd", M.select, { desc = "Select density" })
 end
 
 function M.select()
-    require("managers.select").select(profile_order, {
+    vim.ui.select(profile_order, {
         prompt = "Select density",
         format_item = function(item)
             local label = profiles[item].label
@@ -152,9 +156,6 @@ function M.select()
         end
     end)
 end
-
-vim.keymap.set("n", "<leader>uc", M.cycle, { desc = "Cycle density" })
-vim.keymap.set("n", "<leader>sd", M.select, { desc = "Select density" })
 
 vim.schedule(function()
   local ok, err = pcall(function()
