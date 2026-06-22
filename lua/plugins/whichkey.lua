@@ -17,6 +17,10 @@ return {
                 { "<leader>c", group = "Code" },
                 { "<leader>u", group = "UI" },
                 { "<leader>n", group = "Notifications" },
+                { "<leader>d", group = "Debug" },
+                { "<leader>x", group = "Trouble" },
+                { "<leader>S", group = "Session" },
+                { "<leader>s", group = "Select" },
             })
         end,
     },
