@@ -50,6 +50,15 @@ function M.translate(spec)
     result.cond = spec.condition
   end
 
+  -- lazy.nvim auto-loads plugins with config but no triggers at startup.
+  -- Explicitly set lazy=true so config-only plugins stay lazy.
+  if result.lazy == nil then
+    local has_trigger = result.event or result.cmd or result.keys or result.module or result.ft
+    if spec.config and not has_trigger then
+      result.lazy = true
+    end
+  end
+
   for k, v in pairs(spec) do
     if not generic_fields[k] and result[k] == nil then
       result[k] = v
