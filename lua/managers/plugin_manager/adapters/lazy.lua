@@ -2,41 +2,52 @@ local M = {}
 
 local generic_fields = {
   url = true,
-  on_startup = true,
-  on_lazy = true,
-  on_event = true,
-  on_cmd = true,
-  on_keymap = true,
-  on_require = true,
+  trigger = true,
+  category = true,
+  optional = true,
+  metadata = true,
+  condition = true,
 }
 
 function M.translate(spec)
-  if type(spec[1]) == "string" and spec.url == nil then
+  if not spec.url then
     return spec
   end
 
   local result = { spec.url }
 
-  if spec.on_startup then
-    result.lazy = false
+  if spec.trigger then
+    local t = spec.trigger
+
+    if t.startup then
+      result.lazy = false
+    end
+
+    if t.lazy then
+      result.event = "VeryLazy"
+    elseif t.event then
+      result.event = t.event
+    end
+
+    if t.cmd then
+      result.cmd = t.cmd
+    end
+
+    if t.keymap then
+      result.keys = t.keymap
+    end
+
+    if t.require then
+      result.module = t.require
+    end
+
+    if t.ft then
+      result.ft = t.ft
+    end
   end
 
-  if spec.on_lazy then
-    result.event = "VeryLazy"
-  elseif spec.on_event then
-    result.event = spec.on_event
-  end
-
-  if spec.on_cmd then
-    result.cmd = spec.on_cmd
-  end
-
-  if spec.on_keymap then
-    result.keys = spec.on_keymap
-  end
-
-  if spec.on_require then
-    result.module = spec.on_require
+  if spec.condition then
+    result.cond = spec.condition
   end
 
   for k, v in pairs(spec) do
@@ -54,6 +65,10 @@ function M.translate_all(specs)
     table.insert(lazy_specs, M.translate(spec))
   end
   return lazy_specs
+end
+
+function M.load_plugin(name)
+  pcall(require("lazy").load, { plugins = name })
 end
 
 function M.bootstrap(specs, opts)

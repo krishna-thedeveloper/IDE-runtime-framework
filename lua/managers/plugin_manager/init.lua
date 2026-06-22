@@ -15,7 +15,7 @@ function M._collect(specs, result, depth)
   if depth > 10 then
     return
   end
-  if result.url or type(result[1]) == "string" then
+  if result.url then
     table.insert(specs, result)
     return
   end
@@ -73,8 +73,17 @@ function M.setup(adapter_name, opts)
     return
   end
 
+  M._adapter = adapter
   local specs = M.load_specs()
   adapter.bootstrap(specs, opts)
+end
+
+function M.load_plugin(name)
+  if not M._adapter or not M._adapter.load_plugin then
+    vim.notify("Plugin manager adapter does not support load_plugin", vim.log.levels.ERROR)
+    return
+  end
+  M._adapter.load_plugin(name)
 end
 
 return M
