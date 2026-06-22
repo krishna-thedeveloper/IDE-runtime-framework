@@ -1,13 +1,21 @@
 local M = {}
 
-local indent_color = "#3b4261"
-local scope_color = "#5c6370"
+local default_indent = "#3b4261"
+local default_scope = "#5c6370"
 
 local exclude_filetypes = {
   "help", "dashboard", "neo-tree", "Trouble",
   "lazy", "mason", "notify", "noice", "oil",
   "toggleterm", "lspinfo",
 }
+
+local function palette_color(name, fallback)
+  local ok, palette = pcall(require, "themes")
+  if ok and palette and palette.palette then
+    return palette.palette[name] or fallback
+  end
+  return fallback
+end
 
 function M.setup_config(enabled)
   return {
@@ -33,12 +41,14 @@ function M.setup_config(enabled)
 end
 
 function M.apply_highlights()
-  vim.api.nvim_set_hl(0, "IblIndent", { fg = indent_color })
-  vim.api.nvim_set_hl(0, "IblScope", { fg = scope_color })
+  local fg = vim.api.nvim_get_hl(0, { name = "LineNr" }).fg
+  vim.api.nvim_set_hl(0, "IblIndent", { fg = fg or default_indent })
 end
 
 function M.get_colors()
-  return { indent = indent_color, scope = scope_color }
+  local fg = vim.api.nvim_get_hl(0, { name = "LineNr" }).fg
+  return { indent = fg and string.format("#%06x", fg) or default_indent,
+           scope = palette_color("gray", default_scope) }
 end
 
 return M
