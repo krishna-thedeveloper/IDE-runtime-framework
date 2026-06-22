@@ -74,11 +74,14 @@ function M.apply_profile(name)
   require("statusline").set_layout(profile.statusline)
   vim.opt.showtabline = profile.bufferline and 2 or 0
 
-  pcall(function()
+  local ok, err = pcall(function()
     local ibl = require("ibl")
     ibl.setup(require("managers.indent").setup_config(profile.indent))
     require("managers.indent").apply_highlights()
   end)
+  if not ok then
+    vim.notify("Density IBL: " .. tostring(err), vim.log.levels.WARN)
+  end
 
   pcall(function()
     events.emit("notifications_apply", profile.noice)
@@ -154,12 +157,15 @@ vim.keymap.set("n", "<leader>uc", M.cycle, { desc = "Cycle density" })
 vim.keymap.set("n", "<leader>sd", M.select, { desc = "Select density" })
 
 vim.schedule(function()
-  pcall(function()
+  local ok, err = pcall(function()
     local name = M.get_active_name()
     if name ~= "full" then
       M.apply(name)
     end
   end)
+  if not ok then
+    vim.notify("Density restore: " .. tostring(err), vim.log.levels.WARN)
+  end
 end)
 
 return M
