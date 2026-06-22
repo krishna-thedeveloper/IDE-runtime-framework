@@ -1,7 +1,7 @@
 return {
-    {
-        "folke/snacks.nvim",
-        opts = {
+    url = "folke/snacks.nvim",
+    config = function()
+        require("snacks").setup({
             picker = {
                 enabled = true,
                 ui_select = true,
@@ -36,6 +36,6 @@ return {
                     },
                 },
             },
-        },
-    },
+        })
+    end,
 }

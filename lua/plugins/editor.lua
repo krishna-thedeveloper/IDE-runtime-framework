@@ -1,21 +1,26 @@
 return {
     {
-        "numToStr/Comment.nvim",
-        opts = {},
+        url = "numToStr/Comment.nvim",
+        config = function()
+            require("Comment").setup({})
+        end,
     },
-
     {
-        "kylechui/nvim-surround",
-        opts = {},
+        url = "kylechui/nvim-surround",
+        config = function()
+            require("nvim-surround").setup({})
+        end,
     },
-
     {
-        "echasnovski/mini.pairs",
-        opts = {},
+        url = "echasnovski/mini.pairs",
+        config = function()
+            require("mini.pairs").setup({})
+        end,
     },
-
     {
-        "stevearc/oil.nvim",
-        opts = {},
+        url = "stevearc/oil.nvim",
+        config = function()
+            require("oil").setup({})
+        end,
     },
 }
