@@ -1,6 +1,6 @@
 return {
     url = "folke/which-key.nvim",
-    on_lazy = true,
+    trigger = { lazy = true },
     config = function()
         local wk = require("which-key")
         wk.setup({

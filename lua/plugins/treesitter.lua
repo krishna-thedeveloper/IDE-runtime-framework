@@ -1,6 +1,6 @@
 return {
     url = "nvim-treesitter/nvim-treesitter",
-    on_startup = true,
+    trigger = { startup = true },
     build = ":TSUpdate",
     config = function()
         require("nvim-treesitter").setup({

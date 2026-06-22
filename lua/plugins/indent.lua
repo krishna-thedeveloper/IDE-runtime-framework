@@ -1,6 +1,6 @@
 return {
     url = "lukas-reineke/indent-blankline.nvim",
-    on_lazy = true,
+    trigger = { lazy = true },
     config = function()
         local ibl = require("ibl")
         local opts = require("managers.indent").setup_config(true)

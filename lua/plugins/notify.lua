@@ -1,7 +1,7 @@
 return {
     {
         url = "rcarriga/nvim-notify",
-        on_lazy = true,
+        trigger = { lazy = true },
         opts = {
             timeout = 3000,
             max_height = function()
@@ -24,7 +24,7 @@ return {
 
     {
         url = "folke/noice.nvim",
-        on_lazy = true,
+        trigger = { lazy = true },
         dependencies = {
             "rcarriga/nvim-notify",
             "MunifTanjim/nui.nvim",

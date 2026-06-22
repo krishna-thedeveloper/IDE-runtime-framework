@@ -1,9 +1,10 @@
 return {
     url = "akinsho/bufferline.nvim",
     version = "*",
-    on_lazy = true,
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    on_keymap = {
+    trigger = {
+        lazy = true,
+        keymap = {
         { "<leader>bp", "<cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
         { "<leader>bP", "<cmd>BufferLineGroupClose<CR>", desc = "Close Buffer Group" },
         { "<leader>br", "<cmd>BufferLineCloseRight<CR>", desc = "Close Right" },
@@ -13,6 +14,7 @@ return {
         { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
         { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
         { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
+        },
     },
     config = function()
         require("bufferline").setup({

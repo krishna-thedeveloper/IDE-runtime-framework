@@ -13,7 +13,7 @@ end
 local function theme_spec(url, group, name)
     return {
         url = url,
-        on_startup = active_group == group,
+        trigger = { startup = active_group == group },
         priority = 1000,
         name = name,
         config = delegate(group),
