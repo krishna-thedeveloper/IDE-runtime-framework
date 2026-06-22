@@ -1,6 +1,6 @@
 return {
     url = "folke/snacks.nvim",
-    on_require = "snacks",
+    trigger = { require = "snacks" },
     opts = {
         dashboard = {
             enabled = true,

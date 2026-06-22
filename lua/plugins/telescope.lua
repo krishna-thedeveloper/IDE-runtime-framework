@@ -1,7 +1,7 @@
 return {
     {
         url = "nvim-telescope/telescope.nvim",
-        on_require = "telescope",
+        trigger = { require = "telescope" },
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             local telescope = require("telescope")
