@@ -144,6 +144,9 @@ function M.save(name)
 end
 
 function M.setup()
+  if current_idx then
+    return
+  end
   local name = M.get_current_name()
   local profile = profiles[name]
   if not profile then
