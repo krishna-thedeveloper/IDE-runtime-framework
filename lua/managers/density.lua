@@ -35,7 +35,7 @@ local focus_active = false
 events.on("focus_changed", function(data)
   focus_active = data.active
   if not focus_active then
-    local name = M.get_current_name()
+    local name = M.get_cached_name()
     M.apply_profile(name)
   end
 end)
@@ -58,7 +58,7 @@ function M.get_current_index()
   return current_idx
 end
 
-function M.get_current_name()
+function M.get_cached_name()
   if current_idx then
     return profile_order[current_idx]
   end
@@ -124,7 +124,7 @@ function M.setup()
   if current_idx then
     return
   end
-  local name = M.get_current_name()
+  local name = M.get_cached_name()
   local profile = profiles[name]
   if not profile then
     return
@@ -138,7 +138,7 @@ function M.select()
         prompt = "Select density",
         format_item = function(item)
             local label = profiles[item].label
-            if item == M.get_current_name() then
+            if item == M.get_cached_name() then
                 return label .. "  ●"
             end
             return label
