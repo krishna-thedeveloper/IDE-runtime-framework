@@ -34,7 +34,13 @@ end
 
 local function lazy_cond()
   return function(load_plugin)
-    vim.schedule(load_plugin)
+    vim.api.nvim_create_autocmd("VimEnter", {
+      once = true,
+      callback = function()
+        load_plugin()
+        return true
+      end,
+    })
   end
 end
 
