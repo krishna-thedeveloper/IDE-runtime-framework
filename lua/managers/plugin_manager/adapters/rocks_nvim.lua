@@ -365,8 +365,11 @@ function M.bootstrap(specs, opts)
       .. ";" .. rp .. "/share/lua/5.1/?/init.lua"
     package.cpath = package.cpath .. ";" .. rp .. "/lib/lua/5.1/?.so"
   else
-    -- For git clone, add the whole directory (Neovim finds lua/ inside)
-    vim.opt.runtimepath:append(rocks_nvim_git)
+    -- For git clone, add lua/ to package.path and doc/ to rtp (skip plugin/
+    -- which requires nvim-nio that isn't installed).
+    package.path = package.path .. ";" .. rocks_nvim_git .. "/lua/?.lua"
+      .. ";" .. rocks_nvim_git .. "/lua/?/init.lua"
+    vim.opt.runtimepath:append(rocks_nvim_git .. "/doc")
   end
 
   -- Set up rocks.nvim config
