@@ -45,7 +45,7 @@ function M.cycle()
 end
 
 function M.get_active_name()
-  return M._active or "telescope"
+  return M._active
 end
 
 local methods = {
