@@ -23,14 +23,7 @@ M.cleanup = cleanup
 
 local function action(name)
   return function(...)
-    local builtin = require("telescope.builtin")
-    local ok, err = pcall(builtin[name], ...)
-    cleanup()
-    if not ok then
-      vim.schedule(function()
-        error(err)
-      end)
-    end
+    require("telescope.builtin")[name](...)
   end
 end
 
@@ -43,14 +36,7 @@ M.git_files = action("git_files")
 M.git_commits = action("git_commits")
 
 function M.references()
-  local builtin = require("telescope.builtin")
-  local ok, err = pcall(builtin.lsp_references)
-  cleanup()
-  if not ok then
-    vim.schedule(function()
-      error(err)
-    end)
-  end
+  require("telescope.builtin").lsp_references()
 end
 
 return M
