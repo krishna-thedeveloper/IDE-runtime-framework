@@ -2,15 +2,6 @@ return {
     {
         "stevearc/conform.nvim",
         event = { "BufReadPre", "BufNewFile" },
-        keys = {
-            {
-                "<leader>cf",
-                function()
-                    require("conform").format({ async = true, lsp_fallback = true, stop_after_first = true })
-                end,
-                desc = "Format file",
-            },
-        },
         opts = {
             notify_on_error = false,
             default_format_opts = {
@@ -34,7 +25,7 @@ return {
             },
         },
         config = function(_, opts)
-            require("conform").setup(opts)
+            require("managers.format").setup(opts)
         end,
     },
 }
