@@ -1,6 +1,6 @@
 return {
     url = "neovim/nvim-lspconfig",
-    on_require = "lspconfig",
+    trigger = { require = "lspconfig" },
     dependencies = { "williamboman/mason-lspconfig.nvim" },
     config = function()
         require("managers.lsp").setup()

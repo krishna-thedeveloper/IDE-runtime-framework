@@ -1,6 +1,6 @@
 return {
     url = "stevearc/conform.nvim",
-    on_event = { "BufReadPre", "BufNewFile" },
+    trigger = { event = { "BufReadPre", "BufNewFile" } },
     config = function()
         require("managers.format").setup({
             notify_on_error = false,

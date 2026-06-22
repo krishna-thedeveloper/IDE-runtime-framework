@@ -1,6 +1,6 @@
 return {
     url = "mfussenegger/nvim-lint",
-    on_event = { "BufReadPre", "BufNewFile" },
+    trigger = { event = { "BufReadPre", "BufNewFile" } },
     config = function()
         require("managers.lint").setup({
             events = { "BufWritePost", "BufReadPost", "InsertLeave" },

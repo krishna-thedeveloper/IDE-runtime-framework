@@ -4,7 +4,8 @@ return {
         "rcarriga/nvim-dap-ui",
         "nvim-neotest/nvim-nio",
     },
-    on_keymap = {
+    trigger = {
+        keymap = {
         { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
         { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end,
             desc = "Conditional Breakpoint" },
@@ -16,6 +17,7 @@ return {
         { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
         { "<leader>du", function() require("dapui").toggle() end, desc = "Toggle DAP UI" },
         { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "DAP Hover" },
+        },
     },
     config = function()
         local dap = require("dap")
