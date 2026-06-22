@@ -1,22 +1,17 @@
 return {
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        event = "VeryLazy",
-        opts = function()
-            return require("managers.indent").setup_config(true)
-        end,
-        config = function(_, opts)
-            local ibl = require("ibl")
-            ibl.setup(opts)
+    url = "lukas-reineke/indent-blankline.nvim",
+    on_lazy = true,
+    config = function()
+        local ibl = require("ibl")
+        local opts = require("managers.indent").setup_config(true)
+        ibl.setup(opts)
 
-            require("managers.indent").apply_highlights()
+        require("managers.indent").apply_highlights()
 
-            vim.api.nvim_create_autocmd("ColorScheme", {
-                callback = function()
-                    require("managers.indent").apply_highlights()
-                end,
-            })
-        end,
-    },
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            callback = function()
+                require("managers.indent").apply_highlights()
+            end,
+        })
+    end,
 }

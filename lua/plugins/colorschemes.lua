@@ -10,49 +10,22 @@ local function delegate(group)
     end
 end
 
+local function theme_spec(url, group, name)
+    return {
+        url = url,
+        on_startup = active_group == group,
+        priority = 1000,
+        name = name,
+        config = delegate(group),
+    }
+end
+
 return {
-    {
-        "navarasu/onedark.nvim",
-        lazy = active_group ~= "onedark",
-        priority = 1000,
-        config = delegate("onedark"),
-    },
-    {
-        "folke/tokyonight.nvim",
-        lazy = active_group ~= "tokyonight",
-        priority = 1000,
-        config = delegate("tokyonight"),
-    },
-    {
-        "rebelot/kanagawa.nvim",
-        lazy = active_group ~= "kanagawa",
-        priority = 1000,
-        config = delegate("kanagawa"),
-    },
-    {
-        "catppuccin/nvim",
-        lazy = active_group ~= "catppuccin",
-        priority = 1000,
-        name = "catppuccin",
-        config = delegate("catppuccin"),
-    },
-    {
-        "sainnhe/everforest",
-        lazy = active_group ~= "everforest",
-        priority = 1000,
-        config = delegate("everforest"),
-    },
-    {
-        "sainnhe/gruvbox-material",
-        lazy = active_group ~= "gruvbox-material",
-        priority = 1000,
-        config = delegate("gruvbox-material"),
-    },
-    {
-        "projekt0n/github-nvim-theme",
-        lazy = active_group ~= "github",
-        priority = 1000,
-        name = "github-theme",
-        config = delegate("github"),
-    },
+    theme_spec("navarasu/onedark.nvim", "onedark"),
+    theme_spec("folke/tokyonight.nvim", "tokyonight"),
+    theme_spec("rebelot/kanagawa.nvim", "kanagawa"),
+    theme_spec("catppuccin/nvim", "catppuccin", "catppuccin"),
+    theme_spec("sainnhe/everforest", "everforest"),
+    theme_spec("sainnhe/gruvbox-material", "gruvbox-material"),
+    theme_spec("projekt0n/github-nvim-theme", "github", "github-theme"),
 }

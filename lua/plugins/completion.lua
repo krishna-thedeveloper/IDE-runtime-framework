@@ -1,39 +1,40 @@
 return {
     {
-        "saghen/blink.cmp",
+        url = "saghen/blink.cmp",
         version = "1.*",
         dependencies = { "L3MON4D3/LuaSnip", "rafamadriz/friendly-snippets" },
-        opts = {
-            keymap = {
-                preset = "default",
-                ["<CR>"] = { "accept", "fallback" },
-            },
-            appearance = {
-                nerd_font_variant = "mono",
-            },
-            snippets = { preset = "luasnip" },
-            sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
-            },
-            completion = {
-                documentation = { auto_show = true, auto_show_delay_ms = 500 },
-                ghost_text = { enabled = true },
-                menu = {
-                    auto_show = true,
-                    draw = {
-                        columns = {
-                            { "label", "label_description", gap = 1 },
-                            { "kind_icon", "kind" },
+        config = function()
+            require("blink.cmp").setup({
+                keymap = {
+                    preset = "default",
+                    ["<CR>"] = { "accept", "fallback" },
+                },
+                appearance = {
+                    nerd_font_variant = "mono",
+                },
+                snippets = { preset = "luasnip" },
+                sources = {
+                    default = { "lsp", "path", "snippets", "buffer" },
+                },
+                completion = {
+                    documentation = { auto_show = true, auto_show_delay_ms = 500 },
+                    ghost_text = { enabled = true },
+                    menu = {
+                        auto_show = true,
+                        draw = {
+                            columns = {
+                                { "label", "label_description", gap = 1 },
+                                { "kind_icon", "kind" },
+                            },
                         },
                     },
                 },
-            },
-        },
-        opts_extend = { "sources.default" },
+            })
+        end,
     },
 
     {
-        "L3MON4D3/LuaSnip",
+        url = "L3MON4D3/LuaSnip",
         version = "v2.*",
         build = "make install_jsregexp",
         config = function()
