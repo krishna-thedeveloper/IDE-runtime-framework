@@ -73,6 +73,8 @@ function density._apply_profile(name)
   vim.notify("Density: " .. profile.label, vim.log.levels.INFO)
 end
 
+density.apply_profile = density._apply_profile
+
 function density.apply(name)
   for i, n in ipairs(density._order) do
     if n == name then
