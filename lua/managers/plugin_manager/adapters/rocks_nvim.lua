@@ -353,18 +353,21 @@ function M.bootstrap(specs, opts)
     end
   end
 
-  -- Add rocks.nvim to rtp — prefer luarocks install, fall back to git clone
-  local rocks_nvim_rtp
+  -- Add rocks.nvim to rtp — prefer luarocks install, fall back to git clone.
+  -- Use explicit glob expansion: rtp:append("path/*") treats * literally.
   if vim.uv.fs_stat(rocks_nvim_via_luarocks) then
-    rocks_nvim_rtp = rocks_nvim_via_luarocks .. "/*"
+    local dirs = vim.fn.glob(rocks_nvim_via_luarocks .. "/*", false, true)
+    for _, dir in ipairs(dirs) do
+      vim.opt.runtimepath:append(dir)
+    end
     -- Set up package.path for luarocks-installed rocks
     package.path = package.path .. ";" .. rp .. "/share/lua/5.1/?.lua"
       .. ";" .. rp .. "/share/lua/5.1/?/init.lua"
     package.cpath = package.cpath .. ";" .. rp .. "/lib/lua/5.1/?.so"
   else
-    rocks_nvim_rtp = rocks_nvim_git .. "/*"
+    -- For git clone, add the whole directory (Neovim finds lua/ inside)
+    vim.opt.runtimepath:append(rocks_nvim_git)
   end
-  vim.opt.runtimepath:append(rocks_nvim_rtp)
 
   -- Set up rocks.nvim config
   vim.g.rocks_nvim = { rocks_path = rp }
