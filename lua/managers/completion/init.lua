@@ -68,14 +68,25 @@ local function restore()
   end
 end
 
-local function load_adapters()
-  local ok, adapter = pcall(require, "managers.completion.adapters.blink_cmp")
-  if ok and adapter then
-    M.register("blink_cmp", adapter)
+local function discover_adapters()
+  local ok, files = pcall(vim.fn.readdir, vim.fn.stdpath("config") .. "/lua/managers/completion/adapters")
+  if not ok or not files then
+    return
+  end
+  for _, file in ipairs(files) do
+    local mod = file:match("^(.*)%.lua$")
+    if mod and mod ~= "init" then
+      pcall(function()
+        local adapter = require("managers.completion.adapters." .. mod)
+        if adapter then
+          M.register(mod, adapter)
+        end
+      end)
+    end
   end
 end
 
-load_adapters()
+discover_adapters()
 restore()
 
 function M.select()
