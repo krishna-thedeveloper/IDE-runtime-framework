@@ -143,7 +143,7 @@ function theme.apply(name)
 
   local saved_groups = save_plugin_groups()
 
-  pcall(require("lazy").load, { plugins = t.plugin })
+  pcall(require("managers.plugin_manager").load_plugin, t.plugin)
 
   local ok = pcall(t.apply)
   if not ok then
