@@ -4,7 +4,7 @@ local M = {}
 
 -- known spec fields for validation + typo detection
 local known_fields = {
-  url = true, trigger = true, dependencies = true, build = true,
+  url = true, trigger = true, load = true, dependencies = true, build = true,
   version = true, branch = true, tag = true, commit = true,
   config = true, init = true, enabled = true, condition = true,
   priority = true, opts = true, name = true,

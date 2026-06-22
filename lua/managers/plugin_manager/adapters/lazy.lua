@@ -3,6 +3,7 @@ local M = {}
 local generic_fields = {
   url = true,
   trigger = true,
+  load = true,
   category = true,
   optional = true,
   metadata = true,
@@ -15,6 +16,27 @@ function M.translate(spec)
   end
 
   local result = { spec.url }
+
+  -- Normalize load abstraction into trigger
+  if spec.load then
+    spec.trigger = spec.trigger or {}
+    local m = spec.load.mode
+    if m == "startup" then
+      spec.trigger.startup = true
+    elseif m == "lazy" then
+      spec.trigger.lazy = true
+    elseif m == "event" then
+      spec.trigger.event = spec.load.event
+    elseif m == "cmd" then
+      spec.trigger.cmd = spec.load.cmd
+    elseif m == "keymap" then
+      spec.trigger.keymap = spec.load.keymap
+    elseif m == "require" then
+      spec.trigger.require = spec.load.require
+    elseif m == "ft" then
+      spec.trigger.ft = spec.load.ft
+    end
+  end
 
   if spec.trigger then
     local t = spec.trigger
