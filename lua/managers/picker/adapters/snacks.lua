@@ -18,13 +18,7 @@ M.cleanup = cleanup
 
 local function action(name, snack_name)
   return function(...)
-    local ok, err = pcall(require("snacks").picker[snack_name or name], ...)
-    cleanup()
-    if not ok then
-      vim.schedule(function()
-        error(err)
-      end)
-    end
+    require("snacks").picker[snack_name or name](...)
   end
 end
 
@@ -37,13 +31,7 @@ M.git_files = action("git_files")
 M.git_commits =action("git_log")
 
 function M.references()
-  local ok, err = pcall(require("snacks").picker.lsp_references)
-  cleanup()
-  if not ok then
-    vim.schedule(function()
-      error(err)
-    end)
-  end
+  require("snacks").picker.lsp_references()
 end
 
 return M
