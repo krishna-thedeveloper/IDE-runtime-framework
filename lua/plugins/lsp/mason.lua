@@ -1,6 +1,7 @@
 return {
     {
         url = "williamboman/mason.nvim",
+        on_require = "mason",
         config = function()
             require("mason").setup({
                 ui = { border = "rounded" },
@@ -9,6 +10,7 @@ return {
     },
     {
         url = "williamboman/mason-lspconfig.nvim",
+        on_require = "mason-lspconfig",
         dependencies = { "mason.nvim" },
         config = function()
             require("mason-lspconfig").setup({

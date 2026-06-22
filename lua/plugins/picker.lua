@@ -1,5 +1,6 @@
 return {
     url = "folke/snacks.nvim",
+    on_require = "snacks",
     opts = {
         picker = {
             enabled = true,
