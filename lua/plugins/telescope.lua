@@ -62,5 +62,8 @@ return {
     {
         url = "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
+        enabled = function()
+            return require("managers.picker").get_active_name() == "telescope"
+        end,
     },
 }
