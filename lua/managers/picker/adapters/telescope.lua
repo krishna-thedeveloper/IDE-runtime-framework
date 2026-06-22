@@ -3,20 +3,8 @@ local M = {
 }
 
 local function cleanup()
-  for k in pairs(package.loaded) do
-    if type(k) == "string" and (k:find("^telescope") or k == "fzf_lib") then
-      package.loaded[k] = nil
-    end
-  end
-  local config = require("lazy.core.config")
-  local plugin = config.plugins["telescope.nvim"]
-  if plugin then
-    plugin._.loaded = nil
-  end
-  local fzf = config.plugins["telescope-fzf-native.nvim"]
-  if fzf then
-    fzf._.loaded = nil
-  end
+  require("managers.plugin_manager").cleanup("telescope.nvim")
+  require("managers.plugin_manager").cleanup("telescope-fzf-native.nvim")
 end
 
 M.cleanup = cleanup

@@ -2,7 +2,6 @@ local state = require("managers.state")
 
 local M = {}
 
--- known spec fields for validation + typo detection
 local known_fields = {
   url = true, trigger = true, load = true, dependencies = true, build = true,
   version = true, branch = true, tag = true, commit = true,
@@ -66,15 +65,21 @@ function M.validate(spec)
   return errors
 end
 
-function M._collect(specs, result, depth)
+function M._collect(specs, result, depth, visited)
   if type(result) ~= "table" then
     return
   end
   depth = depth or 0
+  visited = visited or {}
   if depth > 10 then
     return
   end
   if result.url then
+    if visited[result] then
+      vim.notify("[plugins] cycle detected in spec collection for " .. result.url, vim.log.levels.WARN)
+      return
+    end
+    visited[result] = true
     local errs = M.validate(result)
     if #errs > 0 then
       vim.notify("[plugins] validation failed for " .. (result.url or "?"), vim.log.levels.WARN)
@@ -88,7 +93,7 @@ function M._collect(specs, result, depth)
   local count = #result
   if count > 0 then
     for _, item in ipairs(result) do
-      M._collect(specs, item, depth + 1)
+      M._collect(specs, item, depth + 1, visited)
     end
   else
     table.insert(specs, result)
@@ -131,12 +136,61 @@ function M.load_specs()
   return specs
 end
 
+--- Build dependency graph and return specs in topological order.
+--- Detects cycles and warns.
+function M._resolve_dependencies(specs)
+  local by_url = {}
+  for _, spec in ipairs(specs) do
+    by_url[spec.url] = spec
+  end
+
+  local visited = {}
+  local visiting = {}
+  local order = {}
+
+  local function visit(spec)
+    if visited[spec] then
+      return
+    end
+    if visiting[spec] then
+      vim.notify("[plugins] circular dependency detected involving " .. spec.url, vim.log.levels.WARN)
+      return
+    end
+    visiting[spec] = true
+    if spec.dependencies then
+      local deps = type(spec.dependencies) == "table" and spec.dependencies or { spec.dependencies }
+      for _, dep in ipairs(deps) do
+        local dep_spec
+        if type(dep) == "string" then
+          dep_spec = by_url[dep] or M._registry_by_url[dep]
+        else
+          dep_spec = dep
+        end
+        if dep_spec then
+          visit(dep_spec)
+        end
+      end
+    end
+    visiting[spec] = nil
+    visited[spec] = true
+    table.insert(order, spec)
+  end
+
+  for _, spec in ipairs(specs) do
+    visit(spec)
+  end
+
+  return order
+end
+
 function M._build_registry(specs)
-  M._registry = {}
+  M._registry_by_name = {}
+  M._registry_by_url = {}
   for _, spec in ipairs(specs) do
     local name = spec.name or spec.url:match("[^/]+$")
-    M._registry[name] = spec
-    M._registry[spec.url] = spec
+    M._registry_by_name[name] = M._registry_by_name[name] or {}
+    table.insert(M._registry_by_name[name], spec)
+    M._registry_by_url[spec.url] = spec
   end
 end
 
@@ -161,46 +215,66 @@ function M._save_enabled_state()
   pcall(vim.fn.writefile, lines, enabled_file)
 end
 
-function M.get(name)
-  if not M._registry then
-    return nil
+function M.get(key)
+  if M._registry_by_url and M._registry_by_url[key] then
+    return M._registry_by_url[key]
   end
-  return M._registry[name]
+  local named = M._registry_by_name and M._registry_by_name[key]
+  if named then
+    if #named == 1 then
+      return named[1]
+    end
+    return named
+  end
+  return nil
+end
+
+function M.each_spec(fn)
+  for _, specs in pairs(M._registry_by_name or {}) do
+    for _, spec in ipairs(specs) do
+      fn(spec)
+    end
+  end
 end
 
 function M.disable(name)
-  local spec = M._registry and M._registry[name]
-  if not spec then
+  local specs = M._registry_by_name and M._registry_by_name[name]
+  if not specs then
     vim.notify("Plugin '" .. name .. "' not found in registry", vim.log.levels.WARN)
     return
   end
   M._disabled = M._disabled or {}
   M._disabled[name] = true
   M._save_enabled_state()
-  spec.enabled = false
+  for _, spec in ipairs(specs) do
+    spec.enabled = false
+  end
 end
 
 function M.enable(name)
-  local spec = M._registry and M._registry[name]
-  if not spec then
+  local specs = M._registry_by_name and M._registry_by_name[name]
+  if not specs then
     vim.notify("Plugin '" .. name .. "' not found in registry", vim.log.levels.WARN)
     return
   end
   M._disabled = M._disabled or {}
   M._disabled[name] = nil
   M._save_enabled_state()
-  spec.enabled = true
+  for _, spec in ipairs(specs) do
+    spec.enabled = true
+  end
 end
 
 function M.disable_category(category)
-  if not M._registry then
-    return
-  end
-  for name, spec in pairs(M._registry) do
+  M.each_spec(function(spec)
     if spec.category == category then
-      M.disable(name)
+      local name = spec.name or spec.url:match("[^/]+$")
+      M._disabled = M._disabled or {}
+      M._disabled[name] = true
+      spec.enabled = false
     end
-  end
+  end)
+  M._save_enabled_state()
 end
 
 function M._filter_specs(specs)
@@ -210,10 +284,11 @@ function M._filter_specs(specs)
       goto continue
     end
     if spec.optional then
-      local dir_name = spec.url:match("[^/]+$")
-      local install_path = vim.fn.stdpath("data") .. "/lazy/" .. dir_name
-      if not vim.uv.fs_stat(install_path) then
-        goto continue
+      local path = M._adapter and M._adapter.plugin_path and M._adapter.plugin_path(spec.url)
+      if path then
+        if not vim.uv.fs_stat(path) then
+          goto continue
+        end
       end
     end
     table.insert(filtered, spec)
@@ -242,6 +317,7 @@ function M.setup(adapter_name, opts)
     end
   end
 
+  specs = M._resolve_dependencies(specs)
   local active_specs = M._filter_specs(specs)
   adapter.bootstrap(active_specs, opts)
 end
@@ -252,6 +328,14 @@ function M.load_plugin(name)
     return
   end
   M._adapter.load_plugin(name)
+end
+
+function M.cleanup(name)
+  if not M._adapter or not M._adapter.cleanup then
+    vim.notify("Plugin manager adapter does not support cleanup", vim.log.levels.ERROR)
+    return
+  end
+  M._adapter.cleanup(name)
 end
 
 return M

@@ -1,5 +1,7 @@
 local M = {}
 
+M.install_dir = vim.fn.stdpath("data") .. "/lazy"
+
 local generic_fields = {
   url = true,
   trigger = true,
@@ -102,11 +104,39 @@ function M.load_plugin(name)
   pcall(require("lazy").load, { plugins = name })
 end
 
+local function module_prefix(name)
+  return name:match("^([^.]+)")
+end
+
+function M.cleanup(name)
+  local prefix = module_prefix(name)
+  if prefix then
+    for k in pairs(package.loaded) do
+      if type(k) == "string" and k:find("^" .. prefix:gsub("[^%w_]", "%%%1")) then
+        package.loaded[k] = nil
+      end
+    end
+  end
+  local config = require("lazy.core.config")
+  for _, plugin in pairs(config.plugins) do
+    if plugin.name == name then
+      if plugin._ then
+        plugin._.loaded = nil
+      end
+    end
+  end
+end
+
+function M.plugin_path(url)
+  local dir_name = url:match("[^/]+$")
+  return M.install_dir .. "/" .. dir_name
+end
+
 function M.bootstrap(specs, opts)
   opts = opts or {}
   local lazy_opts = opts.lazy_opts or {}
 
-  local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+  local lazypath = M.install_dir .. "/lazy.nvim"
   if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
     local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
