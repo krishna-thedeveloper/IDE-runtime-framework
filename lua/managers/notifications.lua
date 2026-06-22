@@ -213,16 +213,6 @@ function M.save(name)
   state.save(name, state_file)
 end
 
-function M.setup()
-  local name = M.get_active_name()
-  for i, pname in ipairs(preset_order) do
-    if pname == name then
-      current_idx = i
-      break
-    end
-  end
-end
-
 events.on("notifications_apply", function(data)
   M.apply(data)
 end)
