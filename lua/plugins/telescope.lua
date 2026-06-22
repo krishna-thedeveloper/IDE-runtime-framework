@@ -1,10 +1,7 @@
 return {
     {
-        "nvim-telescope/telescope.nvim",
-        lazy = true,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
+        url = "nvim-telescope/telescope.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             local telescope = require("telescope")
 
@@ -58,8 +55,7 @@ return {
     },
 
     {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        lazy = true,
+        url = "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
     },
 }

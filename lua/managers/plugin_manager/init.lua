@@ -7,13 +7,22 @@ function M._get_base_dir()
   return base or vim.fn.stdpath("config")
 end
 
-function M._collect(specs, result)
+function M._collect(specs, result, depth)
   if type(result) ~= "table" then
     return
   end
-  if result[1] then
-    for _, s in ipairs(result) do
-      table.insert(specs, s)
+  depth = depth or 0
+  if depth > 10 then
+    return
+  end
+  if result.url or type(result[1]) == "string" then
+    table.insert(specs, result)
+    return
+  end
+  local count = #result
+  if count > 0 then
+    for _, item in ipairs(result) do
+      M._collect(specs, item, depth + 1)
     end
   else
     table.insert(specs, result)

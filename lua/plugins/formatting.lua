@@ -1,8 +1,8 @@
 return {
-    {
-        "stevearc/conform.nvim",
-        event = { "BufReadPre", "BufNewFile" },
-        opts = {
+    url = "stevearc/conform.nvim",
+    on_event = { "BufReadPre", "BufNewFile" },
+    config = function()
+        require("managers.format").setup({
             notify_on_error = false,
             default_format_opts = {
                 stop_after_first = true,
@@ -23,9 +23,6 @@ return {
                 timeout_ms = 500,
                 stop_after_first = true,
             },
-        },
-        config = function(_, opts)
-            require("managers.format").setup(opts)
-        end,
-    },
+        })
+    end,
 }
