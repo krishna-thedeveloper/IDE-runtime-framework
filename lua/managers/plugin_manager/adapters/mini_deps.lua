@@ -207,7 +207,18 @@ function M.load_plugin(name)
   local ok, err = pcall(function()
     local data = _spec_data[name]
     if data then
-      -- Build the mini.deps spec from stored data
+      local path = M.plugin_path(data.url)
+      if path then
+        vim.opt.rtp:prepend(path)
+      end
+
+      -- Run build BEFORE packadd — some plugins (blink.cmp) call require() in
+      -- their plugin/ file, which crashes if the native lib isn't built yet.
+      if data.build and not data._build_done then
+        run_build(name, data.build)
+        data._build_done = true
+      end
+
       local spec = { source = data.url }
 
       if data.mini_depends then
@@ -216,11 +227,6 @@ function M.load_plugin(name)
 
       if data.checkout then
         spec.checkout = data.checkout
-      end
-
-      if data.build then
-        spec.hooks = spec.hooks or {}
-        spec.hooks.post_checkout = function() run_build(name, data.build) end
       end
 
       MiniDeps.add(spec)
@@ -351,6 +357,21 @@ function M.bootstrap(specs, opts)
 
   local translated = M.translate_all(specs)
 
+  -- Install ALL plugins upfront, including deferred; run builds after clone
+  for i, spec in ipairs(specs) do
+    local name = spec.name or spec.url:match("[^/]+$")
+    local install_path = deps_path(name)
+    if not vim.uv.fs_stat(install_path) then
+      local out = vim.fn.system({
+        "git", "clone", "--depth=1", "--filter=blob:none",
+        "https://github.com/" .. spec.url, install_path,
+      })
+      if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({{ "[mini.deps] clone failed for " .. spec.url .. ": " .. (out or ""), "ErrorMsg" }}, true, {})
+      end
+    end
+  end
+
   local add_startup = {}
   local add_deferred = {}
 
@@ -364,13 +385,10 @@ function M.bootstrap(specs, opts)
     end
   end
 
-  -- Install and add startup plugins
+  -- Load startup plugins through load_plugin (MiniDeps.add + run_config + build)
   for _, entry in ipairs(add_startup) do
-    local ts = entry.translated
-    local ok, err = pcall(MiniDeps.add, ts)
-    if not ok then
-      vim.api.nvim_echo({{ "[mini.deps] add error for " .. ts.name .. ": " .. tostring(err):sub(1, 200), "WarningMsg" }}, false, {})
-    end
+    local name = entry.spec.name or entry.spec.url:match("[^/]+$")
+    _load(function() M.load_plugin(name) end)
   end
 
   -- Register cond functions for deferred plugins
