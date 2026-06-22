@@ -168,7 +168,9 @@ local function rocks_path()
 end
 
 local function site_opt_dir()
-  return rocks_path() .. "/site/pack/luarocks/opt"
+  -- Use <data>/site/pack/luarocks/opt so packadd finds plugins naturally
+  -- via the default packpath (<data>/site/pack/*/opt).
+  return vim.fn.stdpath("data") .. "/site/pack/luarocks/opt"
 end
 
 function M.plugin_path(url)

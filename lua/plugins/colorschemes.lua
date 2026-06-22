@@ -3,9 +3,21 @@ local active_group = theme.get_active_group()
 
 local function delegate(group)
     return function()
-        local entry = theme.get_theme(theme.get_active_theme())
+        local active = theme.get_active_theme()
+        local entry = theme.get_theme(active)
         if entry and entry.group == group then
             entry.apply()
+            -- Re-apply on VimEnter when all plugins (telescope, which-key,
+            -- etc.) are loaded so integration highlights take effect.
+            vim.api.nvim_create_autocmd("VimEnter", {
+                once = true,
+                callback = function()
+                    local e = theme.get_theme(theme.get_active_theme())
+                    if e and e.group == group then
+                        theme.apply(active)
+                    end
+                end,
+            })
         end
     end
 end
