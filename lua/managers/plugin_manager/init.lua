@@ -319,6 +319,27 @@ function M.setup(adapter_name, opts)
 
   specs = M._resolve_dependencies(specs)
   local active_specs = M._filter_specs(specs)
+
+  -- Deduplicate: remove specs that are only dependencies of another spec
+  -- (pckr handles deps natively via requires; lazy.nvim needs them flat)
+  local dep_urls = {}
+  for _, spec in ipairs(active_specs) do
+    if spec.dependencies then
+      for _, dep in ipairs(type(spec.dependencies) == "table" and spec.dependencies or { spec.dependencies }) do
+        local dep_url = type(dep) == "string" and dep or dep.url
+        if dep_url then
+          dep_urls[dep_url] = true
+        end
+      end
+    end
+  end
+  active_specs = vim.tbl_filter(function(spec)
+    if dep_urls[spec.url] and not spec.trigger and not spec.config and not spec.init then
+      return false
+    end
+    return true
+  end, active_specs)
+
   adapter.bootstrap(active_specs, opts)
 end
 

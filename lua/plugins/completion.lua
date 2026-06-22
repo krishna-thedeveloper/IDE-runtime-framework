@@ -1,9 +1,15 @@
 return {
     {
+        url = "saghen/blink.lib",
+        trigger = { require = "blink.lib" },
+    },
+    {
         url = "saghen/blink.cmp",
-        version = "1.*",
         trigger = { require = "blink.cmp" },
-        dependencies = { "L3MON4D3/LuaSnip", "rafamadriz/friendly-snippets" },
+        dependencies = { "L3MON4D3/LuaSnip", "rafamadriz/friendly-snippets", "saghen/blink.lib" },
+        build = function()
+            require("blink.cmp").build():pwait()
+        end,
         config = function()
             require("blink.cmp").setup({
                 keymap = {

@@ -1,21 +1,25 @@
 local M = {}
 
-M.install_dir = vim.fn.stdpath("data") .. "/site/pack/pckr"
-
 local generic_fields = {
   url = true, trigger = true, load = true,
   category = true, optional = true, metadata = true,
   condition = true, enabled = true, priority = true,
 }
 
--- lazily require pckr loaders so they work even if pckr isn't on rtp yet
+local function _load(fn)
+  local ok, err = pcall(fn)
+  if not ok then
+    vim.api.nvim_echo({{ "[pckr] Error: " .. tostring(err):sub(1, 200), "WarningMsg" }}, false, {})
+  end
+end
+
 local function event_cond(events)
   return function(load_plugin)
     local group = vim.api.nvim_create_augroup("PckrEvent", { clear = false })
     vim.api.nvim_create_autocmd(type(events) == "table" and events or { events }, {
       group = group,
       once = true,
-      callback = function() load_plugin() end,
+      callback = function() _load(load_plugin) end,
     })
   end
 end
@@ -27,17 +31,21 @@ local function ft_cond(fts)
       group = group,
       once = true,
       pattern = fts,
-      callback = function() load_plugin() end,
+      callback = function() _load(load_plugin) end,
     })
   end
 end
 
 local function lazy_cond()
   return function(load_plugin)
+    vim.schedule(function() _load(load_plugin) end)
     vim.api.nvim_create_autocmd("VimEnter", {
       once = true,
       callback = function()
-        load_plugin()
+        local ok, err = pcall(load_plugin)
+        if not ok then
+          vim.api.nvim_echo({{ "[pckr] Error: " .. tostring(err):sub(1, 200), "WarningMsg" }}, false, {})
+        end
         return true
       end,
     })
@@ -45,14 +53,13 @@ local function lazy_cond()
 end
 
 local function require_cond(modules)
+  local mods = type(modules) == "table" and modules or { modules }
   return function(load_plugin)
-    local mods = type(modules) == "table" and modules or { modules }
     local _require = _G.require
     _G.require = function(name)
       for _, mod in ipairs(mods) do
         if name:find("^" .. mod:gsub("%.", "%%.")) then
-          _G.require = _require
-          load_plugin()
+          _load(load_plugin)
           break
         end
       end
@@ -71,7 +78,7 @@ local function keymap_cond(keymaps)
         local mode = km.mode or "n"
         local opts = { desc = km.desc or "Pckr" }
         vim.keymap.set(mode, lhs, function()
-          load_plugin()
+          _load(load_plugin)
           if type(rhs) == "function" then
             rhs()
           elseif rhs then
@@ -94,8 +101,7 @@ local function cmd_cond(commands)
         local cmd_name = c:match("^[%w_]+")
         if cmd_name then
           vim.api.nvim_create_user_command(cmd_name, function(info)
-            load_plugin()
-            -- replay the command after plugin loads
+            _load(load_plugin)
             vim.cmd(c .. " " .. (info.args or ""))
           end, {
             nargs = "*",
@@ -115,86 +121,63 @@ function M.translate(spec)
   local result = { spec.url }
   local conds = {}
   local is_startup = false
+  local trigger = spec.trigger
 
   -- Normalize load abstraction into trigger
   if spec.load then
-    spec.trigger = spec.trigger or {}
+    trigger = trigger or {}
     local m = spec.load.mode
     if m == "startup" then
-      spec.trigger.startup = true
+      trigger.startup = true
     elseif m == "lazy" then
-      spec.trigger.lazy = true
+      trigger.lazy = true
     elseif m == "event" then
-      spec.trigger.event = spec.load.event
+      trigger.event = spec.load.event
     elseif m == "cmd" then
-      spec.trigger.cmd = spec.load.cmd
+      trigger.cmd = spec.load.cmd
     elseif m == "keymap" then
-      spec.trigger.keymap = spec.load.keymap
+      trigger.keymap = spec.load.keymap
     elseif m == "require" then
-      spec.trigger.require = spec.load.require
+      trigger.require = spec.load.require
     elseif m == "ft" then
-      spec.trigger.ft = spec.load.ft
+      trigger.ft = spec.load.ft
     end
+    spec.trigger = trigger
   end
 
-  if spec.trigger then
-    local t = spec.trigger
-    is_startup = t.startup or false
+  if trigger then
+    is_startup = trigger.startup or false
 
-    if t.lazy then
+    if trigger.lazy then
       table.insert(conds, lazy_cond())
     end
 
-    if t.event then
-      table.insert(conds, event_cond(t.event))
+    if trigger.event then
+      table.insert(conds, event_cond(trigger.event))
     end
 
-    if t.cmd then
-      local ok, builtin = pcall(require, "pckr.loader.cmd")
-      if ok then
-        for _, c in ipairs(type(t.cmd) == "table" and t.cmd or { t.cmd }) do
-          if type(c) == "string" then
-            table.insert(conds, builtin(c))
-          end
-        end
-      else
-        table.insert(conds, cmd_cond(t.cmd))
-      end
+    if trigger.cmd then
+      table.insert(conds, cmd_cond(trigger.cmd))
     end
 
-    if t.keymap then
-      local ok, builtin = pcall(require, "pckr.loader.keys")
-      if ok then
-        local items = type(t.keymap) == "table" and t.keymap or { t.keymap }
-        for _, km in ipairs(items) do
-          if type(km) == "table" then
-            local mode = km.mode or "n"
-            local lhs = km[1]
-            if lhs then
-              table.insert(conds, builtin(mode, lhs))
-            end
-          elseif type(km) == "string" then
-            table.insert(conds, builtin("n", km))
-          end
-        end
-      else
-        table.insert(conds, keymap_cond(t.keymap))
-      end
+    if trigger.keymap then
+      table.insert(conds, keymap_cond(trigger.keymap))
     end
 
-    if t.require then
-      table.insert(conds, require_cond(t.require))
+    if trigger.require then
+      table.insert(conds, require_cond(trigger.require))
     end
 
-    if t.ft then
-      table.insert(conds, ft_cond(t.ft))
+    if trigger.ft then
+      table.insert(conds, ft_cond(trigger.ft))
     end
   end
 
-  -- pckr auto-loads plugins with config but no triggers at startup (goes in start/).
-  -- Explicitly add lazy cond so config-only plugins stay lazy.
-  if #conds == 0 and not is_startup and spec.config then
-    table.insert(conds, lazy_cond())
+  -- Add lazy fallback for plugins with manual-only triggers (require, cmd, keymap)
+  -- so they eventually auto-load after startup even if never explicitly triggered.
+  local has_auto = trigger and (trigger.lazy or trigger.event or trigger.ft or trigger.startup)
+  if not is_startup and not has_auto and (spec.config or spec.init or #conds > 0) then
+    table.insert(conds, 1, lazy_cond())
   end
 
   if #conds > 0 then
@@ -219,6 +202,20 @@ function M.translate(spec)
 
   if spec.config then
     result.config = spec.config
+  elseif spec.opts then
+    local mod = spec.url:match("/(.+)%.nvim$") or spec.url:match("[^/]+$")
+    if mod and mod:match("%.nvim$") then
+      mod = mod:gsub("%.nvim$", "")
+    end
+    if mod then
+      local m = mod
+      result.config = function()
+        local ok, p = pcall(require, m)
+        if ok and p.setup then
+          p.setup(spec.opts)
+        end
+      end
+    end
   end
 
   for k, v in pairs(spec) do
@@ -231,8 +228,22 @@ function M.translate(spec)
 end
 
 function M.translate_all(specs)
-  local pckr_specs = {}
+  local seen = {}
+  local merged = {}
   for _, spec in ipairs(specs) do
+    if spec.url and seen[spec.url] then
+      local existing = seen[spec.url]
+      if spec.opts then
+        existing.opts = existing.opts and vim.tbl_deep_extend("force", existing.opts, spec.opts) or spec.opts
+      end
+    else
+      seen[spec.url] = spec
+      table.insert(merged, spec)
+    end
+  end
+
+  local pckr_specs = {}
+  for _, spec in ipairs(merged) do
     table.insert(pckr_specs, M.translate(spec))
   end
   return pckr_specs
@@ -253,32 +264,37 @@ function M.cleanup(name)
   end
 end
 
+-- pckr stores plugins at <pack_dir>/pack/pckr/{opt,start}/<name>.
+-- Default pack_dir is stdpath("data")/site, so Neovim's built-in packadd
+-- finds them via packpath.
 function M.plugin_path(url)
   local dir_name = url:match("[^/]+$")
   if not dir_name then
     return nil
   end
-  local opt_path = M.install_dir .. "/opt/" .. dir_name
+  local base = vim.fn.stdpath("data") .. "/site/pack/pckr"
+  local opt_path = base .. "/opt/" .. dir_name
   if vim.uv.fs_stat(opt_path) then
     return opt_path
   end
-  local start_path = M.install_dir .. "/start/" .. dir_name
+  local start_path = base .. "/start/" .. dir_name
   if vim.uv.fs_stat(start_path) then
     return start_path
   end
   return opt_path
 end
 
-local pckr_base = vim.fn.stdpath("data") .. "/pckr"
+local function pckr_path()
+  return vim.fn.stdpath("data") .. "/pckr/pckr.nvim"
+end
 
 function M.bootstrap(specs, opts)
   opts = opts or {}
-  local pckr_opts = opts.pckr_opts or {}
 
-  local pckr_path = pckr_base .. "/pckr.nvim"
-  if not (vim.uv or vim.loop).fs_stat(pckr_path) then
+  local path = pckr_path()
+  if not (vim.uv or vim.loop).fs_stat(path) then
     local repo = "https://github.com/lewis6991/pckr.nvim"
-    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", repo, pckr_path })
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", repo, path })
     if vim.v.shell_error ~= 0 then
       vim.api.nvim_echo({
         { "Failed to clone pckr.nvim:\n", "ErrorMsg" },
@@ -290,11 +306,10 @@ function M.bootstrap(specs, opts)
     end
   end
 
-  vim.opt.rtp:prepend(pckr_path)
+  vim.opt.rtp:prepend(path)
 
-  if next(pckr_opts) then
-    pcall(require("pckr").setup, pckr_opts)
-  end
+  local pckr_opts = opts.pckr_opts or {}
+  pcall(require("pckr").setup, pckr_opts)
 
   local pckr_specs = M.translate_all(specs)
   require("pckr").add(pckr_specs)
