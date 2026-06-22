@@ -31,9 +31,6 @@ A modular, performant Neovim configuration built with Lazy.nvim. Designed for lo
 | UI helpers | which-key.nvim, trouble.nvim |
 | Themes | 7 color schemes, 22+ variants |
 
-## Screenshots
-
-<!-- TODO: Add screenshots of dashboard, editor with LSP, picker, and theme variants -->
 
 ## Installation
 
