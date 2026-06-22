@@ -1,7 +1,7 @@
 local M = {}
 
-local state_dir = vim.fn.stdpath("state")
-local state_file = state_dir .. "/focus.txt"
+local state = require("managers.state")
+local state_file = vim.fn.stdpath("state") .. "/focus.txt"
 local events = require("managers.events")
 local active = nil
 
@@ -38,22 +38,12 @@ function M.toggle()
   end
 end
 
-function M.save(state)
-  vim.fn.mkdir(state_dir, "p")
-  local f = io.open(state_file, "w")
-  if f then
-    f:write(state and "1" or "0")
-    f:close()
-  end
+function M.save(s)
+  state.save(s and "1" or "0", state_file)
 end
 
 function M.load_state()
-  local f = io.open(state_file, "r")
-  if f then
-    local val = f:read("*l")
-    f:close()
-    active = val and vim.trim(val) == "1"
-  end
+  active = state.load(state_file) == "1"
 end
 
 function M.setup()

@@ -3,6 +3,7 @@ return {
         name = "onedark",
         plugin = "onedark.nvim",
         group = "onedark",
+        is_light = false,
         apply = function()
             vim.cmd("highlight clear")
             vim.cmd("syntax reset")

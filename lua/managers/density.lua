@@ -1,7 +1,7 @@
 local M = {}
 
-local state_dir = vim.fn.stdpath("state")
-local state_file = state_dir .. "/density.txt"
+local state = require("managers.state")
+local state_file = vim.fn.stdpath("state") .. "/density.txt"
 local events = require("managers.events")
 
 local profiles = {
@@ -41,16 +41,7 @@ events.on("focus_changed", function(data)
 end)
 
 function M.get_active_name()
-  local f = io.open(state_file, "r")
-  if f then
-    local name = f:read("*l")
-    f:close()
-    name = name and vim.trim(name) or ""
-    if name and profiles[name] then
-      return name
-    end
-  end
-  return "full"
+  return state.load(state_file, profiles, "full")
 end
 
 function M.get_current_index()
@@ -109,6 +100,7 @@ function M._apply_visual(name)
         },
       },
     })
+    require("managers.indent").apply_highlights()
   end)
 
   pcall(function()
@@ -148,12 +140,7 @@ function M.cycle()
 end
 
 function M.save(name)
-  vim.fn.mkdir(state_dir, "p")
-  local f = io.open(state_file, "w")
-  if f then
-    f:write(name)
-    f:close()
-  end
+  state.save(name, state_file)
 end
 
 function M.setup()
@@ -167,8 +154,7 @@ function M.setup()
 end
 
 function M.select()
-    require("managers.picker")._load_active()
-    vim.ui.select(profile_order, {
+    require("managers.select").select(profile_order, {
         prompt = "Select density",
         format_item = function(item)
             local label = profiles[item].label

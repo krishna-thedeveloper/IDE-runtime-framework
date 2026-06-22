@@ -41,13 +41,11 @@ return {
             local ibl = require("ibl")
             ibl.setup(opts)
 
-            vim.api.nvim_set_hl(0, "IblIndent", { fg = "#3b4261" })
-            vim.api.nvim_set_hl(0, "IblScope", { fg = "#5c6370" })
+            require("managers.indent").apply_highlights()
 
             vim.api.nvim_create_autocmd("ColorScheme", {
                 callback = function()
-                    vim.api.nvim_set_hl(0, "IblIndent", { fg = "#3b4261" })
-                    vim.api.nvim_set_hl(0, "IblScope", { fg = "#5c6370" })
+                    require("managers.indent").apply_highlights()
                 end,
             })
         end,

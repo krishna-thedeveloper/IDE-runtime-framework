@@ -12,6 +12,7 @@ for _, variant in ipairs(variants) do
         name = v.name,
         plugin = "catppuccin",
         group = "catppuccin",
+        is_light = v.is_light,
         apply = function()
             require("catppuccin").setup({
                 flavour = v.flavour,

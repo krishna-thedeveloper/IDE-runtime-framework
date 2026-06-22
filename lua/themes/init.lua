@@ -1,7 +1,7 @@
 local M = {}
 
-local state_dir = vim.fn.stdpath("state")
-local theme_file = state_dir .. "/theme.txt"
+local state = require("managers.state")
+local theme_file = vim.fn.stdpath("state") .. "/theme.txt"
 
 local default_palette = {
     red = "#e06c75", green = "#98c379", yellow = "#e5c07b",
@@ -101,16 +101,7 @@ function M.get_theme(name)
 end
 
 function M.get_active_theme()
-    local f = io.open(theme_file, "r")
-    if f then
-        local name = f:read("*l")
-        f:close()
-        name = name and vim.trim(name) or ""
-        if name ~= "" then
-            return name
-        end
-    end
-    return "catppuccin"
+    return state.load(theme_file, nil, "catppuccin")
 end
 
 function M.get_active_group()
@@ -119,17 +110,9 @@ function M.get_active_group()
     return entry and entry.group or "catppuccin"
 end
 
-local light_variants = {
-    ["tokyonight-day"] = true,
-    ["kanagawa-lotus"] = true,
-    ["catppuccin-latte"] = true,
-    ["everforest-light"] = true,
-    ["github-light"] = true,
-    ["github-light-high-contrast"] = true,
-}
-
 function M.is_light_variant(name)
-    return light_variants[name] or false
+    local theme = M.get_theme(name)
+    return theme and theme.is_light or false
 end
 
 function M.save_theme(name)
@@ -137,12 +120,7 @@ function M.save_theme(name)
     if not theme then
         return
     end
-    vim.fn.mkdir(state_dir, "p")
-    local f = io.open(theme_file, "w")
-    if f then
-        f:write(name)
-        f:close()
-    end
+    state.save(name, theme_file)
 end
 
 function M.load_theme(name)
@@ -204,12 +182,12 @@ function M.cycle()
 end
 
 function M.select()
-    require("managers.picker")._load_active()
+    local select = require("managers.select")
     local items = vim.tbl_map(function(t)
         return t.name
     end, M.themes)
     local current = M.get_active_theme()
-    vim.ui.select(items, {
+    select.select(items, {
         prompt = "Select theme",
         format_item = function(item)
             local display = item:gsub("^.", string.upper):gsub("%-(.)", function(c)

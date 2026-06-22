@@ -1,7 +1,7 @@
 local M = {}
 
-local state_dir = vim.fn.stdpath("state")
-local state_file = state_dir .. "/picker.txt"
+local state = require("managers.state")
+local state_file = vim.fn.stdpath("state") .. "/picker.txt"
 
 M._adapters = {}
 M._active = nil
@@ -69,23 +69,13 @@ for _, method in ipairs(methods) do
 end
 
 function M._save(name)
-  vim.fn.mkdir(state_dir, "p")
-  local f = io.open(state_file, "w")
-  if f then
-    f:write(name)
-    f:close()
-  end
+  state.save(name, state_file)
 end
 
 local function restore()
-  local f = io.open(state_file, "r")
-  if f then
-    local name = f:read("*l")
-    f:close()
-    name = name and vim.trim(name) or ""
-    if name ~= "" and M._adapters[name] then
-      M._active = name
-    end
+  local saved = state.load(state_file, M._adapters)
+  if saved then
+    M._active = saved
   end
 end
 
@@ -110,17 +100,8 @@ end
 discover_adapters()
 restore()
 
-function M._load_active()
-  if M._active == "snacks" then
-    pcall(require, "snacks")
-  elseif M._active == "telescope" then
-    pcall(require, "telescope")
-  end
-end
-
 function M.select()
-    M._load_active()
-    vim.ui.select(adapter_order, {
+    require("managers.select").select(adapter_order, {
         prompt = "Select picker",
         format_item = function(item)
             local label = (M._adapters[item] and M._adapters[item].label) or item:gsub("^.", string.upper)

@@ -1,7 +1,7 @@
 local M = {}
 
-local state_dir = vim.fn.stdpath("state")
-local state_file = state_dir .. "/notifications.txt"
+local state = require("managers.state")
+local state_file = vim.fn.stdpath("state") .. "/notifications.txt"
 local events = require("managers.events")
 
 M.base_opts = {
@@ -165,16 +165,7 @@ function M.get_preset(name)
 end
 
 function M.get_active_name()
-  local f = io.open(state_file, "r")
-  if f then
-    local name = f:read("*l")
-    f:close()
-    name = name and vim.trim(name) or ""
-    if name and deltas[name] then
-      return name
-    end
-  end
-  return "rich"
+  return state.load(state_file, deltas, "rich")
 end
 
 function M.get_current_index()
@@ -219,12 +210,7 @@ function M.cycle()
 end
 
 function M.save(name)
-  vim.fn.mkdir(state_dir, "p")
-  local f = io.open(state_file, "w")
-  if f then
-    f:write(name)
-    f:close()
-  end
+  state.save(name, state_file)
 end
 
 function M.setup()
@@ -242,8 +228,7 @@ events.on("notifications_apply", function(data)
 end)
 
 function M.select()
-    require("managers.picker")._load_active()
-    vim.ui.select(preset_order, {
+    require("managers.select").select(preset_order, {
         prompt = "Select notifications preset",
         format_item = function(item)
             local label = deltas[item].label

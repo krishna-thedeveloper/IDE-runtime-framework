@@ -18,6 +18,7 @@ for _, variant in ipairs(variants) do
         name = v.name,
         plugin = "tokyonight.nvim",
         group = "tokyonight",
+        is_light = v.is_light,
         apply = function()
             require("tokyonight").setup({
                 style = v.style,

@@ -1,7 +1,7 @@
 local variants = {
-    { name = "gruvbox-material",        contrast = "medium" },
-    { name = "gruvbox-material-soft",   contrast = "soft"   },
-    { name = "gruvbox-material-hard",   contrast = "hard"   },
+    { name = "gruvbox-material",        contrast = "medium", is_light = false },
+    { name = "gruvbox-material-soft",   contrast = "soft",   is_light = false },
+    { name = "gruvbox-material-hard",   contrast = "hard",   is_light = false },
 }
 
 local entries = {}
@@ -11,6 +11,7 @@ for _, variant in ipairs(variants) do
         name = v.name,
         plugin = "gruvbox-material",
         group = "gruvbox-material",
+        is_light = v.is_light,
         apply = function()
             vim.g.gruvbox_material_background = v.contrast
             vim.g.gruvbox_material_better_performance = 1

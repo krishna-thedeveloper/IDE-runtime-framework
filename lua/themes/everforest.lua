@@ -11,6 +11,7 @@ for _, variant in ipairs(variants) do
         name = v.name,
         plugin = "everforest",
         group = "everforest",
+        is_light = v.is_light,
         apply = function()
             vim.g.everforest_background = v.background
             vim.g.everforest_better_performance = 1

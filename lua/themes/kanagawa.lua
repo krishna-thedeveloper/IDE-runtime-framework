@@ -53,6 +53,7 @@ for _, variant in ipairs(variants) do
         name = v.name,
         plugin = "kanagawa.nvim",
         group = "kanagawa",
+        is_light = v.is_light,
         apply = function()
             require("kanagawa").setup(make_opts(v))
             vim.cmd.colorscheme("kanagawa")

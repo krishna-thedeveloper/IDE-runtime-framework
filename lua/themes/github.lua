@@ -13,6 +13,7 @@ for _, variant in ipairs(variants) do
         name = v.name,
         plugin = "github-theme",
         group = "github",
+        is_light = v.is_light,
         apply = function()
             require("github-theme").setup({
                 options = {
