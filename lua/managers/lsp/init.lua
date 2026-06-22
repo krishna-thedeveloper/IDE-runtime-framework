@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  local servers = require("plugins.lsp.servers")
+  local servers = require("config.lsp_servers")
 
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp_attach", { clear = true }),
