@@ -76,30 +76,7 @@ function M._apply_visual(name)
 
   pcall(function()
     local ibl = require("ibl")
-    ibl.setup({
-      enabled = profile.indent,
-      indent = {
-        char = "│",
-        tab_char = "│",
-        highlight = { "IblIndent", "IblIndent" },
-        smart_indent_cap = true,
-      },
-      scope = {
-        enabled = profile.indent,
-        show_start = true,
-        show_end = true,
-        highlight = "IblScope",
-        injected_languages = false,
-        priority = 500,
-      },
-      exclude = {
-        filetypes = {
-          "help", "dashboard", "neo-tree", "Trouble",
-          "lazy", "mason", "notify", "noice", "oil",
-          "toggleterm", "lspinfo",
-        },
-      },
-    })
+    ibl.setup(require("managers.indent").setup_config(profile.indent))
     require("managers.indent").apply_highlights()
   end)
 
