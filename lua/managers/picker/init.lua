@@ -79,25 +79,9 @@ local function restore()
   end
 end
 
-local function discover_adapters()
-  local ok, files = pcall(vim.fn.readdir, vim.fn.stdpath("config") .. "/lua/managers/picker/adapters")
-  if not ok or not files then
-    return
-  end
-  for _, file in ipairs(files) do
-    local mod = file:match("^(.*)%.lua$")
-    if mod and mod ~= "init" then
-      pcall(function()
-        local adapter = require("managers.picker.adapters." .. mod)
-        if adapter then
-          M.register(mod, adapter)
-        end
-      end)
-    end
-  end
+for mod, adapter in pairs(require("managers.discover").adapters("managers.picker.adapters")) do
+  M.register(mod, adapter)
 end
-
-discover_adapters()
 restore()
 
 function M.select()
