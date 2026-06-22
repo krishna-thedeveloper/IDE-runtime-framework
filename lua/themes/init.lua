@@ -122,11 +122,6 @@ function M.get_active_group()
     return entry and entry.group or "catppuccin"
 end
 
-function M.is_light_variant(name)
-    local theme = M.get_theme(name)
-    return theme and theme.is_light or false
-end
-
 function M.save_theme(name)
     local theme = M.get_theme(name)
     if not theme then

@@ -2,13 +2,6 @@ local M = {}
 
 function M.setup(opts)
   local lint = require("lint")
-
-  for name, linter in pairs(opts.linters or {}) do
-    if type(linter) == "table" then
-      lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name] or {}, linter)
-    end
-  end
-
   lint.linters_by_ft = opts.linters_by_ft
 
   local events = opts.events or { "BufWritePost", "BufReadPost", "InsertLeave" }

@@ -5,10 +5,6 @@ local state_file = vim.fn.stdpath("state") .. "/focus.txt"
 local events = require("managers.events")
 local active = nil
 
-function M.is_active()
-  return active == true
-end
-
 function M.enter()
   active = true
   require("managers.density").apply_profile("minimal")

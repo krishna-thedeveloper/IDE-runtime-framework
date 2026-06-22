@@ -153,16 +153,12 @@ end
 vim.keymap.set("n", "<leader>uc", M.cycle, { desc = "Cycle density" })
 vim.keymap.set("n", "<leader>sd", M.select, { desc = "Select density" })
 
-local did_restore = false
-
 vim.schedule(function()
   pcall(function()
     local name = M.get_active_name()
-    if not did_restore and name ~= "full" then
-      did_restore = true
+    if name ~= "full" then
       M.apply(name)
     end
-    did_restore = true
   end)
 end)
 
