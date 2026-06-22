@@ -126,4 +126,89 @@ function M.create_adapter_manager(opts)
   return manager
 end
 
+function M.create_preset_manager(opts)
+  local mgr = {}
+  local items = opts.items or {}
+  local order = opts.order or {}
+  local state_file = opts.state_file
+  local default_item = opts.default
+
+  mgr._items = items
+  mgr._order = order
+  mgr._state_file = state_file
+  mgr._current_idx = nil
+
+  function mgr.get_active_name()
+    return state.load(state_file, items, default_item)
+  end
+
+  function mgr.get_current_index()
+    if not mgr._current_idx then
+      local name = mgr.get_active_name()
+      for i, n in ipairs(order) do
+        if n == name then
+          mgr._current_idx = i
+          return i
+        end
+      end
+      mgr._current_idx = 1
+    end
+    return mgr._current_idx
+  end
+
+  function mgr.get_cached_name()
+    if mgr._current_idx then
+      return order[mgr._current_idx]
+    end
+    return mgr.get_active_name()
+  end
+
+  function mgr.cycle()
+    if #order == 0 then
+      return
+    end
+    mgr._current_idx = (mgr.get_current_index() % #order) + 1
+    mgr.apply(order[mgr._current_idx])
+  end
+
+  function mgr.select()
+    local current = mgr.get_active_name()
+    vim.ui.select(order, {
+      prompt = "Select " .. (opts.desc or "item"),
+      format_item = function(item)
+        local label = (items[item] and items[item].label) or item:gsub("^.", string.upper)
+        if item == current then
+          return label .. "  ●"
+        end
+        return label
+      end,
+    }, function(choice)
+      if choice then
+        mgr.apply(choice)
+      end
+    end)
+  end
+
+  function mgr.save(name)
+    state.save(name, state_file)
+  end
+
+  if opts.setup then
+    local custom_setup = opts.setup
+    function mgr.setup()
+      if opts.key then
+        local ck = opts.cycle_key or ("<leader>" .. opts.key .. "p")
+        local sk = opts.select_key or ("<leader>s" .. opts.key)
+        vim.keymap.set("n", ck, mgr.cycle, { desc = "Cycle " .. (opts.desc or "item") })
+        vim.keymap.set("n", sk, mgr.select, { desc = "Select " .. (opts.desc or "item") })
+      end
+      if custom_setup then
+        custom_setup(mgr)
+      end
+    end
+  end
+
+  return mgr
+end
+
 return M

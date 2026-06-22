@@ -40,11 +40,10 @@ end
 
 function M.setup()
   M.load_state()
+  vim.keymap.set("n", "<leader>z", M.toggle, { desc = "Toggle focus mode" })
   if active then
     require("managers.density").apply_profile("minimal")
   end
 end
-
-vim.keymap.set("n", "<leader>z", M.toggle, { desc = "Toggle focus mode" })
 
 return M

@@ -1,10 +1,72 @@
-local M = {}
-
-local state = require("managers.state")
-local state_file = vim.fn.stdpath("state") .. "/notifications.txt"
 local events = require("managers.events")
+local base = require("managers.base")
 
-M.base_opts = {
+local notifications = base.create_preset_manager({
+  state_file = vim.fn.stdpath("state") .. "/notifications.txt",
+  desc = "notifications",
+  key = "n",
+  cycle_key = "<leader>nn",
+  select_key = "<leader>sn",
+  default = "rich",
+  items = {
+    rich = { label = "Rich", opts = {} },
+    minimal = {
+      label = "Minimal",
+      opts = {
+        messages = { enabled = false },
+        popupmenu = { enabled = true, backend = "nui" },
+        notify = { enabled = true, view = "mini" },
+        lsp = {
+          progress = { enabled = false },
+          message = { enabled = false },
+        },
+        presets = {
+          command_palette = false,
+          long_message_to_split = false,
+          inc_rename = false,
+        },
+      },
+    },
+    native = {
+      label = "Native",
+      opts = {
+        cmdline = { enabled = false },
+        messages = { enabled = false },
+        popupmenu = { enabled = false },
+        notify = { enabled = false },
+        lsp = {
+          progress = { enabled = false },
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+            ["vim.lsp.util.stylize_markdown"] = false,
+          },
+          hover = { enabled = false },
+          signature = { enabled = false },
+          message = { enabled = false },
+        },
+        presets = {
+          bottom_search = false,
+          command_palette = false,
+          long_message_to_split = false,
+          inc_rename = false,
+        },
+      },
+    },
+  },
+  order = { "rich", "minimal", "native" },
+  setup = function()
+    vim.schedule(function()
+      pcall(function()
+        local name = notifications.get_active_name()
+        if name ~= "rich" then
+          notifications.apply(name)
+        end
+      end)
+    end)
+  end,
+})
+
+notifications.base_opts = {
   cmdline = {
     enabled = true,
     view = "cmdline_popup",
@@ -103,149 +165,39 @@ M.base_opts = {
   format = {},
 }
 
-local deltas = {
-  rich = {
-    label = "Rich",
-    opts = {},
-  },
-  minimal = {
-    label = "Minimal",
-    opts = {
-      messages = { enabled = false },
-      popupmenu = { enabled = true, backend = "nui" },
-      notify = { enabled = true, view = "mini" },
-      lsp = {
-        progress = { enabled = false },
-        message = { enabled = false },
-      },
-      presets = {
-        command_palette = false,
-        long_message_to_split = false,
-        inc_rename = false,
-      },
-    },
-  },
-  native = {
-    label = "Native",
-    opts = {
-      cmdline = { enabled = false },
-      messages = { enabled = false },
-      popupmenu = { enabled = false },
-      notify = { enabled = false },
-      lsp = {
-        progress = { enabled = false },
-        override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
-          ["vim.lsp.util.stylize_markdown"] = false,
-        },
-        hover = { enabled = false },
-        signature = { enabled = false },
-        message = { enabled = false },
-      },
-      presets = {
-        bottom_search = false,
-        command_palette = false,
-        long_message_to_split = false,
-        inc_rename = false,
-      },
-    },
-  },
-}
-
-local preset_order = { "rich", "minimal", "native" }
-local current_idx = nil
-
-function M.get_preset(name)
-  local delta = deltas[name]
-  if not delta then
+function notifications.get_preset(name)
+  local item = notifications._items[name]
+  if not item then
     return nil
   end
-  local opts = vim.tbl_deep_extend("force", {}, M.base_opts, delta.opts)
-  return { label = delta.label, opts = opts }
+  local merged = vim.tbl_deep_extend("force", {}, notifications.base_opts, item.opts)
+  return { label = item.label, opts = merged }
 end
 
-function M.get_active_name()
-  return state.load(state_file, deltas, "rich")
-end
-
-function M.get_current_index()
-  if not current_idx then
-    local name = M.get_active_name()
-    for i, pname in ipairs(preset_order) do
-      if pname == name then
-        current_idx = i
-        return i
-      end
-    end
-    current_idx = 1
-  end
-  return current_idx
-end
-
-function M.apply(name)
-  local delta = deltas[name]
-  if not delta then
-    return
-  end
-
-  for i, pname in ipairs(preset_order) do
-    if pname == name then
-      current_idx = i
+function notifications.apply(name)
+  for i, n in ipairs(notifications._order) do
+    if n == name then
+      notifications._current_idx = i
       break
     end
   end
 
-  local merged = vim.tbl_deep_extend("force", {}, M.base_opts, delta.opts)
+  local item = notifications._items[name]
+  if not item then
+    return
+  end
+
+  local merged = vim.tbl_deep_extend("force", {}, notifications.base_opts, item.opts)
   pcall(function()
     require("noice").setup(merged)
   end)
 
-  vim.notify("Notifications: " .. delta.label, vim.log.levels.INFO)
-  M.save(name)
-end
-
-function M.cycle()
-  current_idx = (M.get_current_index() % #preset_order) + 1
-  M.apply(preset_order[current_idx])
-end
-
-function M.save(name)
-  state.save(name, state_file)
+  vim.notify("Notifications: " .. item.label, vim.log.levels.INFO)
+  notifications.save(name)
 end
 
 events.on("notifications_apply", function(data)
-  M.apply(data)
+  notifications.apply(data)
 end)
 
-function M.select()
-    vim.ui.select(preset_order, {
-        prompt = "Select notifications preset",
-        format_item = function(item)
-            local label = deltas[item].label
-            if item == M.get_active_name() then
-                return label .. "  ●"
-            end
-            return label
-        end,
-    }, function(choice)
-        if choice then
-            M.apply(choice)
-        end
-    end)
-end
-
-function M.setup()
-  vim.keymap.set("n", "<leader>nn", M.cycle, { desc = "Cycle notification preset" })
-  vim.keymap.set("n", "<leader>sn", M.select, { desc = "Select notification preset" })
-
-  vim.schedule(function()
-    pcall(function()
-      local name = M.get_active_name()
-      if name ~= "rich" then
-        M.apply(name)
-      end
-    end)
-  end)
-end
-
-return M
+return notifications
