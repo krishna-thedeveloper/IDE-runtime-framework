@@ -10,3 +10,5 @@ if not ok then
 end
 
 require("config.lazy")
+
+pcall(require, "config.user")

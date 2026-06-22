@@ -1,0 +1,11 @@
+-- User configuration overrides
+-- Place your personal settings here. This file is loaded after everything else.
+--
+-- Examples:
+--   vim.opt.tabstop = 2
+--   vim.opt.shiftwidth = 2
+--   require("managers.theme").load_theme("tokyonight-night")
+--   vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Diagnostics" })
+--
+-- Return an empty table to satisfy Lazy.nvim's plugin spec format.
+return {}

@@ -25,6 +25,12 @@ function M.setup()
       vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts)
       vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts)
       vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, bufopts)
+
+      vim.keymap.set("n", "<leader>ch", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf }), { bufnr = ev.buf })
+      end, vim.tbl_extend("keep", { desc = "Toggle inlay hints" }, bufopts))
+
+      vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
     end,
   })
 
