@@ -36,7 +36,7 @@ events.on("focus_changed", function(data)
   focus_active = data.active
   if not focus_active then
     local name = M.get_current_name()
-    M._apply_visual(name)
+    M.apply_profile(name)
   end
 end)
 
@@ -65,7 +65,7 @@ function M.get_current_name()
   return M.get_active_name()
 end
 
-function M._apply_visual(name)
+function M.apply_profile(name)
   local profile = profiles[name]
   if not profile then
     return
@@ -107,7 +107,7 @@ function M.apply(name)
     return
   end
 
-  M._apply_visual(name)
+  M.apply_profile(name)
   events.emit("density_changed", { profile = name })
 end
 

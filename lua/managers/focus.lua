@@ -11,11 +11,7 @@ end
 
 function M.enter()
   active = true
-  require("statusline").set_layout("minimal")
-  vim.opt.showtabline = 0
-  pcall(function()
-    require("ibl").setup({ enabled = false })
-  end)
+  require("managers.density").apply_profile("minimal")
   vim.cmd("redrawstatus!")
   vim.notify("Focus mode on", vim.log.levels.INFO)
   M.save(true)
@@ -49,8 +45,7 @@ end
 function M.setup()
   M.load_state()
   if active then
-    require("statusline").set_layout("minimal")
-    vim.opt.showtabline = 0
+    require("managers.density").apply_profile("minimal")
   end
 end
 
