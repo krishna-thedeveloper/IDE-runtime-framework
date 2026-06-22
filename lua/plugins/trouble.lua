@@ -1,7 +1,6 @@
 return {
     {
         "folke/trouble.nvim",
-        dependencies = { "folke/which-key.nvim" },
         cmd = "Trouble",
         keys = {
             { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
@@ -20,11 +19,6 @@ return {
         },
         config = function(_, opts)
             require("trouble").setup(opts)
-
-            local wk = require("which-key")
-            wk.add({
-                { "<leader>x", group = "Trouble" },
-            })
         end,
     },
 }

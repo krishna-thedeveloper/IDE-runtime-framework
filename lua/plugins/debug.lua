@@ -4,7 +4,6 @@ return {
         dependencies = {
             "rcarriga/nvim-dap-ui",
             "nvim-neotest/nvim-nio",
-            "folke/which-key.nvim",
         },
         keys = {
             { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
@@ -36,11 +35,6 @@ return {
             dap.listeners.before.event_exited["dapui_config"] = function()
                 dapui.close()
             end
-
-            local wk = require("which-key")
-            wk.add({
-                { "<leader>d", group = "Debug" },
-            })
         end,
     },
 }

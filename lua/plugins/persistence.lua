@@ -2,7 +2,6 @@ return {
     {
         "folke/persistence.nvim",
         event = "BufReadPre",
-        dependencies = { "folke/which-key.nvim" },
         opts = {
             dir = vim.fn.stdpath("state") .. "/sessions/",
             need = 1,
@@ -10,11 +9,6 @@ return {
         },
         config = function(_, opts)
             require("persistence").setup(opts)
-
-            local wk = require("which-key")
-            wk.add({
-                { "<leader>S", group = "Session" },
-            })
 
             vim.keymap.set("n", "<leader>Ss", function()
                 require("persistence").load()
