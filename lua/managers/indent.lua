@@ -10,9 +10,9 @@ local exclude_filetypes = {
 }
 
 local function palette_color(name, fallback)
-  local ok, palette = pcall(require, "themes")
-  if ok and palette and palette.palette then
-    return palette.palette[name] or fallback
+  local ok, mgr = pcall(require, "managers.theme")
+  if ok and mgr and mgr.palette then
+    return mgr.palette[name] or fallback
   end
   return fallback
 end

@@ -1,4 +1,4 @@
-local theme = require("themes")
+local theme = require("managers.theme")
 local active_group = theme.get_active_group()
 
 local function delegate(group)

@@ -1,6 +1,6 @@
 local M = {}
 
-local palette = require("themes").palette
+local palette = require("managers.theme").palette
 
 local ViMode = {
     static = {
