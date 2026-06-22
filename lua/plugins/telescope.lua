@@ -2,7 +2,11 @@ return {
     {
         url = "nvim-telescope/telescope.nvim",
         trigger = { require = "telescope" },
+        category = "picker",
         dependencies = { "nvim-lua/plenary.nvim" },
+        enabled = function()
+            return require("managers.picker").get_active_name() == "telescope"
+        end,
         config = function()
             local telescope = require("telescope")
 
