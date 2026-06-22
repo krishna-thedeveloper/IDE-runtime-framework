@@ -203,8 +203,33 @@ function M.cycle()
     M.load_theme(M.themes[current_idx].name)
 end
 
+function M.select()
+    require("managers.picker")._load_active()
+    local items = vim.tbl_map(function(t)
+        return t.name
+    end, M.themes)
+    local current = M.get_active_theme()
+    vim.ui.select(items, {
+        prompt = "Select theme",
+        format_item = function(item)
+            local display = item:gsub("^.", string.upper):gsub("%-(.)", function(c)
+                return " " .. c:upper()
+            end)
+            if item == current then
+                return display .. "  ●"
+            end
+            return display
+        end,
+    }, function(choice)
+        if choice then
+            M.load_theme(choice)
+        end
+    end)
+end
+
 vim.keymap.set("n", "<leader>tc", M.cycle, { desc = "Cycle theme" })
 vim.keymap.set("n", "<leader>ts", M.show_current_theme, { desc = "Show current theme" })
+vim.keymap.set("n", "<leader>st", M.select, { desc = "Select theme" })
 
 vim.api.nvim_create_autocmd("ColorScheme", {
     group = vim.api.nvim_create_augroup("themes_palette", { clear = true }),
