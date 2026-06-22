@@ -1,9 +1,13 @@
 local M = {}
 
-local generic_to_lazy = {
-  url = function(_, spec)
-    return spec.url
-  end,
+local generic_fields = {
+  url = true,
+  on_startup = true,
+  on_lazy = true,
+  on_event = true,
+  on_cmd = true,
+  on_keymap = true,
+  on_require = true,
 }
 
 function M.translate(spec)
@@ -35,44 +39,10 @@ function M.translate(spec)
     result.module = spec.on_require
   end
 
-  if spec.cond then
-    result.cond = spec.cond
-  end
-
-  if spec.dependencies then
-    result.dependencies = spec.dependencies
-  end
-
-  if spec.build then
-    result.build = spec.build
-  end
-
-  if spec.version then
-    result.version = spec.version
-  end
-
-  if spec.priority then
-    result.priority = spec.priority
-  end
-
-  if spec.name then
-    result.name = spec.name
-  end
-
-  if spec.config then
-    result.config = spec.config
-  end
-
-  if spec.opts then
-    result.opts = spec.opts
-  end
-
-  if spec.opts_extend then
-    result.opts_extend = spec.opts_extend
-  end
-
-  if spec.main then
-    result.main = spec.main
+  for k, v in pairs(spec) do
+    if not generic_fields[k] and result[k] == nil then
+      result[k] = v
+    end
   end
 
   return result
