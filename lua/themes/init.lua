@@ -67,7 +67,7 @@ local function restore_plugin_groups(saved)
 end
 
 M.themes = {}
-
+local current_idx = nil
 local function discover_themes()
     local ok, files = pcall(vim.fn.readdir, vim.fn.stdpath("config") .. "/lua/themes")
     if not ok or not files then
@@ -144,12 +144,9 @@ function M.load_theme(name)
 
     restore_plugin_groups(saved_groups)
 
-    M.update_palette()
     vim.api.nvim_exec_autocmds("ColorScheme", { pattern = vim.g.colors_name })
 
     vim.cmd("redrawstatus!")
-
-    pcall(vim.api.nvim_set_hl, 0, "NotifyBackground", { link = "NormalFloat" })
 
     vim.notify("Theme: " .. name, vim.log.levels.INFO)
     M.save_theme(name)
@@ -159,8 +156,6 @@ function M.show_current_theme()
     local name = M.get_active_theme()
     vim.notify("Current theme: " .. name, vim.log.levels.INFO)
 end
-
-local current_idx = nil
 
 function M.get_current_index()
     if not current_idx then
@@ -211,12 +206,8 @@ vim.keymap.set("n", "<leader>st", M.select, { desc = "Select theme" })
 
 vim.api.nvim_create_autocmd("ColorScheme", {
     group = vim.api.nvim_create_augroup("themes_palette", { clear = true }),
-    callback = M.update_palette,
-})
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-    group = vim.api.nvim_create_augroup("themes_links", { clear = true }),
     callback = function()
+        M.update_palette()
         pcall(vim.api.nvim_set_hl, 0, "NotifyBackground", { link = "NormalFloat" })
     end,
 })
