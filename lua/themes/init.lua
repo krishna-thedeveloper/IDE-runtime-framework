@@ -32,7 +32,7 @@ function M.update_palette()
 end
 
 local PLUGIN_PREFIXES = {
-    "Telescope", "WhichKey", "BufferLine", "Buffer",
+    "Telescope", "WhichKey", "Buffer",
     "Noice", "Notify", "Dap", "DapUI", "Trouble",
     "GitSigns", "Mini", "Oil", "Heirline", "Snacks",
     "BlinkCmp",
@@ -57,11 +57,17 @@ end
 local function restore_plugin_groups(saved)
     for name, hl in pairs(saved) do
         if vim.fn.hlexists(name) == 0 then
+            local restored = {}
             if hl.link then
-                pcall(vim.api.nvim_set_hl, 0, name, { link = hl.link })
-            else
-                pcall(vim.api.nvim_set_hl, 0, name, hl)
+                restored.link = hl.link
             end
+            if hl.fg then
+                restored.fg = hl.fg
+            end
+            if hl.bg then
+                restored.bg = hl.bg
+            end
+            pcall(vim.api.nvim_set_hl, 0, name, restored)
         end
     end
 end
@@ -69,18 +75,24 @@ end
 M.themes = {}
 local current_idx = nil
 local function discover_themes()
-    local ok, files = pcall(vim.fn.readdir, vim.fn.stdpath("config") .. "/lua/themes")
-    if not ok or not files then
-        return
-    end
-    for _, file in ipairs(files) do
-        local mod = file:match("^(.*)%.lua$")
-        if mod and mod ~= "init" then
-            local ok_load, entries = pcall(require, "themes." .. mod)
-            if ok_load and type(entries) == "table" then
-                for _, entry in ipairs(entries) do
-                    if entry.name and entry.apply then
-                        table.insert(M.themes, entry)
+    local seen = {}
+    for _, rtp in ipairs(vim.api.nvim_list_runtime_paths()) do
+        local theme_dir = rtp .. "/lua/themes"
+        if vim.fn.isdirectory(theme_dir) == 1 then
+            local ok, files = pcall(vim.fn.readdir, theme_dir)
+            if ok and files then
+                for _, file in ipairs(files) do
+                    local mod = file:match("^(.*)%.lua$")
+                    if mod and mod ~= "init" and not seen[mod] then
+                        seen[mod] = true
+                        local ok_load, entries = pcall(require, "themes." .. mod)
+                        if ok_load and type(entries) == "table" then
+                            for _, entry in ipairs(entries) do
+                                if entry.name and entry.apply then
+                                    table.insert(M.themes, entry)
+                                end
+                            end
+                        end
                     end
                 end
             end
@@ -140,7 +152,10 @@ function M.load_theme(name)
 
     pcall(require("lazy").load, { plugins = theme.plugin })
 
-    theme.apply()
+    local ok = pcall(theme.apply)
+    if not ok then
+        return
+    end
 
     restore_plugin_groups(saved_groups)
 
@@ -172,6 +187,9 @@ function M.get_current_index()
 end
 
 function M.cycle()
+    if #M.themes == 0 then
+        return
+    end
     current_idx = (M.get_current_index() % #M.themes) + 1
     M.load_theme(M.themes[current_idx].name)
 end

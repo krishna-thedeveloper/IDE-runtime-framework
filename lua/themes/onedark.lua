@@ -5,8 +5,6 @@ return {
         group = "onedark",
         is_light = false,
         apply = function()
-            vim.cmd("highlight clear")
-            vim.cmd("syntax reset")
             require("onedark").setup({
                 style = "dark",
                 transparent = true,
@@ -27,7 +25,6 @@ return {
                 },
             })
             require("onedark").load()
-            vim.cmd("syntax on")
         end,
     },
 }
