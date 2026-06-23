@@ -155,9 +155,18 @@ local Diagnostics = {
         return #vim.diagnostic.get(0) > 0
     end,
     init = function(self)
-        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+        self.errors = 0
+        self.warnings = 0
+        self.hints = 0
+        for _, d in ipairs(vim.diagnostic.get(0)) do
+            if d.severity == vim.diagnostic.severity.ERROR then
+                self.errors = self.errors + 1
+            elseif d.severity == vim.diagnostic.severity.WARN then
+                self.warnings = self.warnings + 1
+            elseif d.severity == vim.diagnostic.severity.HINT then
+                self.hints = self.hints + 1
+            end
+        end
     end,
     {
         provider = function(self)
