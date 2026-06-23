@@ -22,8 +22,8 @@ sequenceDiagram
     K-->>I: Register core keymaps
     I->>A: require("core.autocmds")
     A-->>I: Register global autocmds
-    I->>L: require("config.lazy")
-    L->>L: Bootstrap lazy.nvim (clone if missing)
+    I->>L: require("config.plugin_manager")
+    L->>L: Bootstrap plugin manager (clone if missing)
     L->>P: require("plugins") — load all spec files
     P-->>L: Return plugin specs table
     L->>L: lazy.setup(specs)
@@ -45,7 +45,7 @@ sequenceDiagram
 require("core.options")
 require("core.keymaps")
 require("core.autocmds")
-require("config.lazy")
+require("config.plugin_manager")
 ```
 
 This is the single entry point. It loads modules in dependency order:

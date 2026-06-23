@@ -27,7 +27,7 @@ Modules map directly to file paths:
 | File | `require(...)` |
 |---|---|
 | `lua/core/options.lua` | `"core.options"` |
-| `lua/config/lazy.lua` | `"config.lazy"` |
+| `lua/config/plugin_manager.lua` | `"config.plugin_manager"` |
 | `lua/plugins/lsp/init.lua` | `"plugins.lsp"` |
 | `lua/plugins/lsp/servers.lua` | `"plugins.lsp.servers"` |
 | `lua/managers/picker/init.lua` | `"managers.picker"` |

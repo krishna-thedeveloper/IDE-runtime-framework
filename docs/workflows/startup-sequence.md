@@ -71,7 +71,7 @@ Neovim process starts
   ├── [3] require("core.autocmds")
   │     └── TextYankPost → vim.highlight.on_yank()
   │
-  ├── [4] require("config.lazy")
+  ├── [4] require("config.plugin_manager")
   │     ├── Compute lazypath = stdpath("data") .. "/lazy/lazy.nvim"
   │     ├── If not exists: git clone folke/lazy.nvim --filter=blob:none --branch=stable
   │     ├── vim.opt.rtp:prepend(lazypath)
