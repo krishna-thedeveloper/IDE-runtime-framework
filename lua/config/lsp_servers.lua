@@ -1,5 +1,11 @@
 return {
     ts_ls = {
+        init_options = {
+            maxTsServerMemory = 2048,
+            tsserver = {
+                useSyntaxServer = "never",
+            },
+        },
         settings = {
             typescript = {
                 preferences = {
