@@ -89,7 +89,7 @@ flowchart LR
     I -->|Yes| J[Manager.setup opts]
     I -->|No| K[Direct plugin setup]
     H -->|No| L{Uses opts table?}
-    L -->|Yes| M[Adapter runs require(plugin).setup(opts)]
+    L -->|Yes| M[Adapter calls plugin setup with opts]
     L -->|No| N[Default plugin init]
 ```
 
