@@ -119,6 +119,98 @@ Each scenario opens specific file types and waits for LSP clients to attach befo
 
 ---
 
+## Test 7: Validation — language_engines generic refactor
+
+### Date: 2026-06-23
+
+### Setup
+- Commit `6094bbb` — refactored from TypeScript-specific `config.typescript` to generic `managers.language_engine`
+- Persisted engine selection in `~/.config/nvim/language_engines.dat`
+- `:LanguageEngine` command lists/switches engines generically
+- Provider files under `managers/language_engine/providers/`
+
+### 7a. ts_ls (default) — validates refactor produces same results as Option A
+
+| Process                        | RSS (MB) |
+|--------------------------------|----------|
+| nvim                           | 26       |
+| lua-language-server            | 13       |
+| typescript-language-server     | 60       |
+| tsserver.js (single)           | 180      |
+| typingsInstaller.js            | 78       |
+| vscode-json-language-server    | 65       |
+| yaml-language-server           | 90       |
+| **LSP total**                  | **488**  |
+| **Grand total**                | **514**  |
+
+**Comparison with Option A (before refactor):**
+
+| Metric          | Option A (old) | language_engines (new) | Delta |
+|-----------------|---------------|------------------------|-------|
+| ts_ls wrapper   | 60 MB         | 60 MB                  | 0     |
+| tsserver        | 181 MB        | 180 MB                 | −1    |
+| typingsInstaller| 78 MB         | 78 MB                  | 0     |
+| LSP total       | 484 MB        | 488 MB                 | +4    |
+| Grand total     | 512 MB        | 514 MB                 | +2    |
+
+✅ **Validation PASS**: All values within normal measurement variance (1–4 MB). Refactor is transparent.
+
+---
+
+### 7b. typescript-tools — validates switching mechanism (INITIAL — flawed timing)
+
+**Initial measurement** (5-second settle after client attach) showed inflated values due to tsserver pre-GC state.
+
+| Process                        | RSS (MB) |
+|--------------------------------|----------|
+| nvim                           | 26       |
+| lua-language-server            | 13       |
+| typescript-tools tsserver      | 166      |
+| typescript-tools typingsInstaller | 78    |
+| vscode-json-language-server    | 65       |
+| yaml-language-server           | 88       |
+| **LSP total**                  | **411**  |
+| **Grand total**                | **437**  |
+
+### 7c. typescript-tools — SETTLED measurement (25-second settle)
+
+**Key finding:** tsserver RSS drops from 166 MB → 140 MB ~18 seconds after attach, when V8 GC runs.
+
+| Process                        | RSS (MB) |
+|--------------------------------|----------|
+| nvim                           | 26       |
+| lua-language-server            | 13       |
+| typescript-tools tsserver      | **140**  |
+| typescript-tools typingsInstaller | **74** |
+| vscode-json-language-server    | 67       |
+| yaml-language-server           | 88       |
+| **LSP total**                  | **383**  |
+| **Grand total**                | **409**  |
+
+**Comparison with Option B (before refactor):**
+
+| Metric             | Option B (old) | language_engines (settled) | Delta |
+|--------------------|---------------|---------------------------|-------|
+| tsserver           | 140 MB        | 140 MB                    | **0** |
+| typingsInstaller   | 74 MB         | 74 MB                     | **0** |
+| LSP total          | 382 MB        | 383 MB                    | +1    |
+| Grand total        | 409 MB        | 409 MB                    | **0** |
+
+✅ **Switching validation PASS — zero overhead.** The generic refactor produces identical memory to the old TypeScript-specific implementation. All values match within ±1 MB (measurement rounding).
+
+**Root cause of apparent 26 MB difference:** tsserver (Node.js V8) allocates ~166 MB on startup, then GC reduces it to ~140 MB after ~18 seconds. The initial benchmarks used a 5-second settle, catching pre-GC state. With a 25-second settle, results match perfectly.
+
+✅ **Switching validation**: `:LanguageEngine typescript typescript_tools` correctly:
+1. Writes `typescript typescript_tools` to `language_engines.dat`
+2. Disables ts_ls `ensure_installed` in mason
+3. Enables the typescript-tools.nvim plugin
+4. Starts tsserver directly (no typescript-language-server wrapper)
+5. LSP client reports name `typescript-tools`
+
+➡ **Recommendation:** All future benchmarks should use ≥25-second settle time after tsserver attach to capture post-GC RSS.
+
+---
+
 ## Summary
 
 | Config          | TypeScript (MB) | LSP total (MB) | Grand total (MB) | Savings vs baseline | Savings vs Option A |
