@@ -1,7 +1,7 @@
 return {
     {
         url = "williamboman/mason.nvim",
-        trigger = { require = "mason" },
+        trigger = { event = { "BufReadPre", "BufNewFile" } },
         config = function()
             require("mason").setup({
                 ui = { border = "rounded" },
@@ -10,7 +10,7 @@ return {
     },
     {
         url = "williamboman/mason-lspconfig.nvim",
-        trigger = { require = "mason-lspconfig" },
+        trigger = { event = { "BufReadPre", "BufNewFile" } },
         dependencies = { "mason.nvim" },
         config = function()
             require("mason-lspconfig").setup({
