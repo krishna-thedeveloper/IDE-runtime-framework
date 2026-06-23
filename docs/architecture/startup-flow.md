@@ -9,7 +9,8 @@ sequenceDiagram
     participant O as core/options.lua
     participant K as core/keymaps.lua
     participant A as core/autocmds.lua
-    participant L as config/lazy.lua
+    participant PM as config/plugin_manager.lua
+    participant AD as Adapter (lazy/pckr/mini_deps/vim_pack)
     participant P as plugins/*.lua
     participant M as managers/
     participant S as statusline/
@@ -22,13 +23,14 @@ sequenceDiagram
     K-->>I: Register core keymaps
     I->>A: require("core.autocmds")
     A-->>I: Register global autocmds
-    I->>L: require("config.lazy")
-    L->>L: Bootstrap lazy.nvim (clone if missing)
-    L->>P: require("plugins") — load all spec files
-    P-->>L: Return plugin specs table
-    L->>L: lazy.setup(specs)
-    L->>L: Process lazy-loading triggers
-    L-->>I: Setup complete
+    I->>PM: require("config.plugin_manager")
+    PM->>PM: Read adapter name (lazy / pckr / mini_deps / vim_pack)
+    PM->>AD: Bootstrap selected adapter
+    AD->>AD: Clone backend if missing
+    AD->>P: require("plugins") — load all spec files
+    P-->>AD: Return plugin specs table
+    AD->>AD: setup(specs) — adapter processes triggers
+    AD-->>I: Setup complete
     I-->>N: Ready for user input
 
     Note over P,M: Plugins load lazily on events/keys/commands
@@ -45,7 +47,7 @@ sequenceDiagram
 require("core.options")
 require("core.keymaps")
 require("core.autocmds")
-require("config.lazy")
+require("config.plugin_manager")
 ```
 
 This is the single entry point. It loads modules in dependency order:
@@ -53,7 +55,7 @@ This is the single entry point. It loads modules in dependency order:
 1. **Options** — sets `vim.opt` values, `vim.g.mapleader`, and `vim.g.maplocalleader`. No dependencies.
 2. **Keymaps** — registers global keybindings and **loads all manager modules** that define their own keymaps (themes, density, focus, notifications, completion, picker). These managers register keymaps at `require` time.
 3. **Autocmds** — registers `TextYankPost` highlight. Standalone.
-4. **Lazy** — bootstraps Lazy.nvim if not installed, then loads all plugin specs.
+4. **Plugin Manager** — reads the selected adapter from `config/plugin_manager.lua`, bootstraps the backend if missing, then loads all plugin specs.
 
 ### 2. `core/options.lua`
 
@@ -94,18 +96,27 @@ vim.keymap.set("n", "<leader>ff", picker.find_files, ...)
 
 Registers `TextYankPost` autocmd to highlight yanked text.
 
-### 5. `config/lazy.lua`
+### 5. `config/plugin_manager.lua`
 
-The Lazy.nvim bootstrap process:
+The adapter bootstrap process:
 
-1. Computes `lazypath` = `stdpath("data") .. "/lazy/lazy.nvim"`.
-2. If not installed, clones `folke/lazy.nvim` with `--filter=blob:none --branch=stable`.
-3. Prepends `lazypath` to `rtp`.
-4. Calls `require("lazy").setup("plugins")` which auto-discovers all files in `lua/plugins/`.
+1. Reads the adapter name (one of `"lazy"`, `"pckr"`, `"mini_deps"`, `"vim_pack"`).
+2. Requires the corresponding adapter from `lua/managers/plugin_manager/`.
+3. The adapter bootstraps its backend (clone if missing, set up runtime path).
+4. Calls `setup("plugins")` — the adapter discovers all files in `lua/plugins/` and processes them.
 
-### 6. Plugin Loading (Lazy)
+For each adapter, the bootstrap path differs:
 
-Lazy.nvim processes all plugin specs from `lua/plugins/`. Each spec defines:
+| Adapter | Backend path | Clone URL |
+|---|---|---|
+| `lazy` | `stdpath("data") .. "/lazy/lazy.nvim"` | `folke/lazy.nvim` (stable branch) |
+| `pckr` | `stdpath("data") .. "/pckr/pckr.nvim"` | `lewis6991/pckr.nvim` |
+| `mini_deps` | `stdpath("data") .. "/mini.deps"` | `echasnovski/mini.deps` |
+| `vim_pack` | (built-in, no clone) | N/A |
+
+### 6. Plugin Loading (Adapter)
+
+The adapter processes all plugin specs from `lua/plugins/`. Universal spec fields include:
 
 - **lazy** — whether to lazy-load (default: `true`).
 - **event** — Neovim events that trigger loading.
@@ -113,6 +124,7 @@ Lazy.nvim processes all plugin specs from `lua/plugins/`. Each spec defines:
 - **cmd** — commands that trigger loading.
 - **ft** — filetypes that trigger loading.
 - **priority** — for non-lazy plugins, load order priority.
+- **condition** — function that gates loading at runtime.
 - **dependencies** — ensure dependencies load first.
 
 See [Lazy Loading](lazy-loading.md) for details.

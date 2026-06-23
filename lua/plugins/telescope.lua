@@ -1,10 +1,12 @@
 return {
     {
-        "nvim-telescope/telescope.nvim",
-        lazy = true,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
+        url = "nvim-telescope/telescope.nvim",
+        trigger = { require = "telescope" },
+        category = "picker",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        enabled = function()
+            return require("managers.picker").get_active_name() == "telescope"
+        end,
         config = function()
             local telescope = require("telescope")
 
@@ -58,8 +60,10 @@ return {
     },
 
     {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        lazy = true,
+        url = "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
+        enabled = function()
+            return require("managers.picker").get_active_name() == "telescope"
+        end,
     },
 }

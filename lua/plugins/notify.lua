@@ -1,7 +1,7 @@
 return {
     {
-        "rcarriga/nvim-notify",
-        event = "VeryLazy",
+        url = "rcarriga/nvim-notify",
+        trigger = { lazy = true },
         opts = {
             timeout = 3000,
             max_height = function()
@@ -23,19 +23,17 @@ return {
     },
 
     {
-        "folke/noice.nvim",
-        event = "VeryLazy",
+        url = "folke/noice.nvim",
+        trigger = { lazy = true },
         dependencies = {
             "rcarriga/nvim-notify",
             "MunifTanjim/nui.nvim",
         },
-        opts = function()
+        config = function()
             local notifications = require("managers.notifications")
             local name = notifications.get_active_name()
             local preset = notifications.get_preset(name)
-            return preset and preset.opts or notifications.base_opts
-        end,
-        config = function(_, opts)
+            local opts = preset and preset.opts or notifications.base_opts
             require("noice").setup(opts)
             require("managers.notifications").setup()
         end,

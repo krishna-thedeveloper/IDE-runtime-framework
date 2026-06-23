@@ -3,15 +3,7 @@ local M = {
 }
 
 local function cleanup()
-  for k in pairs(package.loaded) do
-    if type(k) == "string" and k:find("^snacks") then
-      package.loaded[k] = nil
-    end
-  end
-  local plugin = require("lazy.core.config").plugins["snacks.nvim"]
-  if plugin then
-    plugin._.loaded = nil
-  end
+  require("managers.plugin_manager").cleanup("snacks.nvim")
 end
 
 M.cleanup = cleanup

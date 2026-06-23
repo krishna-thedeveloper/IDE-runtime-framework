@@ -1,15 +1,12 @@
 return {
-    {
-        "mfussenegger/nvim-lint",
-        event = { "BufReadPre", "BufNewFile" },
-        opts = {
+    url = "mfussenegger/nvim-lint",
+    trigger = { event = { "BufReadPre", "BufNewFile" } },
+    config = function()
+        require("managers.lint").setup({
             events = { "BufWritePost", "BufReadPost", "InsertLeave" },
             linters_by_ft = {
                 lua = { "selene" },
             },
-        },
-        config = function(_, opts)
-            require("managers.lint").setup(opts)
-        end,
-    },
+        })
+    end,
 }

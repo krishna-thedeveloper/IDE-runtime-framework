@@ -9,6 +9,6 @@ if not ok then
   return
 end
 
-require("config.lazy")
+require("config.plugin_manager")
 
 pcall(require, "config.user")

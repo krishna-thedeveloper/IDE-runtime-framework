@@ -2,11 +2,29 @@
 
 ## Overview
 
-Plugins are managed exclusively by [Lazy.nvim](https://github.com/folke/lazy.nvim). Each plugin spec lives in its own file under `lua/plugins/`. Lazy.nvim auto-discovers these files when `require("lazy").setup("plugins")` is called — no manual import is needed.
+Plugins are managed by one of four swappable backends (adapters), selected via a single line in `lua/config/plugin_manager.lua`. Each plugin spec lives in its own file under `lua/plugins/`.
+
+### Supported Adapters
+
+| Adapter | Backend | Features |
+|---|---|---|
+| **lazy** (default) | [Lazy.nvim](https://github.com/folke/lazy.nvim) | Full native lazy-loading, profiling, UI dashboard |
+| **pckr** | [pckr.nvim](https://github.com/lewis6991/pckr.nvim) | Native lazy-loading, semver ranges, compile-based startup |
+| **mini_deps** | [mini.deps](https://github.com/echasnovski/mini.deps) | Lightweight, no external dependencies, snapshot/restore |
+| **vim_pack** | Built-in `vim.pack` | Zero dependencies, uses Neovim's built-in `:packadd` |
+
+Switch by editing the first line of `lua/config/plugin_manager.lua`:
+
+```lua
+-- Change this to "pckr", "mini_deps", or "vim_pack"
+return "lazy"
+```
+
+All four adapters support the same universal spec fields (see below). Backend-specific features (e.g., Lazy.nvim's UI dashboard) are available when using that adapter.
 
 ## Spec Structure
 
-Every plugin file returns a table of Lazy.nvim spec tables:
+Every plugin file returns a table of spec tables that are backend-agnostic:
 
 ```lua
 -- lua/plugins/example.lua
@@ -23,9 +41,22 @@ return {
     config = function(_, opts) -- setup function
       require("plugin").setup(opts)
     end,
+    condition = function() return vim.g.some_condition end, -- gate loading
+    priority = 1000,           -- load order (adapter-specific)
   },
 }
 ```
+
+## Adapter Bootstrap
+
+When Neovim starts, `init.lua` calls `require("config.plugin_manager")`, which:
+
+1. Reads the adapter name from the file.
+2. Requires the corresponding `lua/managers/plugin_manager/adapters/<name>.lua`.
+3. The adapter bootstraps its backend (clone if missing, setup runtime path).
+4. Calls `setup("plugins")` — the adapter discovers all files in `lua/plugins/` and processes them.
+
+For details, see [Plugin Manager Architecture](../architecture/plugin-manager.md).
 
 ## Categories
 
@@ -47,14 +78,19 @@ return {
 
 ```mermaid
 flowchart LR
-    A[lazy.setup plugins] --> B[Process spec files]
-    B --> C{Has config fn?}
-    C -->|Yes| D[Does config call a manager?]
-    D -->|Yes| E[Manager.setup opts]
-    D -->|No| F[Direct plugin setup]
-    C -->|No| G{Uses opts table?}
-    G -->|Yes| H[Lazy auto-calls<br/>require(plugin).setup(opts)]
-    G -->|No| I[Default plugin init]
+    A[config/plugin_manager.lua] --> B{Select adapter}
+    B -->|lazy| C[require lazy.setup plugins]
+    B -->|pckr| D[require pckr.setup plugins]
+    B -->|mini_deps| E[process plugins via mini.deps API]
+    B -->|vim_pack| F[process plugins via packadd]
+    C & D & E & F --> G[Process spec files]
+    G --> H{Has config fn?}
+    H -->|Yes| I[Does config call a manager?]
+    I -->|Yes| J[Manager.setup opts]
+    I -->|No| K[Direct plugin setup]
+    H -->|No| L{Uses opts table?}
+    L -->|Yes| M[Adapter calls plugin setup with opts]
+    L -->|No| N[Default plugin init]
 ```
 
 ## Configuration Delegation Pattern

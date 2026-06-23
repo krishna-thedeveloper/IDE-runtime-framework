@@ -27,8 +27,9 @@ This document describes the high-level architecture of the Neovim configuration.
                         │
                         ▼
 ┌──────────────────────────────────────────────────────┐
-│                   config/lazy.lua                     │
-│  Lazy.nvim bootstrap → require("plugins")            │
+│               config/plugin_manager.lua               │
+│  Adapter bootstrap → require("plugins")               │
+│  (lazy / pckr / mini_deps / vim_pack)                │
 └──────────────────────┬───────────────────────────────┘
                        │
                        ▼
@@ -59,7 +60,7 @@ init.lua
   ├── core/options.lua      (standalone)
   ├── core/keymaps.lua      → themes, managers.{density, focus, notifications, completion, picker}
   ├── core/autocmds.lua     (standalone)
-  └── config/lazy.lua
+  └── config/plugin_manager.lua
         └── plugins/*.lua
               ├── plugins/lsp/init.lua
               │     ├── plugins/lsp/mason.lua
