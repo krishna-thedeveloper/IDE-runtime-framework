@@ -192,12 +192,15 @@ local Diagnostics = {
 local LSPActive = {
     condition = function() return require("heirline.conditions").lsp_attached end,
     update = { "LspAttach", "LspDetach" },
-    provider = function()
+    init = function(self)
         local clients = vim.lsp.get_clients({ bufnr = 0 })
         local names = vim.tbl_map(function(c)
             return c.name
         end, clients)
-        return " 󰒋 " .. table.concat(names, ",") .. " "
+        self._names = table.concat(names, ",")
+    end,
+    provider = function(self)
+        return self._names and (" 󰒋 " .. self._names .. " ") or ""
     end,
     hl = function() return { fg = palette.blue } end,
 }
