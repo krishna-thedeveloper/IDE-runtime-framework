@@ -1,3 +1,5 @@
+local typescript = require("config.typescript")
+
 return {
     {
         url = "williamboman/mason.nvim",
@@ -13,15 +15,20 @@ return {
         trigger = { event = { "BufReadPre", "BufNewFile" } },
         dependencies = { "mason.nvim" },
         config = function()
-            require("mason-lspconfig").setup({
+            local opts = {
                 ensure_installed = {
-                    "ts_ls",
                     "lua_ls",
                     "jsonls",
                     "yamlls",
                 },
                 automatic_installation = false,
-            })
+            }
+            if typescript.provider == "ts_ls" then
+                table.insert(opts.ensure_installed, "ts_ls")
+            else
+                opts.automatic_enable = { exclude = { "ts_ls" } }
+            end
+            require("mason-lspconfig").setup(opts)
         end,
     },
 }

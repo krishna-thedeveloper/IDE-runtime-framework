@@ -1,5 +1,9 @@
-return {
-    ts_ls = {
+local typescript = require("config.typescript")
+
+local servers = {}
+
+if typescript.provider == "ts_ls" then
+    servers.ts_ls = {
         init_options = {
             maxTsServerMemory = 2048,
             tsserver = {
@@ -13,19 +17,23 @@ return {
                 },
             },
         },
-    },
-    lua_ls = {
-        settings = {
-            Lua = {
-                diagnostics = {
-                    globals = { "vim" },
-                },
-                workspace = {
-                    checkThirdParty = false,
-                },
+    }
+end
+
+servers.lua_ls = {
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = { "vim" },
+            },
+            workspace = {
+                checkThirdParty = false,
             },
         },
     },
-    jsonls = {},
-    yamlls = {},
 }
+
+servers.jsonls = {}
+servers.yamlls = {}
+
+return servers
