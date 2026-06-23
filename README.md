@@ -13,7 +13,7 @@ A modular, performant Neovim configuration built with Lazy.nvim. Designed for lo
 
 | Area | Implementation |
 |---|---|
-| Plugin Manager | [Lazy.nvim](https://github.com/folke/lazy.nvim) |
+| Plugin Manager | Lazy.nvim / pckr.nvim / mini.deps / vim.pack (swappable via config) |
 | Picker | Telescope + Snacks (swappable) |
 | Completion | blink.cmp (adapter-based) |
 | LSP | nvim-lspconfig + mason.nvim |
@@ -36,7 +36,7 @@ A modular, performant Neovim configuration built with Lazy.nvim. Designed for lo
 
 ```bash
 git clone https://github.com/<your-org>/nvim ~/.config/nvim
-nvim --headless "+Lazy! sync" +qa
+nvim --headless "+lua require('config.plugin_manager')" +qa
 ```
 
 ### Requirements
@@ -49,7 +49,7 @@ nvim --headless "+Lazy! sync" +qa
 ## Quick Start
 
 1. Install the configuration (see above).
-2. Open `nvim` — Lazy.nvim downloads and sets up all plugins automatically.
+2. Open `nvim` — The plugin manager downloads and sets up all plugins automatically.
 3. Press `<Space>` to see which-key popup.
 4. Press `<leader>ff` to find files.
 5. Press `<leader>tc` to cycle themes.
@@ -78,7 +78,8 @@ nvim --headless "+Lazy! sync" +qa
 - **Density presets** — Full IDE, Compact, and Minimal profiles adjust every UI element simultaneously: statusline layout, bufferline visibility, indent guides, and notification richness.
 - **Theme variants** — 22+ theme variants across 7 color schemes, all switchable at runtime with full plugin highlight restoration.
 - **Event bus** — Internal pub/sub system (`managers.events`) coordinates cross-manager communication without direct coupling.
-- **Adapter pattern** — Pickers and completion engines are abstracted behind a common interface; adding a new backend requires only an adapter file.
+- **Adapter pattern** — Pickers, completion engines, and plugin managers are abstracted behind a common interface; adding a new backend requires only an adapter file. Switch plugin managers by changing one line in `lua/config/plugin_manager.lua`.
+- **Multi-adapter plugin system** — Choose from 4 backends: Lazy.nvim (default), pckr.nvim, mini.deps, or vim.pack. Universal spec fields (events, keys, commands, filetypes, dependencies, opts, config, condition, priority) work across all adapters.
 
 See [Coding Standards](docs/development/coding-standards.md) for conventions.
 

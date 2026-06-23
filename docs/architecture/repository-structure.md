@@ -10,10 +10,10 @@ nvim/
 │   │   ├── keymaps.lua         #   Global keymaps + manager loading
 │   │   └── autocmds.lua        #   Global autocommands
 │   │
-│   ├── config/                 # Lazy.nvim setup
-│   │   └── lazy.lua            #   Bootstrap + plugin loading
+│   ├── config/                 # Plugin manager setup
+│   │   └── plugin_manager.lua  #   Adapter selection + bootstrap
 │   │
-│   ├── plugins/                # Lazy.nvim plugin specs
+│   ├── plugins/                # Plugin spec files (adapter-agnostic)
 │   │   ├── bufferline.lua      #   Buffer tabs
 │   │   ├── colorschemes.lua    #   Theme plugin specs
 │   │   ├── completion.lua      #   blink.cmp + LuaSnip
@@ -82,7 +82,7 @@ nvim/
 | Pattern | Example | Description |
 |---|---|---|
 | `lua/core/*.lua` | `options.lua` | Bootstrap modules loaded at startup |
-| `lua/config/*.lua` | `lazy.lua` | Single-file configuration modules |
+| `lua/config/*.lua` | `plugin_manager.lua` | Single-file configuration modules |
 | `lua/plugins/*.lua` | `treesitter.lua` | One file per plugin or concern |
 | `lua/plugins/*/` | `lsp/` | Plugin group with multiple files |
 | `lua/managers/*.lua` | `density.lua` | Top-level manager modules |

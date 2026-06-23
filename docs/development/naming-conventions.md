@@ -5,7 +5,7 @@
 | Pattern | Example | When to use |
 |---|---|---|
 | `lua/core/` | `options.lua` | Bootstrap modules loaded on every startup |
-| `lua/config/` | `lazy.lua` | Single-purpose configuration files |
+| `lua/config/` | `plugin_manager.lua` | Single-purpose configuration files |
 | `lua/plugins/` | `treesitter.lua` | Lazy.nvim plugin spec files |
 | `lua/plugins/<group>/` | `lsp/init.lua` | Related plugin specs |
 | `lua/managers/` | `density.lua` | Top-level abstraction managers |
@@ -17,7 +17,7 @@
 ## File Naming
 
 - `init.lua` — entry point for a module directory.
-- `lazy.lua` — Lazy.nvim configuration (special case).
+- `plugin_manager.lua` — Plugin manager adapter selection.
 - All other files: **kebab-case** — `bufferline.lua`, `whichkey.lua`, `blink_cmp.lua`.
 
 ## Lua Module Naming
