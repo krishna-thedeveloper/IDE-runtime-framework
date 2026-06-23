@@ -1,8 +1,8 @@
-local typescript = require("config.typescript")
+local engines = require("managers.language_engine")
 
 local servers = {}
 
-if typescript.provider == "ts_ls" then
+if engines.is_active("typescript", "ts_ls") then
     servers.ts_ls = {
         init_options = {
             maxTsServerMemory = 2048,

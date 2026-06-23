@@ -1,4 +1,4 @@
-local typescript = require("config.typescript")
+local engines = require("managers.language_engine")
 
 return {
     {
@@ -23,7 +23,7 @@ return {
                 },
                 automatic_installation = false,
             }
-            if typescript.provider == "ts_ls" then
+            if engines.is_active("typescript", "ts_ls") then
                 table.insert(opts.ensure_installed, "ts_ls")
             else
                 opts.automatic_enable = { exclude = { "ts_ls" } }
