@@ -3,7 +3,7 @@ local M = {}
 local generic_fields = {
   url = true, trigger = true, load = true,
   category = true, optional = true, metadata = true,
-  condition = true, enabled = true, priority = true,
+  enabled = true,
 }
 
 local function _load(fn)
@@ -185,6 +185,43 @@ function M.translate(spec)
       result.cond = conds[1]
     else
       result.cond = conds
+    end
+  end
+
+  -- Also pass trigger fields natively supported by pckr.nvim so it can
+  -- manage its own lazy-loading alongside the hand-rolled cond functions.
+  if trigger then
+    if trigger.event then result.event = trigger.event end
+    if trigger.cmd then result.cmd = trigger.cmd end
+    if trigger.keymap then result.keys = trigger.keymap end
+    if trigger.ft then result.ft = trigger.ft end
+    if trigger.require then result.module = trigger.require end
+  end
+
+  -- Wrap condition function around existing conds as a gate.
+  -- pckr's cond(load_plugin) already wraps load_plugin; condition()
+  -- is a boolean predicate that gates whether the load should proceed.
+  if spec.condition then
+    local existing = result.cond
+    if existing then
+      if type(existing) == "table" then
+        local wrapped = {}
+        for _, c in ipairs(existing) do
+          table.insert(wrapped, function(load_plugin)
+            if spec.condition() then c(load_plugin) end
+          end)
+        end
+        result.cond = wrapped
+      else
+        local single = existing
+        result.cond = function(load_plugin)
+          if spec.condition() then single(load_plugin) end
+        end
+      end
+    else
+      result.cond = function(load_plugin)
+        if spec.condition() then load_plugin() end
+      end
     end
   end
 

@@ -3,7 +3,7 @@ local M = {}
 local generic_fields = {
   url = true, trigger = true, load = true,
   category = true, optional = true, metadata = true,
-  condition = true, enabled = true, priority = true,
+  enabled = true,
 }
 
 local _spec_data = {}
@@ -251,13 +251,19 @@ function M.load_plugin(name)
   _loading[name] = true
 
   local ok, err = pcall(function()
+    local data = _spec_data[name]
+    -- Gate on condition function if present
+    if data and data.condition and not data.condition() then
+      _loading[name] = nil
+      return
+    end
+
     M.add_to_rtp(name)
     -- For deferred plugins loaded after startup's runtime! step, source
     -- plugin files now.  Startup plugins rely on the built-in runtime! step.
     local p = core_path(name)
     source_plugin_files(p)
     source_plugin_files(p .. "/after")
-    local data = _spec_data[name]
     if data then
       run_config(name, data)
       if data.build and not vim.g["vim_pack_built_" .. name] then
@@ -317,6 +323,7 @@ function M.translate(spec)
     opts = spec.opts,
     build = spec.build,
     url = spec.url,
+    condition = spec.condition,
     dependencies = spec.dependencies,
   }
 
@@ -348,6 +355,10 @@ function M.bootstrap(specs, opts)
   end
 
   local translated = M.translate_all(specs)
+
+  -- Restore from snapshot if available for version pinning
+  local snapshot_name = "nvim-plugins"
+  local ok_snap, _ = pcall(vim.pack.restore, snapshot_name, { silent = true })
 
   vim.api.nvim_create_autocmd("PackChanged", {
     callback = function(ev)
@@ -438,9 +449,24 @@ function M.bootstrap(specs, opts)
     end
   end
 
+  local add_opts = vim.tbl_deep_extend("force", { confirm = false }, opts.pack_add_opts or {})
   if #all_new > 0 then
-    vim.pack.add(all_new, { confirm = false })
+    vim.pack.add(all_new, add_opts)
   end
+
+  -- Sort startup plugins by priority (higher = first)
+  local priority_map = {}
+  for _, spec in ipairs(specs) do
+    local pname = spec.name or spec.url:match("[^/]+$")
+    if spec.priority then
+      priority_map[pname] = spec.priority
+    end
+  end
+  table.sort(add_startup, function(a, b)
+    local pa = priority_map[a.name] or 50
+    local pb = priority_map[b.name] or 50
+    return pa > pb
+  end)
 
   -- Activate startup plugins (add to rtp; runtime! will source plugin files)
   for _, ts in ipairs(add_startup) do
@@ -458,6 +484,9 @@ function M.bootstrap(specs, opts)
       register_conds(name, trigger)
     end
   end
+
+  -- Save snapshot for future restoration
+  pcall(vim.pack.snapshot, snapshot_name, { force = true })
 end
 
 return M

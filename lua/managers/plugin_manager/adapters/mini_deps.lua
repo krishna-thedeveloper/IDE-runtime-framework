@@ -3,7 +3,7 @@ local M = {}
 local generic_fields = {
   url = true, trigger = true, load = true,
   category = true, optional = true, metadata = true,
-  condition = true, enabled = true, priority = true,
+  enabled = true,
 }
 
 local _spec_data = {}
@@ -207,6 +207,12 @@ function M.load_plugin(name)
   local ok, err = pcall(function()
     local data = _spec_data[name]
     if data then
+      -- Gate on condition function if present
+      if data.condition and not data.condition() then
+        _loading[name] = nil
+        return
+      end
+
       local path = M.plugin_path(data.url)
       if path then
         vim.opt.rtp:prepend(path)
@@ -274,11 +280,21 @@ function M.translate(spec)
     name = name,
   }
 
-  -- Convert version field to checkout (simple tags/branches only)
+  -- Convert version field to checkout (supports semver ranges, tags, branches)
   if spec.version then
     if type(spec.version) == "string" then
       local v = spec.version:match("^([^*x]+)")
-      if v then result.checkout = v end
+      if v then
+        result.checkout = v
+      else
+        local ok, r = pcall(vim.version.range, spec.version)
+        if ok then
+          local coerced = tostring(r):match(">= ([%d%.]+)")
+          if coerced then
+            result.checkout = "v" .. coerced
+          end
+        end
+      end
     end
   end
 
@@ -288,11 +304,14 @@ function M.translate(spec)
     result.depends = spec.dependencies
   end
 
-  -- Convert build to a post_checkout hook
+  -- Convert build to post_checkout and post_install hooks
   if spec.build then
     local build_capture = spec.build
     result.hooks = result.hooks or {}
     result.hooks.post_checkout = function()
+      run_build(name, build_capture)
+    end
+    result.hooks.post_install = function()
       run_build(name, build_capture)
     end
   end
@@ -303,6 +322,7 @@ function M.translate(spec)
     opts = spec.opts,
     build = spec.build,
     url = spec.url,
+    condition = spec.condition,
     mini_depends = mini_depends,
     checkout = result.checkout,
   }
@@ -353,7 +373,14 @@ function M.bootstrap(specs, opts)
 
   -- Add mini.nvim to rtp and require mini.deps
   vim.opt.rtp:prepend(mini_path)
-  require("mini.deps").setup()
+  local mini_deps_opts = opts.mini_deps_opts or {}
+  require("mini.deps").setup(mini_deps_opts)
+
+  -- Restore from snapshot if available for version pinning
+  local snapshot_path = vim.fn.stdpath("state") .. "/mini_deps_snapshot"
+  if vim.uv.fs_stat(snapshot_path) then
+    pcall(MiniDeps.restore, snapshot_path)
+  end
 
   local translated = M.translate_all(specs)
 
@@ -385,6 +412,13 @@ function M.bootstrap(specs, opts)
     end
   end
 
+  -- Sort startup plugins by priority (higher = first)
+  table.sort(add_startup, function(a, b)
+    local pa = a.spec and a.spec.priority or 50
+    local pb = b.spec and b.spec.priority or 50
+    return pa > pb
+  end)
+
   -- Load startup plugins through load_plugin (MiniDeps.add + run_config + build)
   for _, entry in ipairs(add_startup) do
     local name = entry.spec.name or entry.spec.url:match("[^/]+$")
@@ -398,6 +432,9 @@ function M.bootstrap(specs, opts)
     local name = spec.name or spec.url:match("[^/]+$")
     register_conds(name, trigger)
   end
+
+  -- Save snapshot for future restoration
+  pcall(MiniDeps.snapshot, snapshot_path)
 end
 
 return M
