@@ -1,7 +1,9 @@
+local engines = require("managers.language_engine")
+
 return {
     {
         url = "williamboman/mason.nvim",
-        trigger = { require = "mason" },
+        trigger = { event = { "BufReadPre", "BufNewFile" } },
         config = function()
             require("mason").setup({
                 ui = { border = "rounded" },
@@ -10,18 +12,23 @@ return {
     },
     {
         url = "williamboman/mason-lspconfig.nvim",
-        trigger = { require = "mason-lspconfig" },
+        trigger = { event = { "BufReadPre", "BufNewFile" } },
         dependencies = { "mason.nvim" },
         config = function()
-            require("mason-lspconfig").setup({
+            local opts = {
                 ensure_installed = {
-                    "ts_ls",
                     "lua_ls",
                     "jsonls",
                     "yamlls",
                 },
                 automatic_installation = false,
-            })
+            }
+            if engines.is_active("typescript", "ts_ls") then
+                table.insert(opts.ensure_installed, "ts_ls")
+            else
+                opts.automatic_enable = { exclude = { "ts_ls" } }
+            end
+            require("mason-lspconfig").setup(opts)
         end,
     },
 }

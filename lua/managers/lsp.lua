@@ -59,6 +59,57 @@ function M.setup()
     vim.lsp.config(server, config)
     vim.lsp.enable(server)
   end
+
+  -- Clean up stale LSP clients when the working directory changes.
+  -- Prevents accumulation of duplicate client instances across projects.
+  vim.api.nvim_create_autocmd("DirChanged", {
+    group = vim.api.nvim_create_augroup("lsp_cleanup", { clear = true }),
+    callback = function()
+      vim.schedule(function()
+        M.stop_stale_clients()
+      end)
+    end,
+  })
+
+  -- Dedup guard: stop any existing client with the same name already attached
+  -- to this buffer's root directory before a new one attaches.
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp_dedup", { clear = true }),
+    callback = function(ev)
+      local new_client = vim.lsp.get_client_by_id(ev.data and ev.data.client_id)
+      if not new_client then return end
+      local new_root = new_client.config and new_client.config.root_dir
+      if not new_root then return end
+      for _, client in ipairs(vim.lsp.get_clients()) do
+        if client.id ~= new_client.id
+          and client.name == new_client.name
+          and client.config and client.config.root_dir == new_root
+        then
+          client:stop()
+        end
+      end
+    end,
+  })
 end
+
+function M.stop_stale_clients()
+  local cwd = vim.fn.getcwd()
+  local stopped = 0
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    local root = client.config and client.config.root_dir
+    if root and root ~= cwd then
+      client:stop()
+      stopped = stopped + 1
+    end
+  end
+  if stopped > 0 then
+    vim.notify(string.format("Stopped %d stale LSP client(s)", stopped), vim.log.levels.INFO)
+  end
+end
+
+vim.api.nvim_create_user_command("LspClean", function()
+  M.stop_stale_clients()
+  vim.notify("LSP clients cleaned", vim.log.levels.INFO)
+end, {})
 
 return M

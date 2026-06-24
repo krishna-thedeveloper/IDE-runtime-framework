@@ -9,6 +9,7 @@ return {
         require("managers.indent").apply_highlights()
 
         vim.api.nvim_create_autocmd("ColorScheme", {
+            group = vim.api.nvim_create_augroup("indent_ibl", { clear = true }),
             callback = function()
                 require("managers.indent").apply_highlights()
             end,
