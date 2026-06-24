@@ -130,7 +130,7 @@ graph TD
 | Phase | Module | Depends On |
 |---|---|---|
 | 0 | `core/options.lua` | nothing |
-| 1 | `themes/init.lua` | nothing (discovers at runtime) |
+| 1 | `managers/theme.lua` | nothing (discovers at runtime) |
 | 2 | `managers/events.lua` | nothing |
 | 3 | `managers/density.lua` | events |
 | 4 | `managers/focus.lua` | events |

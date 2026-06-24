@@ -13,14 +13,14 @@
 ### Via Command
 
 ```vim
-:lua require("themes").load_theme("tokyonight-storm")
+:lua require("managers.theme").apply("tokyonight-storm")
 ```
 
 ### Via Lua
 
 ```lua
-local themes = require("themes")
-themes.load_theme("catppuccin-latte")
+local theme = require("managers.theme")
+theme.apply("catppuccin-latte")
 ```
 
 ## What Happens During a Theme Switch
@@ -28,7 +28,7 @@ themes.load_theme("catppuccin-latte")
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant M as themes/init.lua
+    participant M as managers/theme.lua
     participant S as state/theme.txt
     participant L as lazy.nvim
     participant P as Plugin HL Groups
@@ -52,7 +52,7 @@ sequenceDiagram
 
 When a theme switches, Neovim clears and re-applies all highlight groups. This resets plugin-specific highlights (Telescope selection colors, WhichKey borders, BufferLine active tab, etc.). By saving and restoring known plugin groups, the theme system ensures plugin UI remains consistent across theme switches.
 
-The list of plugin prefixes that are preserved is in `lua/themes/init.lua:34`:
+The list of plugin prefixes that are preserved is in `lua/managers/theme.lua:43`:
 
 ```lua
 PLUGIN_PREFIXES = {

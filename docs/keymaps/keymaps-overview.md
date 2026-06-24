@@ -21,7 +21,7 @@
 | `<leader>x` | Trouble | `plugins/trouble.lua` |
 | `<leader>S` | Session | `plugins/persistence.lua` |
 | `<leader>s` | Select | Various managers (theme, density, notifications, completion, picker) |
-| `<leader>t` | Theme | `themes/init.lua` |
+| `<leader>t` | Theme | `managers/theme.lua` |
 | `<leader>b` | Buffer | `plugins/bufferline.lua` |
 
 ## Complete Keymap Reference
@@ -133,9 +133,9 @@
 
 | Key | Action | Source |
 |---|---|---|
-| `<leader>tc` | Cycle theme | `themes/init.lua:230` |
-| `<leader>ts` | Show current theme | `themes/init.lua:231` |
-| `<leader>st` | Select theme | `themes/init.lua:232` |
+| `<leader>tc` | Cycle theme | `managers/theme.lua:184` |
+| `<leader>ts` | Show current theme | `managers/theme.lua:185` |
+| `<leader>st` | Select theme | `managers/theme.lua:186` |
 
 ### Buffer
 
@@ -155,7 +155,7 @@
 |---|---|
 | `lua/core/keymaps.lua` | Global leader maps (save, quit, picker actions) |
 | `lua/managers/*.lua` | Manager-level keymaps (density, focus, notifications, completion, picker cycling/selection) |
-| `lua/themes/init.lua` | Theme keymaps |
+| `lua/managers/theme.lua` | Theme keymaps |
 | `lua/plugins/*.lua` | Plugin-specific keymaps (debug, trouble, bufferline, persistence) |
 | `lua/managers/*/init.lua` | Manager setup keymaps (LSP, git, format) |
 

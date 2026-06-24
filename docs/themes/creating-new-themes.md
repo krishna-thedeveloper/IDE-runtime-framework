@@ -78,7 +78,7 @@ end
 
 ## Updating the Light Variants Table
 
-If your theme has light variants, add them to `lua/themes/init.lua`:
+If your theme has light variants, add them to the `light_variants` table. Note: There is no `lua/themes/init.lua` — theme variants are defined per-file in `lua/themes/*.lua` and managed by `lua/managers/theme.lua`.
 
 ```lua
 light_variants = {
@@ -91,7 +91,7 @@ This enables `M.is_light_variant()` to work correctly, which is used by some the
 
 ## Testing Your Theme
 
-1. Switch to it: `<leader>st` or `:lua require("themes").load_theme("nightfox")`.
+1. Switch to it: `<leader>st` or `:lua require("managers.theme").apply("nightfox")`.
 2. Verify the statusline colors adapt correctly (palette auto-extracts).
 3. Test switching to another theme and back.
 4. Verify plugin highlights (Telescope, WhichKey, BufferLine, etc.) are preserved.

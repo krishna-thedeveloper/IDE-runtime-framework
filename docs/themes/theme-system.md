@@ -2,7 +2,7 @@
 
 ## Overview
 
-The theme system (`lua/themes/init.lua`) is a self-contained manager that:
+The theme system (`lua/managers/theme.lua`) is a self-contained manager that:
 
 1. **Auto-discovers** theme files in `lua/themes/`.
 2. **Registers variants** (e.g., catppuccin has 4 variants: mocha, macchiato, frappe, latte).
@@ -14,7 +14,7 @@ The theme system (`lua/themes/init.lua`) is a self-contained manager that:
 
 ```mermaid
 flowchart LR
-    A[Theme files] -->|require| B[themes/init.lua]
+    A[Theme files] -->|require| B[managers/theme.lua]
     B --> C[Theme registry]
     C --> D[M.get_theme name]
     D --> E[M.load_theme name]
