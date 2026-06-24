@@ -2,6 +2,40 @@ return {
     url = "folke/snacks.nvim",
     trigger = { require = "snacks" },
     opts = {
+        picker = {
+            enabled = true,
+            ui_select = true,
+            prompt = "❯ ",
+            layout = {
+                preset = "vertical",
+            },
+            formatters = {
+                file = {
+                    filename_first = true,
+                    truncate = "left",
+                },
+            },
+            matcher = {
+                cwd_bonus = true,
+                frecency = true,
+            },
+            sources = {
+                files = { hidden = true },
+                grep = { hidden = true },
+                buffers = { sort_lastused = true },
+                git_files = { untracked = true },
+                lines = {
+                    layout = { preset = "ivy" },
+                },
+            },
+            win = {
+                input = {
+                    keys = {
+                        ["<Esc>"] = { "close", mode = { "n", "i" } },
+                    },
+                },
+            },
+        },
         dashboard = {
             enabled = true,
             preset = {
@@ -9,7 +43,7 @@ return {
     __      _   _     __     ___
    / _\__ _| |_| |__  \ \   / (_)_ __ ___   __ _
    \ \/ _` | __| '_ \  \ \ / /| | '_ ` _ \ / _` |
- _\ \ (_| | |_| |_) |  \ V / | | | | | | | (_| |
+ _\ \ (_| | |_| |_) |  \ V / | | | | | | | | (_| |
 \__/\__,_|\__|_.__/    \_/  |_|_| |_| |_|\__,_|
                 ]],
                 keys = {
