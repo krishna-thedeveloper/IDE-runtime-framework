@@ -1,6 +1,5 @@
 return {
     url = "akinsho/bufferline.nvim",
-    version = "*",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     trigger = {
         lazy = true,
