@@ -52,7 +52,7 @@ function M.create_run(config)
     log_fh = nil,
   }
 
-  function ctx.open_log(name)
+  function ctx:open_log(name)
     name = tostring(name)
     ctx.log_file = dir .. "/raw/" .. name .. ".log"
     ctx.log_fh = io.open(ctx.log_file, "w")

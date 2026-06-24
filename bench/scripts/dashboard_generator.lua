@@ -223,9 +223,13 @@ function M.run()
     series = series,
     timestamps = timestamps,
   }
+  os.execute("mkdir -p " .. rm.dashboards_dir)
   local json_path = rm.dashboards_dir .. "/dashboard-data-" .. rm.timestamp() .. ".json"
-  -- We write to dashboard dir as well
-  local fh = io.open(json_path, "w"); fh:write(vim.fn.json_encode(json_data)); fh:close()
+  local fh = io.open(json_path, "w")
+  if fh then
+    fh:write(vim.fn.json_encode(json_data))
+    fh:close()
+  end
   ctx:log(string.format("Dashboard JSON: %s", json_path))
 
   ctx:record("dashboard", "generation", {

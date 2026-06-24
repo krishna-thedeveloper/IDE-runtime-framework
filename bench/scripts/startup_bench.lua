@@ -112,6 +112,7 @@ function M.run(opts)
 
   -- Compute statistics
   local function compute_stats(results, label)
+    if #results == 0 then return end
     local wall_vals = {}
     local startup_vals = {}
     for _, r in ipairs(results) do

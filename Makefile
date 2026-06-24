@@ -29,7 +29,9 @@ BM ?=
 
 .PHONY: bench-all bench-full bench-fast bench-seed bench-startup bench-lsp \
         bench-completion bench-theme bench-buffer bench-switching bench-stability \
-        bench-plugin-manager bench-run bench-report bench-compare bench-dashboard \
+        bench-plugin-manager bench-plugin-attribution bench-cpu bench-ts-backend \
+        bench-treesitter bench-project-indexing bench-git bench-editing bench-search \
+        bench-run bench-report bench-compare bench-dashboard \
         bench-clean bench-list bench-comprehensive
 
 # Run ALL benchmarks (comprehensive, ~60-90 min)
@@ -42,8 +44,11 @@ bench-all: bench-seed bench-comprehensive bench-report bench-compare bench-dashb
 	@echo "Reports: $(BENCH_DIR)/results/reports/"
 	@ls -lt $(BENCH_DIR)/results/historical/ | head -5
 
+# New benchmarks (Tier 1-3 additions)
+bench-new: bench-plugin-attribution bench-cpu bench-ts-backend bench-treesitter bench-project-indexing bench-git bench-editing bench-search
+
 # Full benchmark suite (all measurement benchmarks)
-bench-comprehensive: bench-startup bench-lsp bench-completion bench-theme bench-buffer bench-switching bench-stability
+bench-comprehensive: bench-startup bench-lsp bench-completion bench-theme bench-buffer bench-switching bench-stability bench-new
 
 # Fast benchmark (quick overview, ~10 min)
 bench-fast: bench-seed
@@ -116,6 +121,62 @@ bench-plugin-manager:
 	@echo "║           Plugin Manager Benchmark                      ║"
 	@echo "╚══════════════════════════════════════════════════════════╝"
 	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/plugin_manager_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-plugin-attribution: bench-seed
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           Plugin Load Attribution                       ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/plugin_attribution_bench.lua').run({cold=5})" -c "qa!" 2>&1
+	@echo ""
+
+bench-cpu: bench-seed
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           CPU Profiling Benchmark                       ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/cpu_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-ts-backend: bench-seed
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           TS Backend Comparison: ts_ls vs typescript-tools ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/ts_backend_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-treesitter: bench-seed
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           Treesitter Benchmark                          ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/treesitter_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-project-indexing: bench-seed
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           Project Indexing Benchmark                    ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/project_indexing_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-git:
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           Git Benchmark                                 ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/git_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-editing:
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           Editing Workflow Benchmark                    ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/editing_bench.lua').run()" -c "qa!" 2>&1
+	@echo ""
+
+bench-search:
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║           Search/Picker Benchmark                       ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	nvim --headless -c "lua dofile('$(BENCH_DIR)/scripts/search_bench.lua').run()" -c "qa!" 2>&1
 	@echo ""
 
 # Run specific benchmarks (set BM="startup lsp completion")
@@ -193,5 +254,7 @@ bench-worst: bench-stability
 
 .PHONY: bench-all bench-full bench-fast bench-seed bench-startup bench-lsp \
         bench-completion bench-theme bench-buffer bench-switching bench-stability \
-        bench-plugin-manager bench-run bench-report bench-compare bench-dashboard \
+        bench-plugin-manager bench-plugin-attribution bench-cpu bench-ts-backend \
+        bench-treesitter bench-project-indexing bench-git bench-editing bench-search \
+        bench-new bench-run bench-report bench-compare bench-dashboard \
         bench-clean bench-list bench-stats bench-comprehensive bench-worst

@@ -22,7 +22,9 @@ end
 
 -- If no specific benchmarks selected, run all
 if #selected == 0 then
-  selected = { "seed", "startup", "lsp", "completion", "theme", "buffer", "switching", "stability", "report", "compare", "dashboard" }
+  selected = { "seed", "startup", "lsp", "completion", "theme", "buffer", "switching", "stability",
+    "plugin_attribution", "cpu", "ts_backend", "treesitter", "project_indexing", "git", "editing", "search",
+    "report", "compare", "dashboard" }
 end
 
 local function has(name)
@@ -112,6 +114,54 @@ end)
 -- 8. Plugin manager benchmark (external runs)
 run_benchmark("plugin_manager", function()
   local mod = dofile(scripts_dir .. "/plugin_manager_bench.lua")
+  return mod.run()
+end)
+
+-- 9. Plugin attribution benchmark
+run_benchmark("plugin_attribution", function()
+  local mod = dofile(scripts_dir .. "/plugin_attribution_bench.lua")
+  return mod.run({ cold = 5 })
+end)
+
+-- 10. CPU profiling benchmark
+run_benchmark("cpu", function()
+  local mod = dofile(scripts_dir .. "/cpu_bench.lua")
+  return mod.run()
+end)
+
+-- 11. TypeScript backend comparison benchmark
+run_benchmark("ts_backend", function()
+  local mod = dofile(scripts_dir .. "/ts_backend_bench.lua")
+  return mod.run()
+end)
+
+-- 12. Treesitter benchmark
+run_benchmark("treesitter", function()
+  local mod = dofile(scripts_dir .. "/treesitter_bench.lua")
+  return mod.run()
+end)
+
+-- 13. Project indexing benchmark
+run_benchmark("project_indexing", function()
+  local mod = dofile(scripts_dir .. "/project_indexing_bench.lua")
+  return mod.run()
+end)
+
+-- 14. Git benchmark
+run_benchmark("git", function()
+  local mod = dofile(scripts_dir .. "/git_bench.lua")
+  return mod.run()
+end)
+
+-- 15. Editing workflow benchmark
+run_benchmark("editing", function()
+  local mod = dofile(scripts_dir .. "/editing_bench.lua")
+  return mod.run()
+end)
+
+-- 16. Search benchmark
+run_benchmark("search", function()
+  local mod = dofile(scripts_dir .. "/search_bench.lua")
   return mod.run()
 end)
 
