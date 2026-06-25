@@ -70,17 +70,11 @@ jobs:
         run: make bench-seed
         working-directory: nvim
 
-      - name: Run full benchmarks (ts_ls)
+      - name: Run full benchmarks
         run: make bench-all
         working-directory: nvim
         env:
           BENCH_ENGINE: ts_ls
-
-      - name: Run ts backend comparison (typescript-tools)
-        run: make bench-ts-backend
-        working-directory: nvim
-        env:
-          BENCH_ENGINE: typescript_tools
 
       - name: Generate commit message
         id: commit_msg
