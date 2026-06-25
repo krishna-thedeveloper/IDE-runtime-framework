@@ -109,41 +109,6 @@ function M.create_run(config, bench_name)
     return metrics
   end
 
-  function ctx:write_csv(filename, data)
-    if not data or #data == 0 then return end
-    local filename_s = tostring(filename)
-    local keys = {}
-    local seen = {}
-    for _, row in ipairs(data) do
-      if type(row) == "table" then
-        for k, _ in pairs(row) do
-          if not seen[k] then
-            seen[k] = true
-            keys[#keys+1] = k
-          end
-        end
-      end
-    end
-    table.sort(keys)
-    if #keys == 0 then return end
-    local fh = io.open(dir .. "/raw/" .. filename_s .. ".csv", "w")
-    fh:write(table.concat(keys, ",") .. "\n")
-    for _, row in ipairs(data) do
-      if type(row) == "table" then
-        local vals = {}
-        for _, k in ipairs(keys) do
-          vals[#vals+1] = tostring(row[k] or "")
-        end
-        fh:write(table.concat(vals, ",") .. "\n")
-      else
-        local vals = {}
-        for _ in ipairs(keys) do vals[#vals+1] = tostring(row) end
-        fh:write(table.concat(vals, ",") .. "\n")
-      end
-    end
-    fh:close()
-  end
-
   function ctx:write_json(filename, data)
     local filename_s = tostring(filename)
     local fh = io.open(dir .. "/raw/" .. filename_s .. ".json", "w")
@@ -324,16 +289,6 @@ function M.create_run(config, bench_name)
       },
       results = ctx.results,
     })
-
-    local by_cat = {}
-    for _, r in ipairs(ctx.results) do
-      local cat = r._category or "uncategorized"
-      if not by_cat[cat] then by_cat[cat] = {} end
-      table.insert(by_cat[cat], r)
-    end
-    for cat, items in pairs(by_cat) do
-      self:write_csv(cat, items)
-    end
 
     local report_path = ctx:generate_report()
 

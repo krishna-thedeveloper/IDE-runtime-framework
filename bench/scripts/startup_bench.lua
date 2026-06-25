@@ -143,9 +143,6 @@ function M.run(opts)
       n = #results,
     })
 
-    ctx:write_csv(label .. "_wall", wall_vals)
-    ctx:write_csv(label .. "_startuptime", startup_vals)
-
     ctx:log(string.format("\n%s Stats (wall clock):", label))
     ctx:log(string.format("  avg=%.1f min=%d max=%d median=%d p95=%d p99=%d stddev=%.1f",
       wall_stats.avg, wall_stats.min, wall_stats.max, wall_stats.median, wall_stats.p95, wall_stats.p99, wall_stats.stddev))
