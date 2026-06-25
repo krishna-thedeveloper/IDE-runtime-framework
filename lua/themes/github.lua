@@ -1,9 +1,9 @@
 local variants = {
-    { name = "github-dark",               colorscheme = "github_dark",              is_light = false },
-    { name = "github-dark-dimmed",        colorscheme = "github_dark_dimmed",       is_light = false },
+    { name = "github-dark", colorscheme = "github_dark", is_light = false },
+    { name = "github-dark-dimmed", colorscheme = "github_dark_dimmed", is_light = false },
     { name = "github-dark-high-contrast", colorscheme = "github_dark_high_contrast", is_light = false },
-    { name = "github-light",              colorscheme = "github_light",             is_light = true  },
-    { name = "github-light-high-contrast", colorscheme = "github_light_high_contrast", is_light = true  },
+    { name = "github-light", colorscheme = "github_light", is_light = true },
+    { name = "github-light-high-contrast", colorscheme = "github_light_high_contrast", is_light = true },
 }
 
 local entries = {}
