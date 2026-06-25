@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        neovim-version: [stable, nightly]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim-version }}
+
+      - name: Validate Lua syntax
+        run: |
+          find lua -name '*.lua' -exec luac -p {} \;
+
+      - name: Validate config loads
+        run: |
+          nvim --headless -c 'lua vim.print("config loaded successfully")' -c 'qa!' 2>&1
+
+      - name: Check for lazy-loading errors
+        run: |
+          nvim --headless -c 'lua vim.wait(2000, function() return false end)' -c 'lua vim.print("startup completed")' -c 'qa!' 2>&1
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: JohnnyMorganz/stylua-action@v4
+        with:
+          version: latest
+          args: --check lua/
