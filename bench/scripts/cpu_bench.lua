@@ -5,7 +5,7 @@ local M = {}
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "cpu_profiling" })
+  local ctx = rm.create_run({ benchmark = "cpu_profiling" }, "cpu")
   ctx:open_log("cpu_profiling")
 
   local proj_dir = rm.bench_dir .. "/projects"

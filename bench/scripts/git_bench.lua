@@ -46,7 +46,7 @@ end
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "git" })
+  local ctx = rm.create_run({ benchmark = "git" }, "git")
   ctx:open_log("git")
 
   local tmp_dir = rm.bench_dir .. "/tmp_git_bench"

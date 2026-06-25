@@ -53,7 +53,7 @@ end
 function M.run(opts)
   opts = opts or {}
   vim.cmd("set noswapfile shortmess+=F")
-  local ctx = rm.create_run({ benchmark = "ts_backend_comparison" })
+  local ctx = rm.create_run({ benchmark = "ts_backend_comparison" }, "ts_backend")
   ctx:open_log("ts_backend_comparison")
 
   local proj_dir = rm.bench_dir .. "/projects"

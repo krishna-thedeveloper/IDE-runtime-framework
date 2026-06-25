@@ -13,7 +13,7 @@ function M.run(opts)
   local ctx = rm.create_run({
     benchmark = "stability",
     idle_minutes = idle_minutes,
-  })
+  }, "stability")
   ctx:open_log("stability")
 
   local proj_dir = rm.bench_dir .. "/projects"

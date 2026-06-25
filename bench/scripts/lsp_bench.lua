@@ -11,7 +11,7 @@ local LSP_SERVERS = { "ts_ls", "lua_ls", "jsonls", "yamlls" }
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "lsp", servers = LSP_SERVERS })
+  local ctx = rm.create_run({ benchmark = "lsp", servers = LSP_SERVERS }, "lsp")
   ctx:open_log("lsp")
 
   local proj_dir = rm.bench_dir .. "/projects"

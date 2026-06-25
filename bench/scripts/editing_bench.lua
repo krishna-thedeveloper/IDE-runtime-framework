@@ -14,7 +14,7 @@ end
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "editing" })
+  local ctx = rm.create_run({ benchmark = "editing" }, "editing")
   ctx:open_log("editing")
 
   local tmp_dir = rm.bench_dir .. "/tmp_edit_bench"

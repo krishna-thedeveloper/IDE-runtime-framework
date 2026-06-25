@@ -67,7 +67,7 @@ end
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "treesitter" })
+  local ctx = rm.create_run({ benchmark = "treesitter" }, "treesitter")
   ctx:open_log("treesitter")
 
   local tmp_dir = rm.bench_dir .. "/tmp_ts_bench"

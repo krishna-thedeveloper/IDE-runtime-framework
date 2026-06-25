@@ -50,7 +50,7 @@ function M.run(opts)
   local cold_n = opts.cold or 10
   local nvim_bin = "nvim"
 
-  local ctx = rm.create_run({ benchmark = "plugin_attribution", cold = cold_n })
+  local ctx = rm.create_run({ benchmark = "plugin_attribution", cold = cold_n }, "plugin_attribution")
   ctx:open_log("plugin_attribution")
 
   ctx:log("=== Plugin Load Attribution Benchmark ===")

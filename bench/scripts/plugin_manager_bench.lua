@@ -15,7 +15,7 @@ function M.run(opts)
   local managers = opts.managers or MANAGERS
   local iterations = opts.iterations or 3
 
-  local ctx = rm.create_run({ benchmark = "plugin_manager", managers = managers, iterations = iterations })
+  local ctx = rm.create_run({ benchmark = "plugin_manager", managers = managers, iterations = iterations }, "plugin_manager")
   ctx:open_log("plugin_managers")
 
   ctx:log("=== Plugin Manager Benchmark ===")

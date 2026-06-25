@@ -105,7 +105,7 @@ end
 function M.run(opts)
   opts = opts or {}
   local switch_cycles = opts.cycles or 50
-  local ctx = rm.create_run({ benchmark = "engine_switching", switch_cycles = switch_cycles })
+  local ctx = rm.create_run({ benchmark = "engine_switching", switch_cycles = switch_cycles }, "switching")
   ctx:open_log("engine_switching")
 
   local proj_dir = rm.bench_dir .. "/projects"

@@ -14,7 +14,7 @@ function M.run(opts)
   local hot_n = opts.hot or 10
   local nvim_bin = "nvim"
 
-  local ctx = rm.create_run({ benchmark = "startup", engine = engine, cold = cold_n, warm = warm_n, hot = hot_n })
+  local ctx = rm.create_run({ benchmark = "startup", engine = engine, cold = cold_n, warm = warm_n, hot = hot_n }, "startup")
   ctx:open_log("startup_" .. engine)
 
   ctx:log("=== Startup Benchmark ===")

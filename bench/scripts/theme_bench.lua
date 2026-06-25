@@ -19,7 +19,7 @@ local THEME_MAP = {
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "themes" })
+  local ctx = rm.create_run({ benchmark = "themes" }, "theme")
   ctx:open_log("themes")
 
   ctx:log("=== Theme Benchmark ===")

@@ -9,7 +9,7 @@ local M = {}
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "completion" })
+  local ctx = rm.create_run({ benchmark = "completion" }, "completion")
   ctx:open_log("completion")
 
   local proj_dir = rm.bench_dir .. "/projects"

@@ -8,7 +8,7 @@ local M = {}
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "buffer_window" })
+  local ctx = rm.create_run({ benchmark = "buffer_window" }, "buffer")
   ctx:open_log("buffer_window")
 
   local proj_dir = rm.bench_dir .. "/projects"
