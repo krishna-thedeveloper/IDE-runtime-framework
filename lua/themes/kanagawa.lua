@@ -1,7 +1,7 @@
 local variants = {
-    { name = "kanagawa",        style = "wave",  is_light = false },
+    { name = "kanagawa", style = "wave", is_light = false },
     { name = "kanagawa-dragon", style = "dragon", is_light = false },
-    { name = "kanagawa-lotus",  style = "lotus",  is_light = true  },
+    { name = "kanagawa-lotus", style = "lotus", is_light = true },
 }
 
 local function make_opts(v)

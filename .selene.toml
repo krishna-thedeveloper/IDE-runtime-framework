@@ -1,0 +1,14 @@
+[unused_variable]
+severity = "warn"
+
+[unused_import]
+severity = "warn"
+
+[nil_else_if]
+severity = "warn"
+
+[global_usage]
+severity = "allow"
+
+[shadow]
+severity = "warn"

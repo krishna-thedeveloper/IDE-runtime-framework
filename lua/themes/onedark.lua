@@ -12,11 +12,15 @@ return {
                 ending_tildes = false,
                 code_style = {
                     comments = "italic",
-                    keywords = "none", functions = "none",
-                    strings = "none", variables = "none",
+                    keywords = "none",
+                    functions = "none",
+                    strings = "none",
+                    variables = "none",
                 },
                 diagnostics = {
-                    darker = true, undercurl = true, background = true,
+                    darker = true,
+                    undercurl = true,
+                    background = true,
                 },
                 highlights = {
                     NormalFloat = { bg = "#282c34" },

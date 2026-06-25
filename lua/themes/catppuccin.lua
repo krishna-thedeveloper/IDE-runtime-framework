@@ -1,8 +1,8 @@
 local variants = {
-    { name = "catppuccin",          flavour = "mocha",     is_light = false },
+    { name = "catppuccin", flavour = "mocha", is_light = false },
     { name = "catppuccin-macchiato", flavour = "macchiato", is_light = false },
-    { name = "catppuccin-frappe",   flavour = "frappe",    is_light = false },
-    { name = "catppuccin-latte",    flavour = "latte",     is_light = true  },
+    { name = "catppuccin-frappe", flavour = "frappe", is_light = false },
+    { name = "catppuccin-latte", flavour = "latte", is_light = true },
 }
 
 local entries = {}

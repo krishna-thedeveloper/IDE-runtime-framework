@@ -1,7 +1,7 @@
 local variants = {
-    { name = "everforest",       background = "hard",   is_light = false },
-    { name = "everforest-soft",  background = "soft",   is_light = false },
-    { name = "everforest-light", background = "medium", is_light = true  },
+    { name = "everforest", background = "hard", is_light = false },
+    { name = "everforest-soft", background = "soft", is_light = false },
+    { name = "everforest-light", background = "medium", is_light = true },
 }
 
 local entries = {}

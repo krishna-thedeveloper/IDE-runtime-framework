@@ -4,8 +4,7 @@
 -- Examples:
 --   vim.opt.tabstop = 2
 --   vim.opt.shiftwidth = 2
---   require("managers.theme").load_theme("tokyonight-night")
+--   require("managers.theme").apply("tokyonight-night")
 --   vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Diagnostics" })
 --
--- Return an empty table to satisfy Lazy.nvim's plugin spec format.
-return {}
+-- No return value needed — this file is loaded directly via require(), not as a plugin spec.

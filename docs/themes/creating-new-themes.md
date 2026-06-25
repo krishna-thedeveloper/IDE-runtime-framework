@@ -78,20 +78,13 @@ end
 
 ## Updating the Light Variants Table
 
-If your theme has light variants, add them to `lua/themes/init.lua`:
-
-```lua
-light_variants = {
-  -- ... existing variants
-  ["dayfox"] = true,
-}
-```
-
-This enables `M.is_light_variant()` to work correctly, which is used by some theme configs.
+Set the `is_light` flag on each variant entry in your theme file.
+This is used by theme setup functions to adjust options like
+`transparent_background` for light vs dark variants.
 
 ## Testing Your Theme
 
-1. Switch to it: `<leader>st` or `:lua require("themes").load_theme("nightfox")`.
+1. Switch to it: `<leader>st` or `:lua require("managers.theme").apply("nightfox")`.
 2. Verify the statusline colors adapt correctly (palette auto-extracts).
 3. Test switching to another theme and back.
 4. Verify plugin highlights (Telescope, WhichKey, BufferLine, etc.) are preserved.

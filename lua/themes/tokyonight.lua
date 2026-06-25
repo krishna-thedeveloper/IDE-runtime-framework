@@ -5,10 +5,10 @@ local function on_highlights(hl, c)
 end
 
 local variants = {
-    { name = "tokyonight",       style = "night", sidebars_floats = "dark",  is_light = false },
-    { name = "tokyonight-storm", style = "storm", sidebars_floats = "dark",  is_light = false },
-    { name = "tokyonight-moon",  style = "moon",  sidebars_floats = "dark",  is_light = false },
-    { name = "tokyonight-day",   style = "day",   sidebars_floats = "light", is_light = true  },
+    { name = "tokyonight", style = "night", sidebars_floats = "dark", is_light = false },
+    { name = "tokyonight-storm", style = "storm", sidebars_floats = "dark", is_light = false },
+    { name = "tokyonight-moon", style = "moon", sidebars_floats = "dark", is_light = false },
+    { name = "tokyonight-day", style = "day", sidebars_floats = "light", is_light = true },
 }
 
 local entries = {}

@@ -97,7 +97,7 @@ init.lua
 | Density Profiles | `lua/managers/density.lua` | UI density presets (full / compact / minimal) |
 | Focus Mode | `lua/managers/focus.lua` | Minimal editing mode |
 | Notification Presets | `lua/managers/notifications.lua` | Rich / Minimal / Native notification levels |
-| Theme System | `lua/themes/init.lua` | Theme discovery, switching, palette extraction |
+| Theme System | `lua/managers/theme.lua` | Theme discovery, switching, palette extraction |
 | Statusline Layouts | `lua/statusline/init.lua` | Composable Heirline layouts per density |
 
 ---

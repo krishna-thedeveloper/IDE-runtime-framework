@@ -45,9 +45,9 @@
 
 ### Theme switch breaks plugin highlights
 
-**Cause:** A plugin prefix is missing from `PLUGIN_PREFIXES` in `lua/themes/init.lua`.
+**Cause:** A plugin prefix is missing from `PLUGIN_PREFIXES` in `lua/managers/theme.lua`.
 
-**Solution:** Add the plugin's highlight prefix to the list:
+**Solution:** Add the plugin's highlight prefix to the list in `lua/managers/theme.lua`:
 
 ```lua
 local PLUGIN_PREFIXES = {
