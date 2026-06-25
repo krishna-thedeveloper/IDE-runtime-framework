@@ -85,7 +85,7 @@ jobs:
           latest=$(ls -dt nvim/bench/results/historical/*/ 2>/dev/null | head -1)
           if [ -n "$latest" ]; then
             run_name=$(basename "$latest")
-            report_count=$(ls "$latest"/reports/*.md 2>/dev/null | wc -l)
+            report_count=$(find "$latest" -name "*.md" -path "*/reports/*" 2>/dev/null | wc -l)
             echo "message=bench: update results ($run_name, $report_count reports)" >> $GITHUB_OUTPUT
           else
             echo "message=bench: initialize result tracking" >> $GITHUB_OUTPUT
@@ -125,13 +125,13 @@ jobs:
 
       - name: Generate workflow summary
         run: |
-          latest=$(ls -dt nvim/bench/results/reports/*.md 2>/dev/null | head -1)
-          if [ -n "$latest" ]; then
+          latest_summary=$(ls -dt nvim/bench/results/historical/*/summary.md 2>/dev/null | head -1)
+          if [ -n "$latest_summary" ]; then
             {
               echo "## Benchmark Results"
               echo ""
-              cat "$latest"
+              cat "$latest_summary"
             } >> $GITHUB_STEP_SUMMARY
           else
-            echo "No benchmark reports found" >> $GITHUB_STEP_SUMMARY
+            echo "No benchmark summary found" >> $GITHUB_STEP_SUMMARY
           fi
