@@ -113,10 +113,14 @@ function M.create_run(config, bench_name)
     if not data or #data == 0 then return end
     local filename_s = tostring(filename)
     local keys = {}
+    local seen = {}
     for _, row in ipairs(data) do
       if type(row) == "table" then
         for k, _ in pairs(row) do
-          if not keys[k] then keys[#keys+1] = k end
+          if not seen[k] then
+            seen[k] = true
+            keys[#keys+1] = k
+          end
         end
       end
     end
@@ -176,17 +180,122 @@ function M.create_run(config, bench_name)
     for _, cat in ipairs(cat_names) do
       add(string.format("## %s", cat:gsub("^%l", string.upper):gsub("_", " ")))
       add("")
-      add("| Name | Metric | Value |")
-      add("|------|--------|-------|")
+
+      -- Separate stats records (have _name matching *_stats or containing aggregated data)
+      local stats_records = {}
+      local data_records = {}
       for _, r in ipairs(categories[cat]) do
-        for k, v in pairs(r) do
-          if not k:match("^_") then
-            local val_str = type(v) == "number" and string.format("%.2f", v) or tostring(v)
-            add(string.format("| %s | %s | %s |", r._name or "", k, val_str))
-          end
+        local name = r._name or ""
+        if name:match("_stats$") or name:match("^(cold|warm|hot)$") or name:match("overview") or
+           r.n ~= nil or r.avg ~= nil then
+          table.insert(stats_records, r)
+        else
+          table.insert(data_records, r)
         end
       end
-      add("")
+
+      -- Stats table
+      if #stats_records > 0 then
+        add("### Summary Statistics")
+        add("")
+        -- Collect all numeric metrics across all stats records
+        local metrics = {}
+        for _, r in ipairs(stats_records) do
+          for k, v in pairs(r) do
+            if not k:match("^_") and type(v) == "number" then
+              if not metrics[k] then metrics[k] = {} end
+              metrics[k][r._name] = v
+            end
+          end
+        end
+
+        local metric_names = {}
+        for k, _ in pairs(metrics) do metric_names[#metric_names+1] = k end
+        table.sort(metric_names)
+
+        -- Header row
+        local header = "| Metric |"
+        local sep = "|--------|"
+        local stat_names = {}
+        for _, r in ipairs(stats_records) do
+          local sn = r._name:gsub("_stats$", "")
+          table.insert(stat_names, sn)
+          header = header .. " " .. sn:gsub("^%l", string.upper) .. " |"
+          sep = sep .. "--------|"
+        end
+        add(header)
+        add(sep)
+
+        for _, mk in ipairs(metric_names) do
+          local row = "| " .. mk .. " |"
+          for _, sn in ipairs(stat_names) do
+            local val = metrics[mk][sn]
+            if val ~= nil then
+              row = row .. " " .. string.format("%.2f", val) .. " |"
+            else
+              row = row .. " — |"
+            end
+          end
+          add(row)
+        end
+        add("")
+      end
+
+      -- Individual data records in a compact table
+      if #data_records > 0 then
+        add("### Individual Runs")
+        add("")
+        local all_keys = {}
+        local seen_k = {}
+        for _, r in ipairs(data_records) do
+          for k, v in pairs(r) do
+            if not k:match("^_") and not seen_k[k] then
+              seen_k[k] = true
+              all_keys[#all_keys+1] = k
+            end
+          end
+        end
+        table.sort(all_keys)
+
+        local header = "| Run |"
+        local sep = "|-----|"
+        for _, k in ipairs(all_keys) do
+          header = header .. " " .. k .. " |"
+          sep = sep .. "--------|"
+        end
+        add(header)
+        add(sep)
+
+        for _, r in ipairs(data_records) do
+          local row = "| " .. (r._name or "") .. " |"
+          for _, k in ipairs(all_keys) do
+            local v = r[k]
+            if v ~= nil then
+              local vs = type(v) == "number" and string.format("%.2f", v) or tostring(v)
+              row = row .. " " .. vs .. " |"
+            else
+              row = row .. " — |"
+            end
+          end
+          add(row)
+        end
+        add("")
+      end
+
+      -- Fallback: if we couldn't classify (e.g. mixed), show flat table
+      if #stats_records == 0 and #data_records == 0 then
+        add("| Name | Metric | Value |")
+        add("|------|--------|-------|")
+        for _, r in ipairs(categories[cat]) do
+          for k, v in pairs(r) do
+            if not k:match("^_") then
+              local val_str = type(v) == "number" and string.format("%.2f", v) or tostring(v)
+              add(string.format("| %s | %s | %s |", r._name or "", k, val_str))
+            end
+          end
+        end
+        add("")
+      end
     end
 
     add("---")
@@ -280,12 +389,35 @@ function M.load_run(timestamp)
     if ok and data then return data end
   end
 
-  -- Fallback: aggregate from sub-benchmarks
+  -- Fallback: aggregate from sub-benchmarks (new format: <ts>/<bench>/raw/all_results.json)
   local benchmarks = {}
   local all_results = {}
   local total_duration = 0
-  local total_count = 0
+  total_count = 0
   local configs = {}
+
+  -- Also check old format: <ts>/raw/all_results.json (pre-subfolder layout)
+  local old_path = run_dir .. "/raw/all_results.json"
+  local old_fh = io.open(old_path, "r")
+  if old_fh then
+    local content = old_fh:read("*a")
+    old_fh:close()
+    local ok, old_data = pcall(vim.fn.json_decode, content)
+    if ok and old_data then
+      local bn = (old_data.run and old_data.run.bench_name) or "benchmark"
+      benchmarks[bn] = old_data
+      if old_data.results then
+        for _, r in ipairs(old_data.results) do
+          table.insert(all_results, r)
+        end
+      end
+      total_count = total_count + (old_data.run and old_data.run.result_count or 0)
+      total_duration = math.max(total_duration, old_data.run and old_data.run.duration_seconds or 0)
+      if old_data.run and old_data.run.config then
+        configs[#configs+1] = old_data.run.config
+      end
+    end
+  end
 
   local subdirs = vim.fn.globpath(run_dir, "*/raw/all_results.json", false, true)
   for _, path in ipairs(subdirs) do
@@ -511,16 +643,16 @@ function M.merge_run_results(timestamp)
   end
   add("")
 
-  add("## Dashboard")
-  add("")
   if run_data.benchmarks and run_data.benchmarks.dashboard then
+    add("## Dashboard")
+    add("")
     add("[View Dashboard](dashboard/reports/benchmark-report.md)")
     add("")
   end
 
-  add("## Comparison")
-  add("")
   if run_data.benchmarks and run_data.benchmarks.comparison then
+    add("## Comparison")
+    add("")
     add("[View Comparison](comparison/reports/benchmark-report.md)")
     add("")
   end
