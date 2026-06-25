@@ -72,8 +72,8 @@ Check if events are being emitted correctly:
 ### Theme System
 
 ```lua
-:lua print(vim.inspect(require("themes").themes))
-:lua print(require("themes").get_active_theme())
+:lua print(vim.inspect(require("managers.theme")._order))
+:lua print(require("managers.theme").get_active_name())
 ```
 
 ## Debugging with Logs
@@ -99,7 +99,7 @@ f:close()
 | Keymap not working | `:verbose nmap <keys>`, check `desc` conflict |
 | Plugin not loaded | `:Lazy`, check if trigger event occurred |
 | LSP not attaching | `:LspInfo`, check server installation via `:Mason` |
-| Highlights broken after theme switch | Check `PLUGIN_PREFIXES` in `lua/themes/init.lua` |
+| Highlights broken after theme switch | Check `PLUGIN_PREFIXES` in `lua/managers/theme.lua` |
 | Manager not switching | Check `state/<name>.txt` file, check adapter registration |
 | Formatting not happening | `:ConformInfo`, check formatter availability |
 | Linting not happening | Check lint configuration and linter availability |

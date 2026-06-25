@@ -14,7 +14,7 @@ All stored in `vim.fn.stdpath("state")` (typically `~/.local/state/nvim/`):
 
 | File | Manager | Contents |
 |---|---|---|
-| `theme.txt` | `lua/themes/init.lua` | Active theme name (e.g., `catppuccin`) |
+| `theme.txt` | `lua/managers/theme.lua` | Active theme name (e.g., `catppuccin`) |
 | `density.txt` | `lua/managers/density.lua` | Density profile name (`full`, `compact`, `minimal`) |
 | `focus.txt` | `lua/managers/focus.lua` | Focus mode state (`0` or `1`) |
 | `notifications.txt` | `lua/managers/notifications.lua` | Notification preset (`rich`, `minimal`, `native`) |

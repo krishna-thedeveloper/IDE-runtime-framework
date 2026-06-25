@@ -9,7 +9,7 @@ init.lua
   → core/options.lua       (Neovim options + leaders)
   → core/keymaps.lua       (core keymaps, loads managers)
   → core/autocmds.lua      (global autocommands)
-  → config/lazy.lua        (Lazy.nvim bootstrap + plugin loading)
+  → config/plugin_manager.lua  (Lazy.nvim bootstrap + plugin loading)
 ```
 
 See [Startup Flow](../architecture/startup-flow.md) for the full sequence.

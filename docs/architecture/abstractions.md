@@ -135,7 +135,7 @@ deltas = {
 
 ---
 
-## 6. Theme System (`lua/themes/init.lua`)
+## 6. Theme System (`lua/managers/theme.lua`)
 
 Auto-discovers themes with variant support, plugin highlight preservation, and palette extraction.
 

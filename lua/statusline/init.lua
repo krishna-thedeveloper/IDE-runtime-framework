@@ -19,18 +19,42 @@ local ViMode = {
             ["!"] = "SHELL",
         },
         mode_colors = {
-            n = function() return palette.green end,
-            i = function() return palette.blue end,
-            v = function() return palette.purple end,
-            V = function() return palette.purple end,
-            ["\22"] = function() return palette.purple end,
-            c = function() return palette.yellow end,
-            s = function() return palette.cyan end,
-            S = function() return palette.cyan end,
-            t = function() return palette.red end,
-            R = function() return palette.yellow end,
-            r = function() return palette.cyan end,
-            ["!"] = function() return palette.red end,
+            n = function()
+                return palette.green
+            end,
+            i = function()
+                return palette.blue
+            end,
+            v = function()
+                return palette.purple
+            end,
+            V = function()
+                return palette.purple
+            end,
+            ["\22"] = function()
+                return palette.purple
+            end,
+            c = function()
+                return palette.yellow
+            end,
+            s = function()
+                return palette.cyan
+            end,
+            S = function()
+                return palette.cyan
+            end,
+            t = function()
+                return palette.red
+            end,
+            R = function()
+                return palette.yellow
+            end,
+            r = function()
+                return palette.cyan
+            end,
+            ["!"] = function()
+                return palette.red
+            end,
         },
     },
     provider = function(self)
@@ -74,7 +98,9 @@ local FileName = {
         end
         return vim.fn.fnamemodify(name, ":~:.")
     end,
-    hl = function() return { fg = palette.white } end,
+    hl = function()
+        return { fg = palette.white }
+    end,
 }
 
 local FileModified = {
@@ -82,7 +108,9 @@ local FileModified = {
         return vim.bo.modified
     end,
     provider = "  ",
-    hl = function() return { fg = palette.blue } end,
+    hl = function()
+        return { fg = palette.blue }
+    end,
 }
 
 local FileReadOnly = {
@@ -90,7 +118,9 @@ local FileReadOnly = {
         return vim.bo.readonly or not vim.bo.modifiable
     end,
     provider = "  ",
-    hl = function() return { fg = palette.red } end,
+    hl = function()
+        return { fg = palette.red }
+    end,
 }
 
 local FileNameBlock = {
@@ -101,7 +131,9 @@ local FileNameBlock = {
 }
 
 local GitBranch = {
-    condition = function() return require("heirline.conditions").is_git_repo end,
+    condition = function()
+        return require("heirline.conditions").is_git_repo
+    end,
     init = function(self)
         local gitsigns = package.loaded.gitsigns
         if gitsigns then
@@ -117,11 +149,15 @@ local GitBranch = {
         end
         return ""
     end,
-    hl = function() return { fg = palette.purple } end,
+    hl = function()
+        return { fg = palette.purple }
+    end,
 }
 
 local GitChanges = {
-    condition = function() return require("heirline.conditions").is_git_repo end,
+    condition = function()
+        return require("heirline.conditions").is_git_repo
+    end,
     init = function(self)
         local gitsigns = package.loaded.gitsigns
         if gitsigns then
@@ -147,7 +183,9 @@ local GitChanges = {
         end
         return ""
     end,
-    hl = function() return { fg = palette.gray } end,
+    hl = function()
+        return { fg = palette.gray }
+    end,
 }
 
 local Diagnostics = {
@@ -155,42 +193,64 @@ local Diagnostics = {
         return #vim.diagnostic.get(0) > 0
     end,
     init = function(self)
-        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+        self.errors = 0
+        self.warnings = 0
+        self.hints = 0
+        for _, d in ipairs(vim.diagnostic.get(0)) do
+            if d.severity == vim.diagnostic.severity.ERROR then
+                self.errors = self.errors + 1
+            elseif d.severity == vim.diagnostic.severity.WARN then
+                self.warnings = self.warnings + 1
+            elseif d.severity == vim.diagnostic.severity.HINT then
+                self.hints = self.hints + 1
+            end
+        end
     end,
     {
         provider = function(self)
             return self.errors > 0 and (" " .. self.errors .. " ") or ""
         end,
-        hl = function() return { fg = palette.red } end,
+        hl = function()
+            return { fg = palette.red }
+        end,
     },
     {
         provider = function(self)
             return self.warnings > 0 and (" " .. self.warnings .. " ") or ""
         end,
-        hl = function() return { fg = palette.yellow } end,
+        hl = function()
+            return { fg = palette.yellow }
+        end,
     },
     {
         provider = function(self)
             return self.hints > 0 and (" " .. self.hints .. " ") or ""
         end,
-        hl = function() return { fg = palette.cyan } end,
+        hl = function()
+            return { fg = palette.cyan }
+        end,
     },
     update = { "DiagnosticChanged", "BufEnter" },
 }
 
 local LSPActive = {
-    condition = function() return require("heirline.conditions").lsp_attached end,
+    condition = function()
+        return require("heirline.conditions").lsp_attached
+    end,
     update = { "LspAttach", "LspDetach" },
-    provider = function()
+    init = function(self)
         local clients = vim.lsp.get_clients({ bufnr = 0 })
         local names = vim.tbl_map(function(c)
             return c.name
         end, clients)
-        return " 󰒋 " .. table.concat(names, ",") .. " "
+        self._names = table.concat(names, ",")
     end,
-    hl = function() return { fg = palette.blue } end,
+    provider = function(self)
+        return self._names and (" 󰒋 " .. self._names .. " ") or ""
+    end,
+    hl = function()
+        return { fg = palette.blue }
+    end,
 }
 
 local FileEncoding = {
@@ -198,17 +258,23 @@ local FileEncoding = {
         local enc = vim.bo.fileencoding or vim.o.encoding
         return " " .. (enc and enc:upper() or "UTF-8") .. " "
     end,
-    hl = function() return { fg = palette.gray } end,
+    hl = function()
+        return { fg = palette.gray }
+    end,
 }
 
 local Ruler = {
     provider = "%l:%c",
-    hl = function() return { fg = palette.white } end,
+    hl = function()
+        return { fg = palette.white }
+    end,
 }
 
 local Scrollbar = {
     provider = " %p%% ",
-    hl = function() return { fg = palette.gray } end,
+    hl = function()
+        return { fg = palette.gray }
+    end,
 }
 
 local Align = { provider = "%=" }
@@ -247,18 +313,27 @@ end
 local layouts = {
     full = {
         active = {
-            "ViMode", "FileNameBlock", "Align",
-            "LSPActive", "Diagnostics",
-            "GitBranch", "GitChanges",
-            "FileEncoding", "Ruler", "Scrollbar",
+            "ViMode",
+            "FileNameBlock",
+            "Align",
+            "LSPActive",
+            "Diagnostics",
+            "GitBranch",
+            "GitChanges",
+            "FileEncoding",
+            "Ruler",
+            "Scrollbar",
         },
         special = { "FileNameBlock", "Align" },
         inactive = { "FileNameBlock", "Align" },
     },
     compact = {
         active = {
-            "FileNameBlock", "Align",
-            "Diagnostics", "Ruler", "Scrollbar",
+            "FileNameBlock",
+            "Align",
+            "Diagnostics",
+            "Ruler",
+            "Scrollbar",
         },
         special = { "FileNameBlock", "Align" },
         inactive = { "FileNameBlock", "Align" },
@@ -288,7 +363,12 @@ function M.set_layout(name)
     end)
     local inactive = prepend_condition(
         vim.list_extend(make_layout(layout.inactive or layout.active), {
-            { provider = " Inactive ", hl = function() return { fg = palette.gray } end },
+            {
+                provider = " Inactive ",
+                hl = function()
+                    return { fg = palette.gray }
+                end,
+            },
         }),
         cond.is_not_active
     )

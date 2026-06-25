@@ -1,0 +1,137 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bench-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmarks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: nvim
+
+      - uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: bench-data
+          path: bench-data
+
+      - name: Restore historical data
+        run: |
+          mkdir -p nvim/bench/results
+          if [ -d bench-data/bench/results/historical ]; then
+            cp -r bench-data/bench/results/historical nvim/bench/results/
+            count=$(ls nvim/bench/results/historical | wc -l)
+            echo "Restored $count historical runs"
+          else
+            echo "No historical data found (first run)"
+          fi
+
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+
+      - name: Cache lazy.nvim plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/nvim/lazy
+          key: lazy-plugins-${{ hashFiles('nvim/lazy-lock.json') }}
+          restore-keys: lazy-plugins-
+
+      - name: Cache mason LSP servers
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/nvim/mason
+          key: mason-packages-${{ hashFiles('nvim/lua/plugins/lsp/mason.lua') }}
+          restore-keys: mason-packages-
+
+      - name: Symlink config so Neovim finds init.lua
+        run: |
+          mkdir -p ~/.config
+          ln -sfn $PWD/nvim ~/.config/nvim
+
+      - name: Install LSP servers for benchmarks
+        run: npm install -g typescript typescript-language-server
+
+      - name: Prime plugin cache
+        run: |
+          nvim --headless -c 'lua vim.wait(120000, function() return require("lazy").stats().count ~= nil end)' -c 'qa!' 2>&1
+
+      - name: Generate test projects
+        run: make bench-seed
+        working-directory: nvim
+
+      - name: Run full benchmarks
+        run: make bench-all
+        working-directory: nvim
+        env:
+          BENCH_ENGINE: ts_ls
+
+      - name: Generate commit message
+        id: commit_msg
+        run: |
+          latest=$(ls -dt nvim/bench/results/historical/*/ 2>/dev/null | head -1)
+          if [ -n "$latest" ]; then
+            run_name=$(basename "$latest")
+            report_count=$(find "$latest" -name "*.md" -path "*/reports/*" 2>/dev/null | wc -l)
+            echo "message=bench: update results ($run_name, $report_count reports)" >> $GITHUB_OUTPUT
+          else
+            echo "message=bench: initialize result tracking" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit results to bench-data branch
+        env:
+          GIT_REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        run: |
+          cd nvim
+          git remote set-url origin "$GIT_REPO_URL"
+          git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data 2>/dev/null || true
+          if ! git rev-parse --verify origin/bench-data >/dev/null 2>&1; then
+            git push origin HEAD:refs/heads/bench-data
+            git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data
+            echo "Created bench-data branch with initial results"
+            exit 0
+          fi
+          NEW_RUN_DIR=$(ls -d bench/results/historical/*/ 2>/dev/null | head -1)
+          git worktree add ../bench-data-tmp origin/bench-data
+          mkdir -p ../bench-data-tmp/bench/results/historical
+          if [ -n "$NEW_RUN_DIR" ]; then
+            cp -r "$NEW_RUN_DIR" ../bench-data-tmp/bench/results/historical/
+          fi
+          cd ../bench-data-tmp
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "${{ steps.commit_msg.outputs.message }}"
+            git push origin HEAD:refs/heads/bench-data
+          fi
+          cd ..
+          rm -rf bench-data-tmp
+
+      - name: Generate workflow summary
+        run: |
+          latest_summary=$(ls -dt nvim/bench/results/historical/*/summary.md 2>/dev/null | head -1)
+          if [ -n "$latest_summary" ]; then
+            {
+              echo "## Benchmark Results"
+              echo ""
+              cat "$latest_summary"
+            } >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No benchmark summary found" >> $GITHUB_STEP_SUMMARY
+          fi

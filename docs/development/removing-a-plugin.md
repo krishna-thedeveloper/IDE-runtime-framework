@@ -46,7 +46,7 @@ If the plugin filled a role covered by the adapter systems:
 
 1. Delete the theme file: `rm lua/themes/oldtheme.lua`.
 2. Remove from `lua/plugins/colorschemes.lua`.
-3. Remove from `light_variants` table in `lua/themes/init.lua` (if applicable).
+3. Remove the variant entry from the theme file (e.g., `lua/themes/catppuccin.lua`).
 
 ---
 

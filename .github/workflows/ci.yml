@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        neovim-version: [stable, nightly]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim-version }}
+
+      - name: Validate Lua syntax
+        run: |
+          nvim --headless -c 'lua local ok = true; for _, f in ipairs(vim.fn.glob("lua/**/*.lua", false, true)) do local r, e = loadfile(f); if not r then print("Syntax error: " .. f .. ": " .. e); ok = false end end; if not ok then vim.cmd("cquit") else print("All Lua files valid") end' -c 'qa!'
+
+      - name: Validate standalone modules
+        run: |
+          nvim --headless --cmd "set rtp+=." -c 'lua local modules = {"managers.state", "managers.events", "managers.base", "managers.discover"}; for _, m in ipairs(modules) do local r, e = pcall(require, m); if not r then print("FAIL: " .. m .. ": " .. e); vim.cmd("cquit") else print("OK: " .. m) end end' -c 'qa!'
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check stylua formatting
+        run: |
+          curl -sL https://github.com/JohnnyMorganz/StyLua/releases/download/v0.20.0/stylua-linux-x86_64.zip -o stylua.zip
+          unzip -q stylua.zip
+          chmod +x stylua
+          ./stylua --check lua/

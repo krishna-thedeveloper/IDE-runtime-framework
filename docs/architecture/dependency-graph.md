@@ -130,7 +130,7 @@ graph TD
 | Phase | Module | Depends On |
 |---|---|---|
 | 0 | `core/options.lua` | nothing |
-| 1 | `themes/init.lua` | nothing (discovers at runtime) |
+| 1 | `managers/theme.lua` | nothing (discovers at runtime) |
 | 2 | `managers/events.lua` | nothing |
 | 3 | `managers/density.lua` | events |
 | 4 | `managers/focus.lua` | events |
@@ -138,7 +138,7 @@ graph TD
 | 6 | `managers/completion/init.lua` | nothing (discovers adapters at runtime) |
 | 7 | `managers/picker/init.lua` | nothing (discovers adapters at runtime) |
 | 8 | `core/keymaps.lua` | themes, density, focus, notifications, completion, picker |
-| 9 | `config/lazy.lua` | nothing (bootstraps Lazy.nvim) |
+| 9 | `config/plugin_manager.lua` | nothing (bootstraps Lazy.nvim) |
 | 10+ | Plugin config functions | various managers |
 
 ## Circular Dependency Prevention

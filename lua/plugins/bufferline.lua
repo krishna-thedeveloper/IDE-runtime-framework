@@ -1,19 +1,18 @@
 return {
     url = "akinsho/bufferline.nvim",
-    version = "*",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     trigger = {
         lazy = true,
         keymap = {
-        { "<leader>bp", "<cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
-        { "<leader>bP", "<cmd>BufferLineGroupClose<CR>", desc = "Close Buffer Group" },
-        { "<leader>br", "<cmd>BufferLineCloseRight<CR>", desc = "Close Right" },
-        { "<leader>bl", "<cmd>BufferLineCloseLeft<CR>", desc = "Close Left" },
-        { "<leader>bd", "<cmd>bd<CR>", desc = "Delete Buffer" },
-        { "<S-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
-        { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
-        { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
-        { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
+            { "<leader>bp", "<cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
+            { "<leader>bP", "<cmd>BufferLineGroupClose<CR>", desc = "Close Buffer Group" },
+            { "<leader>br", "<cmd>BufferLineCloseRight<CR>", desc = "Close Right" },
+            { "<leader>bl", "<cmd>BufferLineCloseLeft<CR>", desc = "Close Left" },
+            { "<leader>bd", "<cmd>bd<CR>", desc = "Delete Buffer" },
+            { "<S-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
+            { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
+            { "[b", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
+            { "]b", "<cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
         },
     },
     config = function()

@@ -12,8 +12,8 @@ Defined in `lua/core/autocmds.lua`:
 
 | Event | Source | Purpose |
 |---|---|---|
-| `ColorScheme` | `lua/themes/init.lua:234` | Update palette after theme switch |
-| `ColorScheme` | `lua/themes/init.lua:239` | Re-link `NotifyBackground` |
+| `ColorScheme` | `lua/managers/theme.lua:191` | Update palette after theme switch |
+| `ColorScheme` | `lua/managers/theme.lua:195` | Re-link `NotifyBackground` |
 | `ColorScheme` | `lua/plugins/bufferline.lua:59` | Re-setup bufferline highlights |
 | `ColorScheme` | `lua/plugins/indent.lua:47` | Re-set indent-blankline highlights |
 

@@ -1,0 +1,12 @@
+# State files — user-specific, regenerated on demand
+language_engines.dat
+startup_tmp.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+*.swp
+*.swo
+*~

@@ -1,7 +1,7 @@
 local variants = {
-    { name = "gruvbox-material",        contrast = "medium", is_light = false },
-    { name = "gruvbox-material-soft",   contrast = "soft",   is_light = false },
-    { name = "gruvbox-material-hard",   contrast = "hard",   is_light = false },
+    { name = "gruvbox-material", contrast = "medium", is_light = false },
+    { name = "gruvbox-material-soft", contrast = "soft", is_light = false },
+    { name = "gruvbox-material-hard", contrast = "hard", is_light = false },
 }
 
 local entries = {}
