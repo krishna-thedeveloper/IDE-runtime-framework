@@ -28,22 +28,37 @@ function M.timestamp()
   return os.date("%Y-%m-%d_%H-%M-%S")
 end
 
-function M.run_dir()
-  return M.historical_dir .. "/" .. M.timestamp()
+--- Resolve the shared run timestamp (RUN_TIMESTAMP env var or fresh)
+function M.resolve_timestamp()
+  return os.getenv("RUN_TIMESTAMP") or M.timestamp()
+end
+
+function M.run_dir(bench_name)
+  local ts = M.resolve_timestamp()
+  local base = M.historical_dir .. "/" .. ts
+  if bench_name then
+    return base .. "/" .. bench_name
+  end
+  return base
+end
+
+function M.base_run_dir()
+  return M.historical_dir .. "/" .. M.resolve_timestamp()
 end
 
 --- Create a new benchmark run context
---- Returns a context object with methods for recording results
-function M.create_run(config)
+--- If bench_name is provided and RUN_TIMESTAMP is set, writes to a subfolder of the shared run dir
+function M.create_run(config, bench_name)
   config = config or {}
   M.init()
-  local dir = M.run_dir()
+  local dir = M.run_dir(bench_name)
   ensure_dir(dir)
   ensure_dir(dir .. "/raw")
   ensure_dir(dir .. "/reports")
 
   local ctx = {
     dir = dir,
+    bench_name = bench_name,
     start_time = os.time(),
     start_ns = vim.uv.hrtime(),
     config = config,
@@ -133,21 +148,20 @@ function M.create_run(config)
     fh:close()
   end
 
-  --- Generate markdown report for this run
+  --- Generate markdown report for this bench_name
   function ctx:generate_report()
     local report = {}
     local function add(l) report[#report+1] = l end
 
-    add(string.format("# Benchmark Report: %s", os.date("%Y-%m-%d %H:%M:%S")))
+    local bench_label = ctx.bench_name or "benchmark"
+    add(string.format("# %s Report", bench_label:gsub("^%l", string.upper):gsub("_", " ")))
     add("")
-    add("## Summary")
-    add(string.format("- **Date:** %s", os.date()))
-    add(string.format("- **Config:** %s", vim.inspect(config)))
-    add(string.format("- **Total results:** %d", #ctx.results))
-    add(string.format("- **Duration:** %.1fs", (vim.uv.hrtime() - ctx.start_ns) / 1e9))
+    add(string.format("**Date:** %s  \n", os.date()))
+    add(string.format("**Config:** `%s`  \n", vim.inspect(config)))
+    add(string.format("**Results:** %d data points  \n", #ctx.results))
+    add(string.format("**Duration:** %.1fs  \n", (vim.uv.hrtime() - ctx.start_ns) / 1e9))
     add("")
 
-    -- Group by category
     local categories = {}
     for _, r in ipairs(ctx.results) do
       local cat = r._category or "uncategorized"
@@ -155,15 +169,20 @@ function M.create_run(config)
       table.insert(categories[cat], r)
     end
 
-    for cat, items in pairs(categories) do
-      add(string.format("## %s", cat))
+    local cat_names = {}
+    for k, _ in pairs(categories) do cat_names[#cat_names+1] = k end
+    table.sort(cat_names)
+
+    for _, cat in ipairs(cat_names) do
+      add(string.format("## %s", cat:gsub("^%l", string.upper):gsub("_", " ")))
       add("")
       add("| Name | Metric | Value |")
       add("|------|--------|-------|")
-      for _, r in ipairs(items) do
+      for _, r in ipairs(categories[cat]) do
         for k, v in pairs(r) do
           if not k:match("^_") then
-            add(string.format("| %s | %s | %s |", r._name or "", k, tostring(v)))
+            local val_str = type(v) == "number" and string.format("%.2f", v) or tostring(v)
+            add(string.format("| %s | %s | %s |", r._name or "", k, val_str))
           end
         end
       end
@@ -186,10 +205,10 @@ function M.create_run(config)
     self:log(string.format("\n=== Run complete. Duration: %.1fs ===", elapsed))
     if ctx.log_fh then ctx.log_fh:close() end
 
-    -- Write combined JSON
     self:write_json("all_results", {
       run = {
         timestamp = os.date(),
+        bench_name = ctx.bench_name,
         config = config,
         duration_seconds = elapsed,
         result_count = #ctx.results,
@@ -197,7 +216,6 @@ function M.create_run(config)
       results = ctx.results,
     })
 
-    -- Write CSV per category
     local by_cat = {}
     for _, r in ipairs(ctx.results) do
       local cat = r._category or "uncategorized"
@@ -247,29 +265,279 @@ function M.stats(vals)
   }
 end
 
---- Load previous runs for comparison
-function M.load_historical_runs(limit)
-  limit = limit or 10
-  local runs = {}
-  local dirs = vim.fn.globpath(M.historical_dir, "*/raw/all_results.json", false, true)
-  table.sort(dirs)
-  for i = math.max(1, #dirs - limit + 1), #dirs do
-    local fh = io.open(dirs[i], "r")
-    if fh then
-      local ok, data = pcall(vim.fn.json_decode, fh:read("*a"))
-      fh:close()
+--- Collect all results from a single run directory (merges sub-benchmarks)
+function M.load_run(timestamp)
+  local run_dir = M.historical_dir .. "/" .. timestamp
+  if vim.fn.isdirectory(run_dir) ~= 1 then return nil end
+
+  -- Check for merged results.json first
+  local merged_path = run_dir .. "/results.json"
+  local fh = io.open(merged_path, "r")
+  if fh then
+    local content = fh:read("*a")
+    fh:close()
+    local ok, data = pcall(vim.fn.json_decode, content)
+    if ok and data then return data end
+  end
+
+  -- Fallback: aggregate from sub-benchmarks
+  local benchmarks = {}
+  local all_results = {}
+  local total_duration = 0
+  local total_count = 0
+  local configs = {}
+
+  local subdirs = vim.fn.globpath(run_dir, "*/raw/all_results.json", false, true)
+  for _, path in ipairs(subdirs) do
+    local fh2 = io.open(path, "r")
+    if fh2 then
+      local content = fh2:read("*a")
+      fh2:close()
+      local ok, data = pcall(vim.fn.json_decode, content)
       if ok and data then
-        table.insert(runs, data)
+        local bn = data.run and data.run.bench_name or vim.fn.fnamemodify(vim.fn.fnamemodify(path, ":h:h"), ":t")
+        benchmarks[bn] = data
+        if data.results then
+          for _, r in ipairs(data.results) do
+            table.insert(all_results, r)
+          end
+        end
+        total_count = total_count + (data.run and data.run.result_count or 0)
+        total_duration = math.max(total_duration, data.run and data.run.duration_seconds or 0)
+        if data.run and data.run.config then
+          configs[#configs+1] = data.run.config
+        end
       end
     end
   end
-  -- Reverse to get chronological order
+
+  return {
+    run = {
+      timestamp = timestamp,
+      duration_seconds = total_duration,
+      result_count = total_count,
+      configs = configs,
+    },
+    benchmarks = benchmarks,
+    results = all_results,
+  }
+end
+
+--- Load historical runs for comparison
+function M.load_historical_runs(limit)
+  limit = limit or 20
+  local runs = {}
+
+  -- List run directories (timestamp-named)
+  local dirs = vim.fn.globpath(M.historical_dir, "*", false, true)
+  table.sort(dirs)
+
+  for _, d in ipairs(dirs) do
+    local ts = vim.fn.fnamemodify(d, ":t")
+    if ts:match("%d%d%d%d%-%d%d%-%d%d_") then
+      local run_data = M.load_run(ts)
+      if run_data then
+        table.insert(runs, run_data)
+      end
+    end
+  end
+
+  -- Return last N runs
   local ordered = {}
-  for i = #runs, 1, -1 do ordered[#ordered+1] = runs[i] end
+  for i = math.max(1, #runs - limit + 1), #runs do
+    table.insert(ordered, runs[i])
+  end
   return ordered
 end
 
---- Compare current results against historical
+--- Merge all sub-benchmark results in a run into a single results.json + summary.md
+function M.merge_run_results(timestamp)
+  local run_dir = M.historical_dir .. "/" .. timestamp
+  if vim.fn.isdirectory(run_dir) ~= 1 then
+    io.write(string.format("Run directory not found: %s\n", run_dir))
+    return nil
+  end
+
+  local run_data = M.load_run(timestamp)
+  if not run_data then
+    io.write(string.format("No data found in: %s\n", run_dir))
+    return nil
+  end
+
+  -- Write merged results.json
+  local merged = {
+    timestamp = os.date(),
+    run_id = timestamp,
+    run = run_data.run,
+    benchmarks = run_data.benchmarks,
+    results = run_data.results,
+  }
+  local json_path = run_dir .. "/results.json"
+  local fh = io.open(json_path, "w")
+  local ok, encoded = pcall(vim.fn.json_encode, merged)
+  fh:write(ok and encoded or "{}")
+  fh:close()
+  io.write(string.format("Merged results: %s (%d total results)\n", json_path, #run_data.results))
+
+  -- Generate summary.md
+  local summary = {}
+  local function add(l) summary[#summary+1] = l end
+
+  add(string.format("# Benchmark Summary — %s", timestamp))
+  add("")
+  add(string.format("**Generated:** %s  \n", os.date()))
+  local bn_count = 0
+  for _ in pairs(run_data.benchmarks or {}) do bn_count = bn_count + 1 end
+  add(string.format("**Benchmarks:** %d  \n", bn_count))
+  add("")
+
+  add(string.format("**Total data points:** %d  \n", #run_data.results))
+  add(string.format("**Duration:** %.1fs  \n", run_data.run and run_data.run.duration_seconds or 0))
+  add("")
+
+  -- Health score
+  local health = 100
+  local health_notes = {}
+
+  -- Find key metrics
+  local function find_result(cat, name)
+    for _, r in ipairs(run_data.results) do
+      if r._category == cat and r._name == name then return r end
+    end
+    return nil
+  end
+
+  local cold_start = find_result("startup_stats", "cold")
+  if cold_start and cold_start.wall_median then
+    if cold_start.wall_median > 2000 then health = health - 20; health_notes[#health_notes+1] = "Cold startup > 2s" end
+    if cold_start.wall_median > 1000 then health = health - 10; health_notes[#health_notes+1] = "Cold startup > 1s" end
+  end
+
+  local multi_lsp = find_result("lsp_multi", "all_servers")
+  if multi_lsp and multi_lsp.grand_rss_mb then
+    if multi_lsp.grand_rss_mb > 1000 then health = health - 20; health_notes[#health_notes+1] = "Memory > 1GB" end
+    if multi_lsp.grand_rss_mb > 500 then health = health - 10; health_notes[#health_notes+1] = "Memory > 500MB" end
+  end
+
+  local ts_attach = find_result("lsp_attach", "ts_ls")
+  if ts_attach and ts_attach.ms then
+    if ts_attach.ms > 10000 then health = health - 20; health_notes[#health_notes+1] = "TS attach > 10s" end
+    if ts_attach.ms > 5000 then health = health - 10; health_notes[#health_notes+1] = "TS attach > 5s" end
+  end
+
+  health = math.max(0, health)
+  local health_bar = ""
+  for i = 1, 20 do
+    if i <= health / 5 then health_bar = health_bar .. "█" else health_bar = health_bar .. "░" end
+  end
+
+  add("## Health Score")
+  add("")
+  if health >= 80 then
+    add(string.format("| Status | Score |"))
+    add(string.format("|--------|-------|"))
+    add(string.format("| **%s** | **%d/100** |", "✅ GOOD", health))
+  elseif health >= 50 then
+    add(string.format("| Status | Score |"))
+    add(string.format("|--------|-------|"))
+    add(string.format("| **%s** | **%d/100** |", "⚠️ WARNING", health))
+  else
+    add(string.format("| Status | Score |"))
+    add(string.format("|--------|-------|"))
+    add(string.format("| **%s** | **%d/100** |", "❌ CRITICAL", health))
+  end
+  add("")
+  add("```")
+  add(health_bar)
+  add("```")
+  add("")
+  if #health_notes > 0 then
+    add("### Issues")
+    add("")
+    for _, note in ipairs(health_notes) do
+      add(string.format("- %s", note))
+    end
+    add("")
+  end
+
+  -- Key Performance Indicators
+  add("## Key Performance Indicators")
+  add("")
+  add("| Metric | Value | Status |")
+  add("|--------|-------|--------|")
+  if cold_start and cold_start.wall_median then
+    local status = cold_start.wall_median < 1000 and "✅" or (cold_start.wall_median < 2000 and "⚠️" or "❌")
+    add(string.format("| Cold Startup (median) | %.0f ms | %s |", cold_start.wall_median, status))
+  end
+  if cold_start and cold_start.wall_p95 then
+    add(string.format("| Cold Startup (p95) | %.0f ms | |", cold_start.wall_p95))
+  end
+  if cold_start and cold_start.wall_stddev then
+    add(string.format("| Cold Startup (stddev) | %.1f ms | |", cold_start.wall_stddev))
+  end
+  if multi_lsp and multi_lsp.grand_rss_mb then
+    local status = multi_lsp.grand_rss_mb < 500 and "✅" or (multi_lsp.grand_rss_mb < 1000 and "⚠️" or "❌")
+    add(string.format("| Multi-LSP Memory | %d MB | %s |", multi_lsp.grand_rss_mb, status))
+  end
+  if ts_attach and ts_attach.ms then
+    local status = ts_attach.ms < 5000 and "✅" or (ts_attach.ms < 10000 and "⚠️" or "❌")
+    add(string.format("| TypeScript LSP Attach | %d ms | %s |", ts_attach.ms, status))
+  end
+  local completion = find_result("completion_latency", "ts_ls_completion")
+  if completion and completion.avg_ms then
+    local status = completion.avg_ms < 100 and "✅" or (completion.avg_ms < 500 and "⚠️" or "❌")
+    add(string.format("| TS Completion (avg) | %.1f ms | %s |", completion.avg_ms, status))
+  end
+  local theme_switch = find_result("engine_switching", "theme_switching")
+  if theme_switch and theme_switch.median_ms then
+    local status = theme_switch.median_ms < 100 and "✅" or (theme_switch.median_ms < 500 and "⚠️" or "❌")
+    add(string.format("| Theme Switching (median) | %.0f ms | %s |", theme_switch.median_ms, status))
+  end
+  add("")
+
+  -- Per-benchmark sections
+  add("## Benchmarks")
+  add("")
+  add("| Benchmark | Status | Results | Report |")
+  add("|-----------|--------|---------|--------|")
+  local bn_sorted = {}
+  for bn, _ in pairs(run_data.benchmarks or {}) do bn_sorted[#bn_sorted+1] = bn end
+  table.sort(bn_sorted)
+  for _, bn in ipairs(bn_sorted) do
+    local data = run_data.benchmarks[bn]
+    local count = data.run and data.run.result_count or 0
+    local report_rel = bn .. "/reports/benchmark-report.md"
+    add(string.format("| %s | ✅ | %d | [View](%s) |", bn:gsub("^%l", string.upper):gsub("_", " "), count, report_rel))
+  end
+  add("")
+
+  add("## Dashboard")
+  add("")
+  if run_data.benchmarks and run_data.benchmarks.dashboard then
+    add("[View Dashboard](dashboard/reports/benchmark-report.md)")
+    add("")
+  end
+
+  add("## Comparison")
+  add("")
+  if run_data.benchmarks and run_data.benchmarks.comparison then
+    add("[View Comparison](comparison/reports/benchmark-report.md)")
+    add("")
+  end
+
+  add("---")
+  add(string.format("_Generated by bench/scripts/result_manager.lua at %s_", os.date()))
+
+  local summary_path = run_dir .. "/summary.md"
+  local sfh = io.open(summary_path, "w")
+  sfh:write(table.concat(summary, "\n"))
+  sfh:close()
+  io.write(string.format("Summary report: %s\n", summary_path))
+
+  return merged
+end
+
+--- Compare current results against historical baseline
 function M.compare(ctx, baseline)
   baseline = baseline or {}
   local report = {}
