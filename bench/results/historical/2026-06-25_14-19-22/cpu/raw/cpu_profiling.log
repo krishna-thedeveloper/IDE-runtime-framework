@@ -1,0 +1,37 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:29:58 2026
+Config: {
+  benchmark = "cpu_profiling"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/cpu
+---
+=== CPU Profiling Benchmark ===
+
+--- CPU at idle ---
+[RESULT] cpu_profiling / idle: {"cpu_delta": -76.7, "_timestamp": "2026-06-25 14:30:00", "_name": "idle", "elapsed_ms": 1001, "_run_time": 1782397800, "nvim_cpu": 3.3, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 3.3}
+  idle: cpu=3.3% lsp_cpu=0.0% total=3.3% delta=-76.7% elapsed=1001ms
+
+--- CPU during buffer open ---
+[RESULT] cpu_profiling / buffer_open: {"cpu_delta": 115.19, "_timestamp": "2026-06-25 14:30:03", "_name": "buffer_open", "elapsed_ms": 3047, "_run_time": 1782397803, "nvim_cpu": 2, "_category": "cpu_profiling", "lsp_cpu": 116.9, "total_cpu": 118.9}
+  buffer_open: cpu=2.0% lsp_cpu=116.9% total=118.9% delta=+115.2% elapsed=3047ms
+
+--- CPU during LSP attach ---
+[RESULT] cpu_profiling / completion: {"cpu_delta": 0, "_timestamp": "2026-06-25 14:31:13", "_name": "completion", "elapsed_ms": 10022, "_run_time": 1782397873, "nvim_cpu": 0.2, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.2}
+  completion: cpu=0.2% lsp_cpu=0.0% total=0.2% delta=+0.0% elapsed=10022ms
+[RESULT] cpu_profiling / hover: {"cpu_delta": -0.1, "_timestamp": "2026-06-25 14:31:19", "_name": "hover", "elapsed_ms": 5010, "_run_time": 1782397879, "nvim_cpu": 0.1, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.1}
+  hover: cpu=0.1% lsp_cpu=0.0% total=0.1% delta=-0.1% elapsed=5010ms
+[RESULT] cpu_profiling / definition: {"cpu_delta": 0, "_timestamp": "2026-06-25 14:31:24", "_name": "definition", "elapsed_ms": 5011, "_run_time": 1782397884, "nvim_cpu": 0.2, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.2}
+  definition: cpu=0.2% lsp_cpu=0.0% total=0.2% delta=+0.0% elapsed=5011ms
+[RESULT] cpu_profiling / references: {"cpu_delta": 0, "_timestamp": "2026-06-25 14:31:29", "_name": "references", "elapsed_ms": 5011, "_run_time": 1782397889, "nvim_cpu": 0.2, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.2}
+  references: cpu=0.2% lsp_cpu=0.0% total=0.2% delta=+0.0% elapsed=5011ms
+[RESULT] cpu_profiling / rename: {"cpu_delta": 0, "_timestamp": "2026-06-25 14:31:35", "_name": "rename", "elapsed_ms": 5011, "_run_time": 1782397895, "nvim_cpu": 0.2, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.2}
+  rename: cpu=0.2% lsp_cpu=0.0% total=0.2% delta=+0.0% elapsed=5011ms
+[RESULT] cpu_profiling / treesitter_parse: {"cpu_delta": 0, "_timestamp": "2026-06-25 14:31:35", "_name": "treesitter_parse", "elapsed_ms": 0, "_run_time": 1782397895, "nvim_cpu": 0.2, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.2}
+  treesitter_parse: cpu=0.2% lsp_cpu=0.0% total=0.2% delta=+0.0% elapsed=0ms
+[RESULT] cpu_profiling / diagnostics: {"cpu_delta": 0, "_timestamp": "2026-06-25 14:31:40", "_name": "diagnostics", "elapsed_ms": 5006, "_run_time": 1782397900, "nvim_cpu": 0.2, "_category": "cpu_profiling", "lsp_cpu": 0, "total_cpu": 0.2}
+  diagnostics: cpu=0.2% lsp_cpu=0.0% total=0.2% delta=+0.0% elapsed=5006ms
+[RESULT] cpu_peak / session: {"_timestamp": "2026-06-25 14:31:42", "_name": "session", "lsp_peak_cpu": 0, "_run_time": 1782397902, "total_peak_cpu": 0.2, "nvim_peak_cpu": 0.2, "_category": "cpu_peak"}
+
+Peak CPU: nvim=0.2% lsp=0.0% total=0.2%
+
+=== Run complete. Duration: 103.9s ===

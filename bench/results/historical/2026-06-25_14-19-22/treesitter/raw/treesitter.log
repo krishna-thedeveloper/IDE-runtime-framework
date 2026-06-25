@@ -1,0 +1,41 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:32:38 2026
+Config: {
+  benchmark = "treesitter"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/treesitter
+---
+=== Treesitter Benchmark ===
+
+--- 100_lines ---
+  open: avg=16.0ms median=10ms
+  parse: N/A
+  highlight: N/A
+  memory: nvim=22MB gc=5248KB
+[RESULT] treesitter_file_open / 100_lines: {"avg_ms": 16, "_timestamp": "2026-06-25 14:32:39", "_name": "100_lines", "max_ms": 28, "_run_time": 1782397959, "median_ms": 10, "min_ms": 10, "_category": "treesitter_file_open"}
+[RESULT] treesitter_parse / 100_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:32:39", "_name": "100_lines", "max_ms": 0, "_run_time": 1782397959, "median_ms": 0, "_category": "treesitter_parse", "min_ms": 0, "stddev_ms": 0, "p95_ms": 0}
+[RESULT] treesitter_highlight / 100_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:32:39", "_name": "100_lines", "max_ms": 0, "_run_time": 1782397959, "median_ms": 0, "min_ms": 0, "_category": "treesitter_highlight"}
+[RESULT] treesitter_memory / 100_lines: {"_timestamp": "2026-06-25 14:32:39", "_name": "100_lines", "_run_time": 1782397959, "nvim_rss_mb": 22, "lines": 100, "_category": "treesitter_memory", "gc_kb": 5248}
+[RESULT] treesitter_cpu / 100_lines: {"cpu": 47.8, "_timestamp": "2026-06-25 14:32:39", "_name": "100_lines", "_run_time": 1782397959, "_category": "treesitter_cpu"}
+--- 1k_lines ---
+  open: avg=10.0ms median=10ms
+  parse: N/A
+  highlight: N/A
+  memory: nvim=23MB gc=5265KB
+[RESULT] treesitter_file_open / 1k_lines: {"avg_ms": 10, "_timestamp": "2026-06-25 14:32:39", "_name": "1k_lines", "max_ms": 10, "_run_time": 1782397959, "median_ms": 10, "min_ms": 10, "_category": "treesitter_file_open"}
+[RESULT] treesitter_parse / 1k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:32:39", "_name": "1k_lines", "max_ms": 0, "_run_time": 1782397959, "median_ms": 0, "_category": "treesitter_parse", "min_ms": 0, "stddev_ms": 0, "p95_ms": 0}
+[RESULT] treesitter_highlight / 1k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:32:39", "_name": "1k_lines", "max_ms": 0, "_run_time": 1782397959, "median_ms": 0, "min_ms": 0, "_category": "treesitter_highlight"}
+[RESULT] treesitter_memory / 1k_lines: {"_timestamp": "2026-06-25 14:32:39", "_name": "1k_lines", "_run_time": 1782397959, "nvim_rss_mb": 23, "lines": 1000, "_category": "treesitter_memory", "gc_kb": 5265}
+[RESULT] treesitter_cpu / 1k_lines: {"cpu": 38.4, "_timestamp": "2026-06-25 14:32:39", "_name": "1k_lines", "_run_time": 1782397959, "_category": "treesitter_cpu"}
+--- 10k_lines ---
+  open: avg=10.3ms median=10ms
+  parse: N/A
+  highlight: N/A
+  memory: nvim=24MB gc=5308KB
+[RESULT] treesitter_file_open / 10k_lines: {"avg_ms": 10.33, "_timestamp": "2026-06-25 14:32:39", "_name": "10k_lines", "max_ms": 11, "_run_time": 1782397959, "median_ms": 10, "min_ms": 10, "_category": "treesitter_file_open"}
+[RESULT] treesitter_parse / 10k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:32:39", "_name": "10k_lines", "max_ms": 0, "_run_time": 1782397959, "median_ms": 0, "_category": "treesitter_parse", "min_ms": 0, "stddev_ms": 0, "p95_ms": 0}
+[RESULT] treesitter_highlight / 10k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:32:39", "_name": "10k_lines", "max_ms": 0, "_run_time": 1782397959, "median_ms": 0, "min_ms": 0, "_category": "treesitter_highlight"}
+[RESULT] treesitter_memory / 10k_lines: {"_timestamp": "2026-06-25 14:32:39", "_name": "10k_lines", "_run_time": 1782397959, "nvim_rss_mb": 24, "lines": 10000, "_category": "treesitter_memory", "gc_kb": 5308}
+[RESULT] treesitter_cpu / 10k_lines: {"cpu": 36.29, "_timestamp": "2026-06-25 14:32:39", "_name": "10k_lines", "_run_time": 1782397959, "_category": "treesitter_cpu"}
+
+=== Run complete. Duration: 0.5s ===

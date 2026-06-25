@@ -1,0 +1,33 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:33:15 2026
+Config: {
+  benchmark = "editing"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/editing
+---
+=== Editing Workflow Benchmark ===
+
+--- 100_lines (buffer=2) ---
+  insert: avg=0.000ms median=0.000ms p95=0.000ms
+  delete: avg=0.000ms median=0.000ms p95=0.000ms
+  cursor move: avg=0.000ms median=0.000ms p95=0.000ms
+  visual select/delete: avg=0.000ms median=0.000ms
+  memory: nvim=25MB cpu=11.7%
+[RESULT] editing_insert / 100_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:33:16", "_name": "100_lines", "p95_ms": 0, "_run_time": 1782397996, "median_ms": 0, "samples": 100, "min_ms": 0, "_category": "editing_insert", "max_ms": 0}
+[RESULT] editing_delete / 100_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:33:16", "_name": "100_lines", "p95_ms": 0, "_run_time": 1782397996, "median_ms": 0, "samples": 100, "min_ms": 0, "_category": "editing_delete", "max_ms": 0}
+[RESULT] editing_cursor_move / 100_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:33:16", "_name": "100_lines", "p95_ms": 0, "_run_time": 1782397996, "median_ms": 0, "samples": 100, "min_ms": 0, "_category": "editing_cursor_move", "max_ms": 0}
+[RESULT] editing_visual / 100_lines: {"median_ms": 0, "_timestamp": "2026-06-25 14:33:16", "_name": "100_lines", "max_ms": 0, "_run_time": 1782397996, "avg_ms": 0, "min_ms": 0, "_category": "editing_visual", "samples": 50}
+[RESULT] editing_memory / 100_lines: {"cpu": 11.7, "_timestamp": "2026-06-25 14:33:16", "_name": "100_lines", "_run_time": 1782397996, "nvim_rss_mb": 25, "_category": "editing_memory", "gc_kb": 7748}
+--- 1k_lines (buffer=3) ---
+  insert: avg=0.000ms median=0.000ms p95=0.000ms
+  delete: avg=0.000ms median=0.000ms p95=0.000ms
+  cursor move: avg=0.000ms median=0.000ms p95=0.000ms
+  visual select/delete: avg=0.000ms median=0.000ms
+  memory: nvim=25MB cpu=8.3%
+[RESULT] editing_insert / 1k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:33:17", "_name": "1k_lines", "p95_ms": 0, "_run_time": 1782397997, "median_ms": 0, "samples": 100, "min_ms": 0, "_category": "editing_insert", "max_ms": 0}
+[RESULT] editing_delete / 1k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:33:17", "_name": "1k_lines", "p95_ms": 0, "_run_time": 1782397997, "median_ms": 0, "samples": 100, "min_ms": 0, "_category": "editing_delete", "max_ms": 0}
+[RESULT] editing_cursor_move / 1k_lines: {"avg_ms": 0, "_timestamp": "2026-06-25 14:33:17", "_name": "1k_lines", "p95_ms": 0, "_run_time": 1782397997, "median_ms": 0, "samples": 100, "min_ms": 0, "_category": "editing_cursor_move", "max_ms": 0}
+[RESULT] editing_visual / 1k_lines: {"median_ms": 0, "_timestamp": "2026-06-25 14:33:17", "_name": "1k_lines", "max_ms": 0, "_run_time": 1782397997, "avg_ms": 0, "min_ms": 0, "_category": "editing_visual", "samples": 50}
+[RESULT] editing_memory / 1k_lines: {"cpu": 8.3, "_timestamp": "2026-06-25 14:33:17", "_name": "1k_lines", "_run_time": 1782397997, "nvim_rss_mb": 25, "_category": "editing_memory", "gc_kb": 9420}
+
+=== Run complete. Duration: 1.5s ===

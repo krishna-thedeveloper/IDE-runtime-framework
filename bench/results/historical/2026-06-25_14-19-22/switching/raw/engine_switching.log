@@ -1,0 +1,120 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:22:50 2026
+Config: {
+  benchmark = "engine_switching",
+  switch_cycles = 100
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/switching
+---
+=== Engine Switching & Lifecycle Tests ===
+
+--- 1. Theme Switching (%d cycles) --- 100
+  before_theme_switching: clients=0 children=1 autocmds=272 modules=266 nvim=20MB lsp=0MB total=20MB cpu=25.0%
+[RESULT] lifecycle_before_theme_switching / summary: {"autocmds": 272, "cpu": 25, "_timestamp": "2026-06-25 14:22:50", "_name": "summary", "_run_time": 1782397370, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 20692, "child_processes": 1, "_category": "lifecycle_before_theme_switching", "modules": 266, "gc_kb": 6043, "grand_rss_kb": 20692}
+  Theme switch 50/100
+  Theme switch 100/100
+[RESULT] engine_switching / theme_switching: {"avg_ms": 1.71, "_timestamp": "2026-06-25 14:22:50", "_name": "theme_switching", "max_ms": 6, "_run_time": 1782397370, "median_ms": 1, "cycles": 100, "min_ms": 1, "_category": "engine_switching", "p95_ms": 3}
+  Theme switching: avg=1.7ms median=1ms p95=3ms
+  after_theme_switching: clients=0 children=1 autocmds=272 modules=291 nvim=25MB lsp=0MB total=25MB cpu=50.0%
+[RESULT] lifecycle_after_theme_switching / summary: {"autocmds": 272, "cpu": 50, "_timestamp": "2026-06-25 14:22:50", "_name": "summary", "_run_time": 1782397370, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 26580, "child_processes": 1, "_category": "lifecycle_after_theme_switching", "modules": 291, "gc_kb": 8888, "grand_rss_kb": 26580}
+
+--- 2. LSP Attach Lifecycle (%s) --- ts_ls
+  before_lsp_attach: clients=0 children=1 autocmds=272 modules=291 nvim=26MB lsp=0MB total=26MB cpu=40.6%
+[RESULT] lifecycle_before_lsp_attach / summary: {"autocmds": 272, "cpu": 40.6, "_timestamp": "2026-06-25 14:22:50", "_name": "summary", "_run_time": 1782397370, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 26708, "child_processes": 1, "_category": "lifecycle_before_lsp_attach", "modules": 291, "gc_kb": 8994, "grand_rss_kb": 26708}
+[RESULT] lifecycle_attach / ts_ls: {"cpu": 9.5, "attached": true, "nvim_rss_mb": 27, "lsp_rss_mb": 337, "_run_time": 1782397373, "grand_rss_mb": 365, "total_startup_ms": 2549, "_name": "ts_ls", "_timestamp": "2026-06-25 14:22:53", "_category": "lifecycle_attach", "attach_ms": 543}
+  Attach: 543ms (total startup: 2549ms)
+  Memory after attach: nvim=27MB lsp=337MB total=365MB
+
+--- 2b. LSP Operations ---
+    completion: 69.0ms (1075)
+[RESULT] lsp_operations / ts_ls/completion: {"_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/completion", "_run_time": 1782397373, "ms": 69, "count": 1075, "_category": "lsp_operations"}
+    hover: 1.0ms
+[RESULT] lsp_operations / ts_ls/hover: {"_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/hover", "_run_time": 1782397373, "ms": 1, "_category": "lsp_operations"}
+    definition: 1.0ms
+[RESULT] lsp_operations / ts_ls/definition: {"_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/definition", "_run_time": 1782397373, "ms": 1, "_category": "lsp_operations"}
+    references: 2.0ms (0)
+[RESULT] lsp_operations / ts_ls/references: {"_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/references", "_run_time": 1782397373, "ms": 2, "count": 0, "_category": "lsp_operations"}
+    rename: 1.0ms
+[RESULT] lsp_operations / ts_ls/rename: {"_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/rename", "_run_time": 1782397373, "ms": 1, "_category": "lsp_operations"}
+    formatting: 8.0ms
+[RESULT] lsp_operations / ts_ls/formatting: {"_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/formatting", "_run_time": 1782397373, "ms": 8, "_category": "lsp_operations"}
+[RESULT] lifecycle_memory / ts_ls/after_ops: {"cpu": 8.9, "_timestamp": "2026-06-25 14:22:53", "_name": "ts_ls/after_ops", "_run_time": 1782397373, "grand_rss_mb": 374, "nvim_rss_mb": 27, "lsp_rss_mb": 346, "_category": "lifecycle_memory"}
+
+--- 2d. Stop & Cleanup ---
+  Stop took: 1505ms
+[RESULT] lifecycle_stop / ts_ls: {"_timestamp": "2026-06-25 14:22:55", "_name": "ts_ls", "_run_time": 1782397375, "stop_ms": 1505, "_category": "lifecycle_stop"}
+  after_stop: clients=0 children=1 autocmds=295 modules=403 nvim=28MB lsp=0MB total=28MB cpu=6.1%
+[RESULT] lifecycle_after_stop / summary: {"autocmds": 295, "cpu": 6.1, "_timestamp": "2026-06-25 14:22:55", "_name": "summary", "_run_time": 1782397375, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 28756, "child_processes": 1, "_category": "lifecycle_after_stop", "modules": 403, "gc_kb": 11172, "grand_rss_kb": 28756}
+  No orphan processes after stop.
+
+--- 2e. Restart (Second Attach) ---
+  Second attach: 511ms
+[RESULT] lifecycle_restart / ts_ls: {"_timestamp": "2026-06-25 14:22:57", "_name": "ts_ls", "_run_time": 1782397377, "attach_ms": 511, "_category": "lifecycle_restart"}
+  after_restart_cleanup: clients=0 children=1 autocmds=295 modules=403 nvim=28MB lsp=0MB total=28MB cpu=3.7%
+[RESULT] lifecycle_after_restart_cleanup / summary: {"autocmds": 295, "cpu": 3.7, "_timestamp": "2026-06-25 14:22:59", "_name": "summary", "_run_time": 1782397379, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 29012, "child_processes": 1, "_category": "lifecycle_after_restart_cleanup", "modules": 403, "gc_kb": 11860, "grand_rss_kb": 29012}
+
+--- 3. Start/Stop Cycling (%d cycles) --- 15
+  Cycle 5/15: attach=511ms
+  Cycle 10/15: attach=510ms
+  Cycle 15/15: attach=511ms
+[RESULT] lifecycle_cycling / ts_ls: {"avg_ms": 511.2, "_timestamp": "2026-06-25 14:24:09", "_name": "ts_ls", "max_ms": 515, "_run_time": 1782397449, "median_ms": 511, "cycles": 15, "min_ms": 510, "_category": "lifecycle_cycling", "p95_ms": 515}
+  Cycle attach: avg=511.2ms median=511ms min=510ms max=515ms p95=515ms
+[RESULT] lifecycle_cycling_growth / ts_ls: {"nvim_growth_per_cycle_kb": 307, "_timestamp": "2026-06-25 14:24:09", "_name": "ts_ls", "lsp_growth_kb": -200, "lsp_growth_per_cycle_kb": -14, "cycles": 15, "nvim_growth_kb": 4608, "_run_time": 1782397449, "_category": "lifecycle_cycling_growth"}
+  Growth across 15 cycles: nvim=4608KB lsp=-200KB
+
+--- 4. File Open/Close Cycles (%d) --- 50
+  before_file_cycles: clients=1 children=4 autocmds=298 modules=403 nvim=33MB lsp=339MB total=372MB cpu=0.7%
+[RESULT] lifecycle_before_file_cycles / ts_ls: {"attached_bufs": 2, "_timestamp": "2026-06-25 14:24:12", "_name": "ts_ls", "_run_time": 1782397452, "pid": 0, "_category": "lifecycle_before_file_cycles"}
+[RESULT] lifecycle_before_file_cycles / summary: {"autocmds": 298, "cpu": 0.7, "_timestamp": "2026-06-25 14:24:12", "_name": "summary", "_run_time": 1782397452, "clients": 1, "lsp_rss_kb": 347172, "nvim_rss_kb": 34364, "child_processes": 4, "_category": "lifecycle_before_file_cycles", "modules": 403, "gc_kb": 16381, "grand_rss_kb": 381536}
+  File cycle 10/50
+  File cycle 20/50
+  File cycle 30/50
+  File cycle 40/50
+  File cycle 50/50
+[RESULT] engine_switching / file_open_close: {"avg_ms": 318.58, "_timestamp": "2026-06-25 14:24:28", "_name": "file_open_close", "max_ms": 343, "_run_time": 1782397468, "median_ms": 318, "cycles": 50, "min_ms": 316, "_category": "engine_switching", "p95_ms": 323}
+  File open/close: avg=318.6ms median=318ms p95=323ms
+  after_file_cycles: clients=1 children=4 autocmds=495 modules=404 nvim=35MB lsp=397MB total=432MB cpu=1.8%
+[RESULT] lifecycle_after_file_cycles / ts_ls: {"attached_bufs": 0, "_timestamp": "2026-06-25 14:24:28", "_name": "ts_ls", "_run_time": 1782397468, "pid": 0, "_category": "lifecycle_after_file_cycles"}
+[RESULT] lifecycle_after_file_cycles / summary: {"autocmds": 495, "cpu": 1.8, "_timestamp": "2026-06-25 14:24:28", "_name": "summary", "_run_time": 1782397468, "clients": 1, "lsp_rss_kb": 406732, "nvim_rss_kb": 36240, "child_processes": 4, "_category": "lifecycle_after_file_cycles", "modules": 404, "gc_kb": 14052, "grand_rss_kb": 442972}
+
+--- 5. Load & Worst-Case Testing ---
+  before_load_test: clients=0 children=1 autocmds=495 modules=404 nvim=35MB lsp=0MB total=35MB cpu=1.8%
+[RESULT] lifecycle_before_load_test / summary: {"autocmds": 495, "cpu": 1.8, "_timestamp": "2026-06-25 14:24:30", "_name": "summary", "_run_time": 1782397470, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 36240, "child_processes": 1, "_category": "lifecycle_before_load_test", "modules": 404, "gc_kb": 14290, "grand_rss_kb": 36240}
+  Opening 50 files with LSP at once...
+  50 files opened in 3543ms
+  Load state: nvim=56MB lsp=441MB total=497MB cpu=2.4% autocmds=703
+[RESULT] lifecycle_load_test / 50_files_bulk_open: {"autocmds": 703, "avg_ms": 9.62, "cpu": 2.4, "nvim_rss_mb": 56, "_name": "50_files_bulk_open", "max_ms": 13, "_run_time": 1782397477, "grand_rss_mb": 497, "lsp_rss_mb": 441, "total_ms": 3543, "_timestamp": "2026-06-25 14:24:37", "_category": "lifecycle_load_test"}
+
+  Heavy operations across all buffers...
+  50 completion requests dispatched: avg=0.0ms max=1ms
+  Heavy load state: nvim=64MB lsp=578MB total=642MB cpu=2.4%
+[RESULT] lifecycle_load_test / 50_completion_burst: {"cpu": 2.4, "avg_ms": 0.02, "nvim_rss_mb": 64, "_name": "50_completion_burst", "max_ms": 1, "_run_time": 1782397480, "grand_rss_mb": 642, "lsp_rss_mb": 578, "_timestamp": "2026-06-25 14:24:40", "_category": "lifecycle_load_test"}
+  Total diagnostics across all buffers: 154
+[RESULT] lifecycle_load_test / diagnostics_count: {"_timestamp": "2026-06-25 14:24:40", "_name": "diagnostics_count", "_run_time": 1782397480, "_category": "lifecycle_load_test", "count": 154}
+  after_load_test: clients=1 children=4 autocmds=304 modules=404 nvim=64MB lsp=578MB total=643MB cpu=2.4%
+[RESULT] lifecycle_after_load_test / ts_ls: {"attached_bufs": 2, "_timestamp": "2026-06-25 14:24:43", "_name": "ts_ls", "_run_time": 1782397483, "pid": 0, "_category": "lifecycle_after_load_test"}
+[RESULT] lifecycle_after_load_test / summary: {"autocmds": 304, "cpu": 2.4, "_timestamp": "2026-06-25 14:24:43", "_name": "summary", "_run_time": 1782397483, "clients": 1, "lsp_rss_kb": 592584, "nvim_rss_kb": 65860, "child_processes": 4, "_category": "lifecycle_after_load_test", "modules": 404, "gc_kb": 20922, "grand_rss_kb": 658444}
+  after_load_cleanup: clients=0 children=1 autocmds=301 modules=404 nvim=64MB lsp=0MB total=64MB cpu=2.4%
+[RESULT] lifecycle_after_load_cleanup / summary: {"autocmds": 301, "cpu": 2.4, "_timestamp": "2026-06-25 14:24:44", "_name": "summary", "_run_time": 1782397484, "clients": 0, "lsp_rss_kb": 0, "nvim_rss_kb": 65860, "child_processes": 1, "_category": "lifecycle_after_load_cleanup", "modules": 404, "gc_kb": 21094, "grand_rss_kb": 65860}
+
+--- 6. Cross-Engine Verification (%s) --- typescript-tools
+  Launching subprocess for typescript-tools...
+  typescript-tools: attached (187ms)
+    memory: nvim=25MB lsp=267MB total=292MB cpu=1.8%
+    completion: 63.0ms
+    hover: 1.0ms
+    references: 1.0ms
+    rename: 0.0ms
+    definition: 1.0ms
+    formatting: 8.0ms
+[RESULT] cross_engine / typescript-tools: {"attached": true, "nvim_rss_mb": 25, "_name": "typescript-tools", "_run_time": 1782397493, "grand_rss_mb": 292, "lsp_rss_mb": 267, "_timestamp": "2026-06-25 14:24:53", "_category": "cross_engine", "attach_ms": 187}
+
+--- 7. Final Orphan Detection ---
+[RESULT] lifecycle_orphans / final_detection: {"total_children": 1, "_timestamp": "2026-06-25 14:24:53", "_name": "final_detection", "_run_time": 1782397493, "zombie_count": 0, "orphans": 0, "_category": "lifecycle_orphans"}
+  No orphan processes detected.
+
+--- 8. Final Memory Growth Analysis ---
+[RESULT] lifecycle_memory / growth_analysis: {"growth_percent": 0, "final_gc_kb": 6939.359375, "_name": "growth_analysis", "samples": 5, "_run_time": 1782397494, "growth_kb": 0, "initial_rss_kb": 63380, "final_rss_kb": 63380, "_timestamp": "2026-06-25 14:24:54", "_category": "lifecycle_memory", "initial_gc_kb": 6940.757812}
+  Memory: initial=63380KB final=63380KB growth=0KB (0.0%)
+
+=== Run complete. Duration: 124.7s ===

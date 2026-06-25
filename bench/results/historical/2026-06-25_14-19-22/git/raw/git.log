@@ -1,0 +1,31 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:33:15 2026
+Config: {
+  benchmark = "git"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/git
+---
+=== Git Benchmark ===
+
+--- 100_files ---
+  repo setup: 29ms
+  git status: 2ms
+  git diff: 1ms
+  git log: 1ms
+  git blame: 1ms
+  git branch: 1ms
+  git stash list: 1ms
+  git grep: 2ms
+[RESULT] git_operations / 100_files: {"diff_ms": 1, "branch_ms": 1, "grep_ms": 2, "files": 100, "blame_ms": 1, "stash_ms": 1, "_run_time": 1782397995, "log_ms": 1, "setup_ms": 29, "_name": "100_files", "status_ms": 2, "_timestamp": "2026-06-25 14:33:15", "_category": "git_operations"}
+--- 1k_files ---
+  repo setup: 128ms
+  git status: 6ms
+  git diff: 5ms
+  git log: 1ms
+  git blame: 1ms
+  git branch: 1ms
+  git stash list: 1ms
+  git grep: 5ms
+[RESULT] git_operations / 1k_files: {"diff_ms": 5, "branch_ms": 1, "grep_ms": 5, "files": 1000, "blame_ms": 1, "stash_ms": 1, "_run_time": 1782397995, "log_ms": 1, "setup_ms": 128, "_name": "1k_files", "status_ms": 6, "_timestamp": "2026-06-25 14:33:15", "_category": "git_operations"}
+
+=== Run complete. Duration: 0.2s ===

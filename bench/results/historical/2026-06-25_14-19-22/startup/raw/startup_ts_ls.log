@@ -1,0 +1,80 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:19:22 2026
+Config: {
+  benchmark = "startup",
+  cold = 10,
+  engine = "ts_ls",
+  hot = 5,
+  warm = 5
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/startup
+---
+=== Startup Benchmark ===
+Engine: ts_ls
+Iterations: cold=10 warm=5 hot=5
+
+--- Cold startups ---
+Cold 1/10...
+[RESULT] startup / cold_1: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_1", "startuptime_ms": 39.76, "_run_time": 1782397163, "wall_ms": 43, "type": "cold", "_category": "startup"}
+Cold 2/10...
+[RESULT] startup / cold_2: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_2", "startuptime_ms": 46.255, "_run_time": 1782397163, "wall_ms": 50, "type": "cold", "_category": "startup"}
+Cold 3/10...
+[RESULT] startup / cold_3: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_3", "startuptime_ms": 44.844, "_run_time": 1782397163, "wall_ms": 49, "type": "cold", "_category": "startup"}
+Cold 4/10...
+[RESULT] startup / cold_4: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_4", "startuptime_ms": 46.827, "_run_time": 1782397163, "wall_ms": 50, "type": "cold", "_category": "startup"}
+Cold 5/10...
+[RESULT] startup / cold_5: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_5", "startuptime_ms": 45.782, "_run_time": 1782397163, "wall_ms": 49, "type": "cold", "_category": "startup"}
+Cold 6/10...
+[RESULT] startup / cold_6: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_6", "startuptime_ms": 39.898, "_run_time": 1782397163, "wall_ms": 44, "type": "cold", "_category": "startup"}
+Cold 7/10...
+[RESULT] startup / cold_7: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_7", "startuptime_ms": 38.446, "_run_time": 1782397163, "wall_ms": 42, "type": "cold", "_category": "startup"}
+Cold 8/10...
+[RESULT] startup / cold_8: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_8", "startuptime_ms": 38.393, "_run_time": 1782397163, "wall_ms": 42, "type": "cold", "_category": "startup"}
+Cold 9/10...
+[RESULT] startup / cold_9: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_9", "startuptime_ms": 39.126, "_run_time": 1782397163, "wall_ms": 42, "type": "cold", "_category": "startup"}
+Cold 10/10...
+[RESULT] startup / cold_10: {"_timestamp": "2026-06-25 14:19:23", "_name": "cold_10", "startuptime_ms": 38.356, "_run_time": 1782397163, "wall_ms": 42, "type": "cold", "_category": "startup"}
+--- Warm startups ---
+Warm 1/5...
+[RESULT] startup / warm_1: {"_timestamp": "2026-06-25 14:19:23", "_name": "warm_1", "startuptime_ms": 38.647, "_run_time": 1782397163, "wall_ms": 42, "type": "warm", "_category": "startup"}
+Warm 2/5...
+[RESULT] startup / warm_2: {"_timestamp": "2026-06-25 14:19:23", "_name": "warm_2", "startuptime_ms": 39.27, "_run_time": 1782397163, "wall_ms": 43, "type": "warm", "_category": "startup"}
+Warm 3/5...
+[RESULT] startup / warm_3: {"_timestamp": "2026-06-25 14:19:23", "_name": "warm_3", "startuptime_ms": 38.918, "_run_time": 1782397163, "wall_ms": 42, "type": "warm", "_category": "startup"}
+Warm 4/5...
+[RESULT] startup / warm_4: {"_timestamp": "2026-06-25 14:19:23", "_name": "warm_4", "startuptime_ms": 37.976, "_run_time": 1782397163, "wall_ms": 41, "type": "warm", "_category": "startup"}
+Warm 5/5...
+[RESULT] startup / warm_5: {"_timestamp": "2026-06-25 14:19:23", "_name": "warm_5", "startuptime_ms": 39.599, "_run_time": 1782397163, "wall_ms": 43, "type": "warm", "_category": "startup"}
+--- Hot startups ---
+Hot 1/5...
+[RESULT] startup / hot_1: {"_timestamp": "2026-06-25 14:19:23", "_name": "hot_1", "startuptime_ms": 41.324, "_run_time": 1782397163, "wall_ms": 45, "type": "hot", "_category": "startup"}
+Hot 2/5...
+[RESULT] startup / hot_2: {"_timestamp": "2026-06-25 14:19:23", "_name": "hot_2", "startuptime_ms": 39.286, "_run_time": 1782397163, "wall_ms": 43, "type": "hot", "_category": "startup"}
+Hot 3/5...
+[RESULT] startup / hot_3: {"_timestamp": "2026-06-25 14:19:23", "_name": "hot_3", "startuptime_ms": 39.909, "_run_time": 1782397163, "wall_ms": 44, "type": "hot", "_category": "startup"}
+Hot 4/5...
+[RESULT] startup / hot_4: {"_timestamp": "2026-06-25 14:19:23", "_name": "hot_4", "startuptime_ms": 45.098, "_run_time": 1782397163, "wall_ms": 49, "type": "hot", "_category": "startup"}
+Hot 5/5...
+[RESULT] startup / hot_5: {"_timestamp": "2026-06-25 14:19:23", "_name": "hot_5", "startuptime_ms": 44.291, "_run_time": 1782397163, "wall_ms": 49, "type": "hot", "_category": "startup"}
+[RESULT] startup_stats / cold: {"_name": "cold", "wall_max": 50, "startup_p95": 46.827, "startup_min": 38.356, "wall_avg": 45.3, "_timestamp": "2026-06-25 14:19:23", "startup_variance": 11.98778, "wall_p99": 50, "wall_p95": 50, "startup_p99": 46.827, "_run_time": 1782397163, "wall_median": 43, "startup_stddev": 3.462337, "wall_stddev": 3.494281, "n": 10, "startup_median": 39.76, "startup_max": 46.827, "wall_variance": 12.21, "startup_avg": 41.7687, "_category": "startup_stats", "wall_min": 42}
+
+cold Stats (wall clock):
+  avg=45.3 min=42 max=50 median=43 p95=50 p99=50 stddev=3.5
+cold Stats (startuptime):
+  avg=41.8 min=38 max=47 median=40 p95=47 p99=47 stddev=3.5
+[RESULT] startup_stats / warm: {"_name": "warm", "wall_max": 43, "startup_p95": 39.599, "startup_min": 37.976, "wall_avg": 42.2, "_timestamp": "2026-06-25 14:19:23", "startup_variance": 0.308398, "wall_p99": 43, "wall_p95": 43, "startup_p99": 39.599, "_run_time": 1782397163, "wall_median": 42, "startup_stddev": 0.555336, "wall_stddev": 0.748331, "n": 5, "startup_median": 38.918, "startup_max": 39.599, "wall_variance": 0.56, "startup_avg": 38.882, "_category": "startup_stats", "wall_min": 41}
+
+warm Stats (wall clock):
+  avg=42.2 min=41 max=43 median=42 p95=43 p99=43 stddev=0.7
+warm Stats (startuptime):
+  avg=38.9 min=38 max=40 median=39 p95=40 p99=40 stddev=0.6
+[RESULT] startup_stats / hot: {"_name": "hot", "wall_max": 49, "startup_p95": 45.098, "startup_min": 39.286, "wall_avg": 46, "_timestamp": "2026-06-25 14:19:23", "startup_variance": 5.407929, "wall_p99": 49, "wall_p95": 49, "startup_p99": 45.098, "_run_time": 1782397163, "wall_median": 45, "startup_stddev": 2.325495, "wall_stddev": 2.529822, "n": 5, "startup_median": 41.324, "startup_max": 45.098, "wall_variance": 6.4, "startup_avg": 41.9816, "_category": "startup_stats", "wall_min": 43}
+
+hot Stats (wall clock):
+  avg=46.0 min=43 max=49 median=45 p95=49 p99=49 stddev=2.5
+hot Stats (startuptime):
+  avg=42.0 min=39 max=45 median=41 p95=45 p99=45 stddev=2.3
+
+Top 20 slowest startup contributors (by wall-clock occurrence):
+
+=== Run complete. Duration: 0.9s ===

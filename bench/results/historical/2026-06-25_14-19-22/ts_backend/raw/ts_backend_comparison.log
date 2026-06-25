@@ -1,0 +1,155 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:31:42 2026
+Config: {
+  benchmark = "ts_backend_comparison"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/ts_backend
+---
+=== TypeScript Backend Benchmark: ts_ls vs typescript-tools ===
+
+
+--- Testing: small project (/home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/projects/small) ---
+  Launching subprocess for ts_ls...
+  ts_ls: attached (95ms)
+    memory baseline: nvim=24MB lsp=339MB total=364MB
+    cpu baseline: 1.8%
+    completion: 65.0ms (1075 items)
+    hover: 1.0ms
+    definition: 1.0ms
+    references: 1.0ms (0 items)
+    rename: 0.0ms
+    formatting: 8.0ms
+    memory after ops: nvim=24MB lsp=347MB total=372MB
+    cpu after ops: 1.4%
+[RESULT] ts_backend_attach / small/ts_ls: {"attached": true, "_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 95, "_category": "ts_backend_attach"}
+[RESULT] ts_backend_rename / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 0, "_category": "ts_backend_rename"}
+[RESULT] ts_backend_completion / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 65, "count": 1075, "_category": "ts_backend_completion"}
+[RESULT] ts_backend_references / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 1, "count": 0, "_category": "ts_backend_references"}
+[RESULT] ts_backend_formatting / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 8, "_category": "ts_backend_formatting"}
+[RESULT] ts_backend_hover / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 1, "_category": "ts_backend_hover"}
+[RESULT] ts_backend_definition / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "ms": 1, "_category": "ts_backend_definition"}
+[RESULT] ts_backend_memory / small/ts_ls/baseline: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls/baseline", "_run_time": 1782397912, "grand_rss_mb": 364, "nvim_rss_mb": 24, "lsp_rss_mb": 339, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_memory / small/ts_ls/after_ops: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls/after_ops", "_run_time": 1782397912, "grand_rss_mb": 372, "nvim_rss_mb": 24, "lsp_rss_mb": 347, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_cpu / small/ts_ls: {"_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "after_ops": 1.4, "_category": "ts_backend_cpu", "baseline": 1.8}
+[RESULT] ts_backend_memory_growth / small/ts_ls: {"growth_mb": 8, "_timestamp": "2026-06-25 14:31:52", "_name": "small/ts_ls", "_run_time": 1782397912, "_category": "ts_backend_memory_growth"}
+  Launching subprocess for typescript_tools...
+  typescript-tools: attached (174ms)
+    memory baseline: nvim=25MB lsp=267MB total=292MB
+    cpu baseline: 1.8%
+    completion: 67.0ms (1075 items)
+    hover: 1.0ms
+    definition: 1.0ms
+    references: 1.0ms (0 items)
+    rename: 0.0ms
+    formatting: 8.0ms
+    memory after ops: nvim=27MB lsp=275MB total=303MB
+    cpu after ops: 1.5%
+[RESULT] ts_backend_attach / small/typescript-tools: {"attached": true, "_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 174, "_category": "ts_backend_attach"}
+[RESULT] ts_backend_rename / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 0, "_category": "ts_backend_rename"}
+[RESULT] ts_backend_completion / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 67, "count": 1075, "_category": "ts_backend_completion"}
+[RESULT] ts_backend_references / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 1, "count": 0, "_category": "ts_backend_references"}
+[RESULT] ts_backend_formatting / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 8, "_category": "ts_backend_formatting"}
+[RESULT] ts_backend_hover / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 1, "_category": "ts_backend_hover"}
+[RESULT] ts_backend_definition / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "ms": 1, "_category": "ts_backend_definition"}
+[RESULT] ts_backend_memory / small/typescript-tools/baseline: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools/baseline", "_run_time": 1782397921, "grand_rss_mb": 292, "nvim_rss_mb": 25, "lsp_rss_mb": 267, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_memory / small/typescript-tools/after_ops: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools/after_ops", "_run_time": 1782397921, "grand_rss_mb": 303, "nvim_rss_mb": 27, "lsp_rss_mb": 275, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_cpu / small/typescript-tools: {"_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "after_ops": 1.5, "_category": "ts_backend_cpu", "baseline": 1.8}
+[RESULT] ts_backend_memory_growth / small/typescript-tools: {"growth_mb": 11, "_timestamp": "2026-06-25 14:32:01", "_name": "small/typescript-tools", "_run_time": 1782397921, "_category": "ts_backend_memory_growth"}
+
+--- Testing: medium project (/home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/projects/medium) ---
+  Launching subprocess for ts_ls...
+  ts_ls: attached (97ms)
+    memory baseline: nvim=26MB lsp=348MB total=374MB
+    cpu baseline: 1.8%
+    completion: 82.0ms (1565 items)
+    hover: 1.0ms
+    definition: 1.0ms
+    references: 2.0ms (0 items)
+    rename: 0.0ms
+    formatting: 32.0ms
+    memory after ops: nvim=27MB lsp=363MB total=390MB
+    cpu after ops: 1.4%
+[RESULT] ts_backend_attach / medium/ts_ls: {"attached": true, "_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 97, "_category": "ts_backend_attach"}
+[RESULT] ts_backend_rename / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 0, "_category": "ts_backend_rename"}
+[RESULT] ts_backend_completion / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 82, "count": 1565, "_category": "ts_backend_completion"}
+[RESULT] ts_backend_references / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 2, "count": 0, "_category": "ts_backend_references"}
+[RESULT] ts_backend_formatting / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 32, "_category": "ts_backend_formatting"}
+[RESULT] ts_backend_hover / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 1, "_category": "ts_backend_hover"}
+[RESULT] ts_backend_definition / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "ms": 1, "_category": "ts_backend_definition"}
+[RESULT] ts_backend_memory / medium/ts_ls/baseline: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls/baseline", "_run_time": 1782397930, "grand_rss_mb": 374, "nvim_rss_mb": 26, "lsp_rss_mb": 348, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_memory / medium/ts_ls/after_ops: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls/after_ops", "_run_time": 1782397930, "grand_rss_mb": 390, "nvim_rss_mb": 27, "lsp_rss_mb": 363, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_cpu / medium/ts_ls: {"_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "after_ops": 1.4, "_category": "ts_backend_cpu", "baseline": 1.8}
+[RESULT] ts_backend_memory_growth / medium/ts_ls: {"growth_mb": 16, "_timestamp": "2026-06-25 14:32:10", "_name": "medium/ts_ls", "_run_time": 1782397930, "_category": "ts_backend_memory_growth"}
+  Launching subprocess for typescript_tools...
+  typescript-tools: attached (180ms)
+    memory baseline: nvim=26MB lsp=274MB total=300MB
+    cpu baseline: 2.0%
+    completion: 89.0ms (1565 items)
+    hover: 1.0ms
+    definition: 1.0ms
+    references: 2.0ms (0 items)
+    rename: 0.0ms
+    formatting: 31.0ms
+    memory after ops: nvim=29MB lsp=288MB total=317MB
+    cpu after ops: 1.8%
+[RESULT] ts_backend_attach / medium/typescript-tools: {"attached": true, "_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 180, "_category": "ts_backend_attach"}
+[RESULT] ts_backend_rename / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 0, "_category": "ts_backend_rename"}
+[RESULT] ts_backend_completion / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 89, "count": 1565, "_category": "ts_backend_completion"}
+[RESULT] ts_backend_references / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 2, "count": 0, "_category": "ts_backend_references"}
+[RESULT] ts_backend_formatting / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 31, "_category": "ts_backend_formatting"}
+[RESULT] ts_backend_hover / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 1, "_category": "ts_backend_hover"}
+[RESULT] ts_backend_definition / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "ms": 1, "_category": "ts_backend_definition"}
+[RESULT] ts_backend_memory / medium/typescript-tools/baseline: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools/baseline", "_run_time": 1782397939, "grand_rss_mb": 300, "nvim_rss_mb": 26, "lsp_rss_mb": 274, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_memory / medium/typescript-tools/after_ops: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools/after_ops", "_run_time": 1782397939, "grand_rss_mb": 317, "nvim_rss_mb": 29, "lsp_rss_mb": 288, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_cpu / medium/typescript-tools: {"_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "after_ops": 1.8, "_category": "ts_backend_cpu", "baseline": 2}
+[RESULT] ts_backend_memory_growth / medium/typescript-tools: {"growth_mb": 17, "_timestamp": "2026-06-25 14:32:19", "_name": "medium/typescript-tools", "_run_time": 1782397939, "_category": "ts_backend_memory_growth"}
+
+--- Testing: large project (/home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/projects/large) ---
+  Launching subprocess for ts_ls...
+  ts_ls: attached (99ms)
+    memory baseline: nvim=38MB lsp=444MB total=483MB
+    cpu baseline: 2.6%
+    completion: 446.0ms (13065 items)
+    hover: 2.0ms
+    definition: 1.0ms
+    references: 2.0ms (0 items)
+    rename: 1.0ms
+    formatting: 141.0ms
+    memory after ops: nvim=44MB lsp=525MB total=569MB
+    cpu after ops: 2.2%
+[RESULT] ts_backend_attach / large/ts_ls: {"attached": true, "_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 99, "_category": "ts_backend_attach"}
+[RESULT] ts_backend_formatting / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 141, "_category": "ts_backend_formatting"}
+[RESULT] ts_backend_completion / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 446, "count": 13065, "_category": "ts_backend_completion"}
+[RESULT] ts_backend_references / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 2, "count": 0, "_category": "ts_backend_references"}
+[RESULT] ts_backend_rename / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 1, "_category": "ts_backend_rename"}
+[RESULT] ts_backend_hover / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 2, "_category": "ts_backend_hover"}
+[RESULT] ts_backend_definition / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "ms": 1, "_category": "ts_backend_definition"}
+[RESULT] ts_backend_memory / large/ts_ls/baseline: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls/baseline", "_run_time": 1782397949, "grand_rss_mb": 483, "nvim_rss_mb": 38, "lsp_rss_mb": 444, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_memory / large/ts_ls/after_ops: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls/after_ops", "_run_time": 1782397949, "grand_rss_mb": 569, "nvim_rss_mb": 44, "lsp_rss_mb": 525, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_cpu / large/ts_ls: {"_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "after_ops": 2.2, "_category": "ts_backend_cpu", "baseline": 2.6}
+[RESULT] ts_backend_memory_growth / large/ts_ls: {"growth_mb": 86, "_timestamp": "2026-06-25 14:32:29", "_name": "large/ts_ls", "_run_time": 1782397949, "_category": "ts_backend_memory_growth"}
+  Launching subprocess for typescript_tools...
+  typescript-tools: attached (179ms)
+    memory baseline: nvim=40MB lsp=361MB total=401MB
+    cpu baseline: 3.1%
+    completion: 369.0ms (13065 items)
+    hover: 1.0ms
+    definition: 1.0ms
+    references: 1.0ms (0 items)
+    rename: 0.0ms
+    formatting: 139.0ms
+    memory after ops: nvim=80MB lsp=412MB total=493MB
+    cpu after ops: 3.3%
+[RESULT] ts_backend_attach / large/typescript-tools: {"attached": true, "_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 179, "_category": "ts_backend_attach"}
+[RESULT] ts_backend_formatting / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 139, "_category": "ts_backend_formatting"}
+[RESULT] ts_backend_completion / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 369, "count": 13065, "_category": "ts_backend_completion"}
+[RESULT] ts_backend_references / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 1, "count": 0, "_category": "ts_backend_references"}
+[RESULT] ts_backend_rename / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 0, "_category": "ts_backend_rename"}
+[RESULT] ts_backend_hover / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 1, "_category": "ts_backend_hover"}
+[RESULT] ts_backend_definition / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "ms": 1, "_category": "ts_backend_definition"}
+[RESULT] ts_backend_memory / large/typescript-tools/baseline: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools/baseline", "_run_time": 1782397958, "grand_rss_mb": 401, "nvim_rss_mb": 40, "lsp_rss_mb": 361, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_memory / large/typescript-tools/after_ops: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools/after_ops", "_run_time": 1782397958, "grand_rss_mb": 493, "nvim_rss_mb": 80, "lsp_rss_mb": 412, "_category": "ts_backend_memory"}
+[RESULT] ts_backend_cpu / large/typescript-tools: {"_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "after_ops": 3.3, "_category": "ts_backend_cpu", "baseline": 3.1}
+[RESULT] ts_backend_memory_growth / large/typescript-tools: {"growth_mb": 92, "_timestamp": "2026-06-25 14:32:38", "_name": "large/typescript-tools", "_run_time": 1782397958, "_category": "ts_backend_memory_growth"}
+
+=== Run complete. Duration: 55.9s ===

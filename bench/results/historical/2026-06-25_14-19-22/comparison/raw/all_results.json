@@ -1,0 +1,1 @@
+{"results": [], "run": {"result_count": 0, "timestamp": "Thu Jun 25 14:33:30 2026", "bench_name": "comparison", "duration_seconds": 0.004458, "config": {"thresholds": {"critical": 20, "slight": 1, "warn": 10, "minor": 5}, "benchmark": "comparison"}}}

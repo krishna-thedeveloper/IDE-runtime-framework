@@ -1,0 +1,62 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:19:23 2026
+Config: {
+  benchmark = "lsp",
+  servers = { "ts_ls", "lua_ls", "jsonls", "yamlls" }
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/lsp
+---
+=== LSP Benchmark ===
+
+--- 1. TypeScript LSP ---
+  Chdir to /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/projects/large
+  Opening /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/projects/large/src/file_0500.ts ...
+[RESULT] lsp_attach / ts_ls: {"attached": "true", "_timestamp": "2026-06-25 14:19:24", "ms": 122, "_run_time": 1782397164, "_name": "ts_ls", "_category": "lsp_attach"}
+  ts_ls attach: 122 ms (ok=true)
+  Waiting 15s for indexing...
+  Diagnostics...
+[RESULT] lsp_diagnostics / ts_ls: {"_timestamp": "2026-06-25 14:19:44", "_name": "ts_ls", "elapsed_ms": 5006, "_run_time": 1782397184, "count": 3, "_category": "lsp_diagnostics"}
+[RESULT] lsp_operation / ts_ls_completion: {"method": "textDocument/completion", "p95_ms": 530, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_completion", "samples": 5, "_run_time": 1782397185, "avg_ms": 269.4, "median_ms": 203, "p99_ms": 530, "max_ms": 530, "min_ms": 195, "stddev_ms": 130.578099, "_category": "lsp_operation"}
+  ts_ls_completion: avg=269.4ms median=203ms p95=530ms (n=5)
+[RESULT] lsp_operation / ts_ls_hover: {"method": "textDocument/hover", "p95_ms": 12, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_hover", "samples": 3, "_run_time": 1782397185, "avg_ms": 4.666667, "median_ms": 1, "p99_ms": 12, "max_ms": 12, "min_ms": 1, "stddev_ms": 5.18545, "_category": "lsp_operation"}
+  ts_ls_hover: avg=4.7ms median=1ms p95=12ms (n=3)
+[RESULT] lsp_operation / ts_ls_definition: {"method": "textDocument/definition", "p95_ms": 5, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_definition", "samples": 3, "_run_time": 1782397185, "avg_ms": 3, "median_ms": 3, "p99_ms": 5, "max_ms": 5, "min_ms": 1, "stddev_ms": 1.632993, "_category": "lsp_operation"}
+  ts_ls_definition: avg=3.0ms median=3ms p95=5ms (n=3)
+[RESULT] lsp_operation / ts_ls_references: {"method": "textDocument/references", "p95_ms": 36, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_references", "samples": 3, "_run_time": 1782397185, "avg_ms": 22, "median_ms": 17, "p99_ms": 36, "max_ms": 36, "min_ms": 13, "stddev_ms": 10.033278, "_category": "lsp_operation"}
+  ts_ls_references: avg=22.0ms median=17ms p95=36ms (n=3)
+[RESULT] lsp_operation / ts_ls_rename: {"method": "textDocument/rename", "p95_ms": 3, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_rename", "samples": 3, "_run_time": 1782397185, "avg_ms": 1.666667, "median_ms": 1, "p99_ms": 3, "max_ms": 3, "min_ms": 1, "stddev_ms": 0.942809, "_category": "lsp_operation"}
+  ts_ls_rename: avg=1.7ms median=1ms p95=3ms (n=3)
+[RESULT] lsp_operation / ts_ls_code_action: {"method": "textDocument/codeAction", "p95_ms": 5, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_code_action", "samples": 3, "_run_time": 1782397185, "avg_ms": 1.666667, "median_ms": 0, "p99_ms": 5, "max_ms": 5, "min_ms": 0, "stddev_ms": 2.357023, "_category": "lsp_operation"}
+  ts_ls_code_action: avg=1.7ms median=0ms p95=5ms (n=3)
+[RESULT] lsp_operation / ts_ls_document_symbol: {"method": "textDocument/documentSymbol", "p95_ms": 4, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_document_symbol", "samples": 3, "_run_time": 1782397185, "avg_ms": 1.333333, "median_ms": 0, "p99_ms": 4, "max_ms": 4, "min_ms": 0, "stddev_ms": 1.885618, "_category": "lsp_operation"}
+  ts_ls_document_symbol: avg=1.3ms median=0ms p95=4ms (n=3)
+[RESULT] lsp_operation / ts_ls_formatting: {"method": "textDocument/formatting", "p95_ms": 9, "_timestamp": "2026-06-25 14:19:45", "_name": "ts_ls_formatting", "samples": 3, "_run_time": 1782397185, "avg_ms": 6, "median_ms": 5, "p99_ms": 9, "max_ms": 9, "min_ms": 4, "stddev_ms": 2.160247, "_category": "lsp_operation"}
+  ts_ls_formatting: avg=6.0ms median=5ms p95=9ms (n=3)
+
+--- 2. LuaLS ---
+[RESULT] lsp_attach / lua_ls: {"attached": "false", "_timestamp": "2026-06-25 14:20:00", "ms": 15032, "_run_time": 1782397200, "_name": "lua_ls", "_category": "lsp_attach"}
+  lua_ls attach: 15032 ms (ok=false)
+
+--- 3. JSONLS ---
+[RESULT] lsp_attach / jsonls: {"attached": "false", "_timestamp": "2026-06-25 14:20:15", "ms": 15025, "_run_time": 1782397215, "_name": "jsonls", "_category": "lsp_attach"}
+  jsonls attach: 15025 ms (ok=false)
+
+--- 4. LSP Scaling ---
+  Project: small (10 files)
+[RESULT] lsp_scaling / small: {"files": 10, "_name": "small", "clients": 1, "_run_time": 1782397225, "grand_rss_mb": 394, "nvim_rss_mb": 62, "lsp_rss_mb": 332, "_timestamp": "2026-06-25 14:20:25", "modules": 416, "_category": "lsp_scaling"}
+    nvim=62MB lsp=332MB total=394MB clients=1
+  Project: medium (100 files)
+[RESULT] lsp_scaling / medium: {"files": 100, "_name": "medium", "clients": 1, "_run_time": 1782397236, "grand_rss_mb": 399, "nvim_rss_mb": 63, "lsp_rss_mb": 336, "_timestamp": "2026-06-25 14:20:36", "modules": 416, "_category": "lsp_scaling"}
+    nvim=63MB lsp=336MB total=399MB clients=1
+  Project: large (1000 files)
+[RESULT] lsp_scaling / large: {"files": 1000, "_name": "large", "clients": 1, "_run_time": 1782397246, "grand_rss_mb": 477, "nvim_rss_mb": 64, "lsp_rss_mb": 413, "_timestamp": "2026-06-25 14:20:46", "modules": 416, "_category": "lsp_scaling"}
+    nvim=64MB lsp=413MB total=477MB clients=1
+  Project: huge (10000 files)
+[RESULT] lsp_scaling / huge: {"files": 10000, "_name": "huge", "clients": 1, "_run_time": 1782397256, "grand_rss_mb": 600, "nvim_rss_mb": 64, "lsp_rss_mb": 536, "_timestamp": "2026-06-25 14:20:56", "modules": 416, "_category": "lsp_scaling"}
+    nvim=64MB lsp=536MB total=600MB clients=1
+
+--- 5. Multi-LSP Test ---
+[RESULT] lsp_multi / all_servers: {"nvim_rss_mb": 66, "lsp_rss_mb": 666, "clients": 1, "_run_time": 1782397271, "grand_rss_mb": 733, "_name": "all_servers", "_timestamp": "2026-06-25 14:21:11", "_category": "lsp_multi"}
+  Multi-LSP: clients=1 nvim=66MB lsp=666MB total=733MB
+
+=== Run complete. Duration: 107.8s ===

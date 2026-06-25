@@ -1,0 +1,31 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:33:17 2026
+Config: {
+  benchmark = "search"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/search
+---
+=== Search/Picker Benchmark ===
+
+--- 100_files ---
+  project setup: 120ms
+  loaded 100 buffers
+  picker available: snacks (load: 0ms)
+  glob: avg=0.0ms median=0ms
+  grep: avg=1.2ms median=1ms
+[RESULT] search_glob / 100_files: {"avg_ms": 0, "files": 100, "_timestamp": "2026-06-25 14:33:18", "_name": "100_files", "p95_ms": 0, "_run_time": 1782397998, "median_ms": 0, "min_ms": 0, "_category": "search_glob", "max_ms": 0}
+[RESULT] search_grep / 100_files: {"avg_ms": 1.2, "files": 100, "_timestamp": "2026-06-25 14:33:18", "_name": "100_files", "max_ms": 2, "_run_time": 1782397998, "median_ms": 1, "min_ms": 1, "_category": "search_grep"}
+[RESULT] search_memory / 100_files: {"files": 100, "_timestamp": "2026-06-25 14:33:18", "_name": "100_files", "_run_time": 1782397998, "nvim_rss_mb": 71, "modules": 361, "gc_kb": 7566, "_category": "search_memory"}
+[RESULT] search_picker_load / snacks: {"files": 100, "_timestamp": "2026-06-25 14:33:18", "_name": "snacks", "_run_time": 1782397998, "ms": 0, "_category": "search_picker_load"}
+--- 1k_files ---
+  project setup: 1187ms
+  loaded 1000 buffers
+  picker available: snacks (load: 0ms)
+  glob: avg=6.8ms median=7ms
+  grep: avg=4.2ms median=4ms
+[RESULT] search_glob / 1k_files: {"avg_ms": 6.8, "files": 1000, "_timestamp": "2026-06-25 14:33:30", "_name": "1k_files", "p95_ms": 7, "_run_time": 1782398010, "median_ms": 7, "min_ms": 6, "_category": "search_glob", "max_ms": 7}
+[RESULT] search_grep / 1k_files: {"avg_ms": 4.2, "files": 1000, "_timestamp": "2026-06-25 14:33:30", "_name": "1k_files", "max_ms": 5, "_run_time": 1782398010, "median_ms": 4, "min_ms": 4, "_category": "search_grep"}
+[RESULT] search_memory / 1k_files: {"files": 1000, "_timestamp": "2026-06-25 14:33:30", "_name": "1k_files", "_run_time": 1782398010, "nvim_rss_mb": 491, "modules": 362, "gc_kb": 23152, "_category": "search_memory"}
+[RESULT] search_picker_load / snacks: {"files": 1000, "_timestamp": "2026-06-25 14:33:30", "_name": "snacks", "_run_time": 1782398010, "ms": 0, "_category": "search_picker_load"}
+
+=== Run complete. Duration: 12.9s ===

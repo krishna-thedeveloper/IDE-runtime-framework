@@ -1,0 +1,43 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:24:54 2026
+Config: {
+  benchmark = "stability",
+  idle_minutes = 5
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/stability
+---
+=== Stability, Idle & Failure Recovery Tests ===
+Idle duration: 5 minutes
+
+--- 1. Idle Test (%d min) --- 5
+[RESULT] idle_snapshot / minute_1: {"autocmds": 272, "timers": 0, "cpu": 0, "_timestamp": "2026-06-25 14:25:55", "_name": "minute_1", "clients": 0, "_run_time": 1782397555, "grand_rss_mb": 20, "nvim_rss_mb": 20, "lsp_rss_mb": 0, "child_procs": 1, "_category": "idle_snapshot", "modules": 282}
+  WARNING: High autocmd count (272) at minute 1
+  minute  1: nvim=20MB lsp=0MB total=20MB autocmds=272 timers=0 procs=1 cpu=0.0%
+[RESULT] idle_snapshot / minute_2: {"autocmds": 272, "timers": 0, "cpu": 0, "_timestamp": "2026-06-25 14:26:55", "_name": "minute_2", "clients": 0, "_run_time": 1782397615, "grand_rss_mb": 20, "nvim_rss_mb": 20, "lsp_rss_mb": 0, "child_procs": 1, "_category": "idle_snapshot", "modules": 282}
+  WARNING: High autocmd count (272) at minute 2
+  minute  2: nvim=20MB lsp=0MB total=20MB autocmds=272 timers=0 procs=1 cpu=0.0%
+[RESULT] idle_snapshot / minute_3: {"autocmds": 272, "timers": 0, "cpu": 0, "_timestamp": "2026-06-25 14:27:55", "_name": "minute_3", "clients": 0, "_run_time": 1782397675, "grand_rss_mb": 20, "nvim_rss_mb": 20, "lsp_rss_mb": 0, "child_procs": 1, "_category": "idle_snapshot", "modules": 282}
+  WARNING: High autocmd count (272) at minute 3
+  minute  3: nvim=20MB lsp=0MB total=20MB autocmds=272 timers=0 procs=1 cpu=0.0%
+[RESULT] idle_snapshot / minute_4: {"autocmds": 272, "timers": 0, "cpu": 0, "_timestamp": "2026-06-25 14:28:55", "_name": "minute_4", "clients": 0, "_run_time": 1782397735, "grand_rss_mb": 20, "nvim_rss_mb": 20, "lsp_rss_mb": 0, "child_procs": 1, "_category": "idle_snapshot", "modules": 282}
+  WARNING: High autocmd count (272) at minute 4
+  minute  4: nvim=20MB lsp=0MB total=20MB autocmds=272 timers=0 procs=1 cpu=0.0%
+[RESULT] idle_snapshot / minute_5: {"autocmds": 272, "timers": 0, "cpu": 0, "_timestamp": "2026-06-25 14:29:56", "_name": "minute_5", "clients": 0, "_run_time": 1782397796, "grand_rss_mb": 20, "nvim_rss_mb": 20, "lsp_rss_mb": 0, "child_procs": 1, "_category": "idle_snapshot", "modules": 282}
+  WARNING: High autocmd count (272) at minute 5
+  minute  5: nvim=20MB lsp=0MB total=20MB autocmds=272 timers=0 procs=1 cpu=0.0%
+[RESULT] idle_trend / memory_growth: {"growth_mb": 0, "_timestamp": "2026-06-25 14:29:56", "_name": "memory_growth", "_run_time": 1782397796, "initial_mb": 20, "growth_pct": 0, "final_mb": 20, "_category": "idle_trend", "duration_minutes": 5}
+  Idle memory growth: 0 MB (0.0%) over 5 min
+
+--- 2. GC Pressure Test ---
+[RESULT] gc_pressure / average: {"freed_kb": 29270, "_timestamp": "2026-06-25 14:29:56", "_name": "average", "samples": 5, "_run_time": 1782397796, "_category": "gc_pressure"}
+  GC freed avg: 29271 KB per cycle
+
+--- 3. Failure Simulation ---
+  Testing LSP crash recovery...
+  No TypeScript LSP client to kill
+
+--- 4. Resource Cleanup Verification ---
+[RESULT] resource_cleanup / buffer_close: {"clients_remaining": 0, "_timestamp": "2026-06-25 14:29:58", "_name": "buffer_close", "_run_time": 1782397798, "freed_mb": -1, "after_rss_mb": 25, "before_rss_mb": 24, "_category": "resource_cleanup"}
+  Cleanup: freed -1 MB (was 24MB, now 25MB) clients=0
+
+=== Run complete. Duration: 303.6s ===

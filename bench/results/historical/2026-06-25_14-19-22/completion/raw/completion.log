@@ -1,0 +1,25 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:21:11 2026
+Config: {
+  benchmark = "completion"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/completion
+---
+=== Completion Engine Benchmark ===
+
+Engine: blink.cmp
+[RESULT] completion_info / engine: {"_timestamp": "2026-06-25 14:21:11", "_name": "engine", "name": "blink.cmp", "_run_time": 1782397271, "_category": "completion_info"}
+--- Small file ---
+[RESULT] completion_latency / small_file: {"avg_ms": 20.9, "_timestamp": "2026-06-25 14:21:17", "_name": "small_file", "max_ms": 76, "_run_time": 1782397277, "avg_items": 1075, "median_ms": 14, "p99_ms": 76, "_category": "completion_latency", "min_ms": 8, "stddev_ms": 19.075901, "n": 10, "p95_ms": 76}
+  small_file: avg=20.9ms median=14ms p95=76ms items=1075
+--- Medium file ---
+[RESULT] completion_latency / medium_file: {"avg_ms": 26.5, "_timestamp": "2026-06-25 14:21:22", "_name": "medium_file", "max_ms": 40, "_run_time": 1782397282, "avg_items": 1565, "median_ms": 24, "p99_ms": 40, "_category": "completion_latency", "min_ms": 19, "stddev_ms": 6.545991, "n": 10, "p95_ms": 40}
+  medium_file: avg=26.5ms median=24ms p95=40ms items=1565
+--- Large file ---
+[RESULT] completion_latency / large_file: {"avg_ms": 210, "_timestamp": "2026-06-25 14:21:32", "_name": "large_file", "max_ms": 336, "_run_time": 1782397292, "avg_items": 13065, "median_ms": 190, "p99_ms": 336, "_category": "completion_latency", "min_ms": 178, "stddev_ms": 46.544602, "n": 10, "p95_ms": 336}
+  large_file: avg=210.0ms median=190ms p95=336ms items=13065
+--- Memory during completion ---
+[RESULT] completion_memory / blink.cmp: {"_timestamp": "2026-06-25 14:21:38", "_name": "blink.cmp", "_run_time": 1782397298, "after_typing_kb": 54172, "baseline_kb": 52848, "_category": "completion_memory", "delta_kb": 1324}
+  Memory: baseline=52848KB after=54172KB delta=1324KB
+
+=== Run complete. Duration: 26.8s ===

@@ -1,0 +1,65 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:21:38 2026
+Config: {
+  benchmark = "themes"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/theme
+---
+=== Theme Benchmark ===
+
+Available themes: 7
+  tokyonight -> tokyonight
+  kanagawa -> kanagawa
+  github -> github_dark
+  catppuccin -> catppuccin
+  gruvbox-material -> gruvbox-material
+  everforest -> everforest
+  onedark -> onedark
+
+--- Theme Switching ---
+[RESULT] theme_switching / tokyonight->kanagawa: {"avg_ms": 1.8, "_timestamp": "2026-06-25 14:21:39", "_name": "tokyonight->kanagawa", "max_ms": 2, "_run_time": 1782397299, "median_ms": 2, "min_ms": 1, "_category": "theme_switching"}
+  tokyonight -> kanagawa: avg=1.8ms p95=2ms
+[RESULT] theme_switching / kanagawa->github: {"avg_ms": 2, "_timestamp": "2026-06-25 14:21:40", "_name": "kanagawa->github", "max_ms": 2, "_run_time": 1782397300, "median_ms": 2, "min_ms": 2, "_category": "theme_switching"}
+  kanagawa -> github: avg=2.0ms p95=2ms
+[RESULT] theme_switching / github->catppuccin: {"avg_ms": 2, "_timestamp": "2026-06-25 14:21:40", "_name": "github->catppuccin", "max_ms": 2, "_run_time": 1782397300, "median_ms": 2, "min_ms": 2, "_category": "theme_switching"}
+  github -> catppuccin: avg=2.0ms p95=2ms
+[RESULT] theme_switching / catppuccin->gruvbox-material: {"avg_ms": 7, "_timestamp": "2026-06-25 14:21:41", "_name": "catppuccin->gruvbox-material", "max_ms": 7, "_run_time": 1782397301, "median_ms": 7, "min_ms": 7, "_category": "theme_switching"}
+  catppuccin -> gruvbox-material: avg=7.0ms p95=7ms
+[RESULT] theme_switching / gruvbox-material->everforest: {"avg_ms": 7, "_timestamp": "2026-06-25 14:21:41", "_name": "gruvbox-material->everforest", "max_ms": 7, "_run_time": 1782397301, "median_ms": 7, "min_ms": 7, "_category": "theme_switching"}
+  gruvbox-material -> everforest: avg=7.0ms p95=7ms
+[RESULT] theme_switching / everforest->onedark: {"avg_ms": 5.4, "_timestamp": "2026-06-25 14:21:42", "_name": "everforest->onedark", "max_ms": 6, "_run_time": 1782397302, "median_ms": 5, "min_ms": 5, "_category": "theme_switching"}
+  everforest -> onedark: avg=5.4ms p95=6ms
+
+--- Memory Impact ---
+[RESULT] theme_memory / tokyonight: {"_timestamp": "2026-06-25 14:21:42", "_name": "tokyonight", "_run_time": 1782397302, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  tokyonight: +0 KB
+[RESULT] theme_memory / kanagawa: {"_timestamp": "2026-06-25 14:21:42", "_name": "kanagawa", "_run_time": 1782397302, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  kanagawa: +0 KB
+[RESULT] theme_memory / github: {"_timestamp": "2026-06-25 14:21:43", "_name": "github", "_run_time": 1782397303, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  github: +0 KB
+[RESULT] theme_memory / catppuccin: {"_timestamp": "2026-06-25 14:21:43", "_name": "catppuccin", "_run_time": 1782397303, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  catppuccin: +0 KB
+[RESULT] theme_memory / gruvbox-material: {"_timestamp": "2026-06-25 14:21:43", "_name": "gruvbox-material", "_run_time": 1782397303, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  gruvbox-material: +0 KB
+[RESULT] theme_memory / everforest: {"_timestamp": "2026-06-25 14:21:43", "_name": "everforest", "_run_time": 1782397303, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  everforest: +0 KB
+[RESULT] theme_memory / onedark: {"_timestamp": "2026-06-25 14:21:43", "_name": "onedark", "_run_time": 1782397303, "after_kb": 28392, "baseline_kb": 28392, "_category": "theme_memory", "delta_kb": 0}
+  onedark: +0 KB
+
+--- Redraw Speed ---
+[RESULT] theme_redraw / tokyonight: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "tokyonight", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  tokyonight: redraw avg=0.0ms
+[RESULT] theme_redraw / kanagawa: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "kanagawa", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  kanagawa: redraw avg=0.0ms
+[RESULT] theme_redraw / github: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "github", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  github: redraw avg=0.0ms
+[RESULT] theme_redraw / catppuccin: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "catppuccin", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  catppuccin: redraw avg=0.0ms
+[RESULT] theme_redraw / gruvbox-material: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "gruvbox-material", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  gruvbox-material: redraw avg=0.0ms
+[RESULT] theme_redraw / everforest: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "everforest", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  everforest: redraw avg=0.0ms
+[RESULT] theme_redraw / onedark: {"median_ms": 0, "_timestamp": "2026-06-25 14:21:43", "_name": "onedark", "max_ms": 0, "_run_time": 1782397303, "avg_ms": 0, "_category": "theme_redraw"}
+  onedark: redraw avg=0.0ms
+
+=== Run complete. Duration: 5.3s ===

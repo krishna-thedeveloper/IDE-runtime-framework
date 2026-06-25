@@ -1,0 +1,18 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:33:30 2026
+Config: {
+  benchmark = "comparison",
+  thresholds = {
+    critical = 20,
+    minor = 5,
+    slight = 1,
+    warn = 10
+  }
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/comparison
+---
+=== Comparison & Regression Detection ===
+
+Need at least 2 historical runs for comparison (found 1)
+
+=== Run complete. Duration: 0.0s ===

@@ -1,0 +1,1 @@
+{"series": {"lsp_rss": [0, 0, 0, 0, 0], "cold_startup_p95": [50], "completion_latency": [], "clients": [0, 0, 0, 0, 0], "memory_total": [733], "cold_startup_median": [43], "nvim_rss": [20, 20, 20, 20, 20], "lsp_attach": [122], "modules": [282, 282, 282, 282, 282]}, "run_count": 1, "timestamps": ["2026-06-25_14-19-22"], "generated": "Thu Jun 25 14:33:30 2026"}

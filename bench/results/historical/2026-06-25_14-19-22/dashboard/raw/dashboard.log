@@ -1,0 +1,84 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:33:30 2026
+Config: {
+  benchmark = "dashboard"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/dashboard
+---
+=== Dashboard Generation ===
+
+Loaded 1 historical runs
+
+--- Cold Startup Median (ms) (range: 43.0 - 43.0) ---
+  43
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+█ 43
+.
+
+--- Cold Startup P95 (ms) (range: 50.0 - 50.0) ---
+  50
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+█ 50
+.
+
+--- Total Memory (MB) (range: 733.0 - 733.0) ---
+  733
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+█ 733
+.
+
+--- LSP Attach Time (ms) (range: 122.0 - 122.0) ---
+  122
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+█ 122
+.
+
+--- Memory breakdown by run ---
+  Run 1: nvim=20MB lsp=0MB total=20MB
+  Run 2: nvim=20MB lsp=0MB total=20MB
+  Run 3: nvim=20MB lsp=0MB total=20MB
+  Run 4: nvim=20MB lsp=0MB total=20MB
+  Run 5: nvim=20MB lsp=0MB total=20MB
+
+--- Generating Dashboard Report ---
+Dashboard report: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/dashboard/reports/benchmark-report.md
+Dashboard JSON: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/dashboard/raw/dashboard-data.json
+[RESULT] dashboard / generation: {"historical_runs": 1, "_timestamp": "2026-06-25 14:33:30", "_name": "generation", "_run_time": 1782398010, "series_count": 0, "_category": "dashboard"}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 5}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 5}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 5}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 5}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 1}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 1}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 1}
+[RESULT] dashboard / series: {"_timestamp": "2026-06-25 14:33:30", "_name": "series", "_run_time": 1782398010, "_category": "dashboard", "count": 1}
+
+=== Run complete. Duration: 0.0s ===

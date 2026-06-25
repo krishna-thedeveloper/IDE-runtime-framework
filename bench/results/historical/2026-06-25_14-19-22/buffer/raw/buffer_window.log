@@ -1,0 +1,43 @@
+=== Benchmark Run ===
+Date: Thu Jun 25 14:21:44 2026
+Config: {
+  benchmark = "buffer_window"
+}
+Run Dir: /home/runner/work/IDE-runtime-framework/IDE-runtime-framework/nvim/bench/results/historical/2026-06-25_14-19-22/buffer
+---
+=== Buffer & Window Benchmarks ===
+
+--- Buffer Scaling ---
+[RESULT] buffer_scaling / 1_buffers: {"switch_median_ms": 0, "nvim_rss_mb": 24, "_name": "1_buffers", "_run_time": 1782397309, "switch_avg_ms": 0, "grand_rss_mb": 441, "delta_mb": 420, "lsp_rss_mb": 417, "modules": 389, "_timestamp": "2026-06-25 14:21:49", "count": 1, "_category": "buffer_scaling"}
+    1 buffers: nvim=24MB lsp=417MB total=441MB delta=420MB switch=0ms
+[RESULT] buffer_scaling / 10_buffers: {"switch_median_ms": 0, "nvim_rss_mb": 30, "_name": "10_buffers", "_run_time": 1782397314, "switch_avg_ms": 0, "grand_rss_mb": 451, "delta_mb": 9, "lsp_rss_mb": 420, "modules": 391, "_timestamp": "2026-06-25 14:21:54", "count": 10, "_category": "buffer_scaling"}
+   10 buffers: nvim=30MB lsp=420MB total=451MB delta=9MB switch=0ms
+[RESULT] buffer_scaling / 50_buffers: {"switch_median_ms": 0, "nvim_rss_mb": 56, "_name": "50_buffers", "_run_time": 1782397320, "switch_avg_ms": 0, "grand_rss_mb": 454, "delta_mb": 1, "lsp_rss_mb": 398, "modules": 391, "_timestamp": "2026-06-25 14:22:00", "count": 50, "_category": "buffer_scaling"}
+   50 buffers: nvim=56MB lsp=398MB total=454MB delta=1MB switch=0ms
+[RESULT] buffer_scaling / 100_buffers: {"switch_median_ms": 0, "nvim_rss_mb": 84, "_name": "100_buffers", "_run_time": 1782397327, "switch_avg_ms": 0, "grand_rss_mb": 495, "delta_mb": 39, "lsp_rss_mb": 410, "modules": 391, "_timestamp": "2026-06-25 14:22:07", "count": 100, "_category": "buffer_scaling"}
+  100 buffers: nvim=84MB lsp=410MB total=495MB delta=39MB switch=0ms
+[RESULT] buffer_scaling / 500_buffers: {"switch_median_ms": 0, "nvim_rss_mb": 302, "_name": "500_buffers", "_run_time": 1782397338, "switch_avg_ms": 0, "grand_rss_mb": 768, "delta_mb": 269, "lsp_rss_mb": 466, "modules": 391, "_timestamp": "2026-06-25 14:22:18", "count": 500, "_category": "buffer_scaling"}
+  500 buffers: nvim=302MB lsp=466MB total=768MB delta=269MB switch=0ms
+[RESULT] buffer_scaling / 1000_buffers: {"switch_median_ms": 0, "nvim_rss_mb": 589, "_name": "1000_buffers", "_run_time": 1782397355, "switch_avg_ms": 0, "grand_rss_mb": 1087, "delta_mb": 312, "lsp_rss_mb": 497, "modules": 391, "_timestamp": "2026-06-25 14:22:35", "count": 1000, "_category": "buffer_scaling"}
+  1000 buffers: nvim=589MB lsp=497MB total=1087MB delta=312MB switch=0ms
+
+--- Window Scaling ---
+[RESULT] window_scaling / 1_windows: {"_timestamp": "2026-06-25 14:22:37", "_name": "1_windows", "_run_time": 1782397357, "delta_mb": 0, "grand_rss_mb": 1088, "nvim_rss_mb": 589, "count": 1, "_category": "window_scaling"}
+   1 windows: nvim=589MB total=1088MB delta=0MB
+[RESULT] window_scaling / 2_windows: {"_timestamp": "2026-06-25 14:22:38", "_name": "2_windows", "_run_time": 1782397358, "delta_mb": 0, "grand_rss_mb": 1088, "nvim_rss_mb": 589, "count": 2, "_category": "window_scaling"}
+   2 windows: nvim=589MB total=1088MB delta=0MB
+[RESULT] window_scaling / 4_windows: {"_timestamp": "2026-06-25 14:22:40", "_name": "4_windows", "_run_time": 1782397360, "delta_mb": 0, "grand_rss_mb": 1088, "nvim_rss_mb": 590, "count": 4, "_category": "window_scaling"}
+   4 windows: nvim=590MB total=1088MB delta=0MB
+[RESULT] window_scaling / 8_windows: {"_timestamp": "2026-06-25 14:22:41", "_name": "8_windows", "_run_time": 1782397361, "delta_mb": 0, "grand_rss_mb": 1088, "nvim_rss_mb": 590, "count": 8, "_category": "window_scaling"}
+   8 windows: nvim=590MB total=1088MB delta=0MB
+[RESULT] window_scaling / 16_windows: {"_timestamp": "2026-06-25 14:22:43", "_name": "16_windows", "_run_time": 1782397363, "delta_mb": 0, "grand_rss_mb": 1088, "nvim_rss_mb": 590, "count": 16, "_category": "window_scaling"}
+  16 windows: nvim=590MB total=1088MB delta=0MB
+
+--- Treesitter Benchmarks ---
+
+--- Search/Picker Benchmarks ---
+  Available: snacks
+[RESULT] picker_startup / snacks: {"avg_ms": 0, "_timestamp": "2026-06-25 14:22:50", "_name": "snacks", "_run_time": 1782397370, "median_ms": 0, "_category": "picker_startup"}
+  snacks load: avg=0.0ms
+
+=== Run complete. Duration: 66.1s ===
