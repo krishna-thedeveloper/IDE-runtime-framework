@@ -29,7 +29,7 @@ jobs:
 
       - name: Validate standalone modules
         run: |
-          nvim --headless -c 'lua local modules = {"managers.state", "managers.events", "managers.base", "managers.discover"}; for _, m in ipairs(modules) do local r, e = pcall(require, m); if not r then print("FAIL: " .. m .. ": " .. e); vim.cmd("cquit") else print("OK: " .. m) end end' -c 'qa!'
+          nvim --headless --cmd "set rtp+=." -c 'lua local modules = {"managers.state", "managers.events", "managers.base", "managers.discover"}; for _, m in ipairs(modules) do local r, e = pcall(require, m); if not r then print("FAIL: " .. m .. ": " .. e); vim.cmd("cquit") else print("OK: " .. m) end end' -c 'qa!'
 
   lint:
     runs-on: ubuntu-latest
