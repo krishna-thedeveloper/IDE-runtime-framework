@@ -1,6 +1,6 @@
 --- Comparison & Regression Detection Engine
 --- Compares current results against historical baselines
---- Usage: nvim --headless -c "lua require('bench.scripts.comparison_engine').run()" -c "qa!"
+--- Usage: nvim --headless -c "lua dofile('bench/scripts/comparison_engine.lua')" -c "qa!"
 
 local rm = dofile(vim.fn.getcwd() .. "/bench/scripts/result_manager.lua")
 
@@ -15,7 +15,7 @@ local REGRESSION_THRESHOLDS = {
 
 function M.run(opts)
   opts = opts or {}
-  local ctx = rm.create_run({ benchmark = "comparison", thresholds = REGRESSION_THRESHOLDS })
+  local ctx = rm.create_run({ benchmark = "comparison", thresholds = REGRESSION_THRESHOLDS }, "comparison")
   ctx:open_log("comparison")
 
   ctx:log("=== Comparison & Regression Detection ===")
@@ -35,7 +35,6 @@ function M.run(opts)
 
   ctx:log(string.format("Comparing run %d (latest) vs run %d (previous)", #historical, #historical - 1))
 
-  -- Find best and median values for each metric across all runs
   local function find_best_and_median(category, name, metric)
     local vals = {}
     for _, run in ipairs(all_runs) do
@@ -50,11 +49,10 @@ function M.run(opts)
     if #vals == 0 then return nil, nil end
     table.sort(vals)
     local median = vals[math.ceil(#vals / 2)]
-    local best = vals[1] -- lower is better
+    local best = vals[1]
     return best, median
   end
 
-  -- Compare current vs previous
   local regressions = {}
   local improvements = {}
   local stable = {}
@@ -135,7 +133,6 @@ function M.run(opts)
     end
   end
 
-  -- Sort regressions by severity
   table.sort(regressions, function(a, b)
     local severity_order = { CRITICAL = 0, WARN = 1, MINOR = 2, SLIGHT = 3, PASS = 4 }
     return (severity_order[a.severity] or 99) < (severity_order[b.severity] or 99)
@@ -144,7 +141,6 @@ function M.run(opts)
   ctx:log(string.format("\nFound %d regressions, %d improvements, %d stable, %d new, %d missing",
     #regressions, #improvements, #stable, #new_metrics, #missing_metrics))
 
-  -- Record summary
   ctx:record("comparison_summary", "overview", {
     regressions = #regressions,
     improvements = #improvements,
@@ -153,7 +149,6 @@ function M.run(opts)
     missing_metrics = #missing_metrics,
   })
 
-  -- CRITICAL/WARN regressions
   local critical_count = 0
   local warn_count = 0
   for _, r in ipairs(regressions) do
@@ -188,7 +183,6 @@ function M.run(opts)
     ctx:log(string.format("  ALERT: %d CRITICAL regressions detected!", critical_count))
   end
 
-  -- Improvements highlights
   table.sort(improvements, function(a, b) return a.delta_pct < b.delta_pct end)
   for i = 1, math.min(5, #improvements) do
     local r = improvements[i]
@@ -204,33 +198,39 @@ function M.run(opts)
   )
   ctx:log(string.format("Comparison report: %s", compare_result))
 
-  --- Generate regression report
+  -- Generate beautiful regression report
   local report_lines = {}
   local function add(l) report_lines[#report_lines+1] = l end
 
   add("# Regression Detection Report")
   add("")
-  add(string.format("**Generated:** %s", os.date()))
-  add(string.format("**Runs compared:** latest vs previous (%d total)", #historical))
+  add(string.format("**Generated:** %s  \n", os.date()))
+  add(string.format("**Runs compared:** latest vs previous (%d total)  \n", #historical))
   add("")
-  add(string.format("- **Regressions:** %d", #regressions))
-  add(string.format("- **Improvements:** %d", #improvements))
-  add(string.format("- **Stable metrics:** %d", #stable))
-  add(string.format("- **New metrics:** %d", #new_metrics))
-  add(string.format("- **Missing metrics:** %d", #missing_metrics))
+
+  add("## Summary")
+  add("")
+  add("| Category | Count |")
+  add("|----------|-------|")
+  add(string.format("| Regressions | %d |", #regressions))
+  add(string.format("| Improvements | %d |", #improvements))
+  add(string.format("| Stable metrics | %d |", #stable))
+  add(string.format("| New metrics | %d |", #new_metrics))
+  add(string.format("| Missing metrics | %d |", #missing_metrics))
   add("")
 
   if #regressions > 0 then
     add("## Regressions by Severity")
     add("")
     local severities = { "CRITICAL", "WARN", "MINOR", "SLIGHT" }
+    local severity_icons = { CRITICAL = "❌", WARN = "⚠️", MINOR = "🔶", SLIGHT = "🔸" }
     for _, sev in ipairs(severities) do
       local sev_items = {}
       for _, r in ipairs(regressions) do
         if r.severity == sev then table.insert(sev_items, r) end
       end
       if #sev_items > 0 then
-        add(string.format("### %s (%d)", sev, #sev_items))
+        add(string.format("### %s %s (%d)", severity_icons[sev], sev, #sev_items))
         add("")
         add("| Metric | Previous | Current | Delta | Delta % |")
         add("|--------|----------|---------|-------|---------|")
@@ -258,10 +258,6 @@ function M.run(opts)
 
   add("## Historical Trends")
   add("")
-  add("For each metric with 3+ data points:")
-  add("")
-
-  -- Track trend for each metric
   local metric_history = {}
   for _, run in ipairs(historical) do
     if run.results then
@@ -295,7 +291,7 @@ function M.run(opts)
   add("---")
   add(string.format("_Generated by bench/scripts/comparison_engine.lua at %s_", os.date()))
 
-  local report_path = rm.comparisons_dir .. "/regression-report-" .. rm.timestamp() .. ".md"
+  local report_path = ctx.dir .. "/reports/benchmark-report.md"
   local fh = io.open(report_path, "w"); fh:write(table.concat(report_lines, "\n")); fh:close()
   ctx:log(string.format("Regression report: %s", report_path))
 
