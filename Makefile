@@ -35,7 +35,8 @@ BM ?=
         bench-clean bench-list bench-comprehensive
 
 # Run ALL benchmarks (comprehensive, ~60-90 min)
-bench-all: bench-seed bench-comprehensive bench-report bench-compare bench-dashboard
+bench-all:
+	RUN_TIMESTAMP=$$(date +%Y-%m-%d_%H-%M-%S) $(MAKE) bench-seed bench-comprehensive bench-report bench-compare bench-dashboard
 	@echo ""
 	@echo "╔══════════════════════════════════════════════════════════╗"
 	@echo "║           ALL BENCHMARKS COMPLETE                       ║"

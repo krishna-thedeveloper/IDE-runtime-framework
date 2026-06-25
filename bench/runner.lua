@@ -6,6 +6,10 @@
 ---   nvim --headless -c "lua arg={'startup','lsp'}; dofile('bench/runner.lua')" -c "qa!"       # Run specific
 ---   nvim --headless -c "lua arg={'engine=ts_ls'}; dofile('bench/runner.lua')" -c "qa!"        # With config
 
+-- Set shared RUN_TIMESTAMP for all benchmarks in this run
+local run_ts = os.getenv("RUN_TIMESTAMP") or os.date("%Y-%m-%d_%H-%M-%S")
+vim.env.RUN_TIMESTAMP = run_ts
+
 -- Parse arguments
 local args = arg or {}
 local selected = {}
@@ -39,6 +43,7 @@ local scripts_dir = bench_dir .. "/scripts"
 local engine = config.engine or vim.g.bench_engine or "ts_ls"
 
 print(string.format("=== Benchmark Orchestrator ==="))
+print(string.format("Run timestamp: %s", run_ts))
 print(string.format("Selected: %s", table.concat(selected, ", ")))
 print(string.format("Config: engine=%s", engine))
 print("")
@@ -187,6 +192,8 @@ end)
 print("\n" .. string.rep("=", 60))
 print("=== BENCHMARK RUN COMPLETE ===")
 print(string.rep("=", 60))
+print(string.format("Run timestamp: %s", run_ts))
+print(string.format("Run directory: %s", vim.fn.getcwd() .. "/bench/results/historical/" .. run_ts))
 print(string.format("Benchmarks run: %d", #results))
 print(string.format("Benchmarks failed: %d", #errors))
 print("")
