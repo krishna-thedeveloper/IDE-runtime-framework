@@ -97,15 +97,20 @@ jobs:
         run: |
           cd nvim
           git remote set-url origin "$GIT_REPO_URL"
-          if ! git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data 2>/dev/null; then
+          git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data 2>/dev/null || true
+          if ! git rev-parse --verify origin/bench-data >/dev/null 2>&1; then
             git push origin HEAD:refs/heads/bench-data
             git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data
+            echo "Created bench-data branch with initial results"
+            exit 0
           fi
+          NEW_RUN_DIR=$(ls -d bench/results/historical/*/ 2>/dev/null | head -1)
           git worktree add ../bench-data-tmp origin/bench-data
+          mkdir -p ../bench-data-tmp/bench/results/historical
+          if [ -n "$NEW_RUN_DIR" ]; then
+            cp -r "$NEW_RUN_DIR" ../bench-data-tmp/bench/results/historical/
+          fi
           cd ../bench-data-tmp
-          rm -rf bench/results/historical
-          mkdir -p bench/results
-          cp -r ../nvim/bench/results/historical bench/results/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
