@@ -59,6 +59,9 @@ jobs:
           mkdir -p ~/.config
           ln -sfn $PWD/nvim ~/.config/nvim
 
+      - name: Install LSP servers for benchmarks
+        run: npm install -g typescript typescript-language-server
+
       - name: Prime plugin cache
         run: |
           nvim --headless -c 'lua vim.wait(120000, function() return require("lazy").stats().count ~= nil end)' -c 'qa!' 2>&1
@@ -67,11 +70,17 @@ jobs:
         run: make bench-seed
         working-directory: nvim
 
-      - name: Run full benchmarks
+      - name: Run full benchmarks (ts_ls)
         run: make bench-all
         working-directory: nvim
         env:
           BENCH_ENGINE: ts_ls
+
+      - name: Run ts backend comparison (typescript-tools)
+        run: make bench-ts-backend
+        working-directory: nvim
+        env:
+          BENCH_ENGINE: typescript_tools
 
       - name: Generate commit message
         id: commit_msg
