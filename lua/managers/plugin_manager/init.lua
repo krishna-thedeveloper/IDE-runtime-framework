@@ -13,10 +13,7 @@ local known_fields = {
 local enabled_file = vim.fn.stdpath("state") .. "/plugins_enabled.txt"
 
 function M._get_base_dir()
-  local info = debug.getinfo(1, "S")
-  local src = info and info.source or ""
-  local base = src:match("^@(.+)/lua/managers/plugin_manager/init%.lua$")
-  return base or vim.fn.stdpath("config")
+  return vim.fn.stdpath("config")
 end
 
 function M.validate(spec)
