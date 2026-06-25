@@ -78,16 +78,9 @@ end
 
 ## Updating the Light Variants Table
 
-If your theme has light variants, add them to the `light_variants` table. Note: There is no `lua/themes/init.lua` — theme variants are defined per-file in `lua/themes/*.lua` and managed by `lua/managers/theme.lua`.
-
-```lua
-light_variants = {
-  -- ... existing variants
-  ["dayfox"] = true,
-}
-```
-
-This enables `M.is_light_variant()` to work correctly, which is used by some theme configs.
+Set the `is_light` flag on each variant entry in your theme file.
+This is used by theme setup functions to adjust options like
+`transparent_background` for light vs dark variants.
 
 ## Testing Your Theme
 

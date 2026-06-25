@@ -17,7 +17,7 @@ flowchart LR
     A[Theme files] -->|require| B[managers/theme.lua]
     B --> C[Theme registry]
     C --> D[M.get_theme name]
-    D --> E[M.load_theme name]
+    D --> E[theme.apply name]
     E --> F[Save plugin highlights]
     E --> G[lazy.load plugin]
     E --> H[theme.apply]
@@ -58,7 +58,7 @@ return {
 
 ## How Theme Switching Works
 
-When `M.load_theme(name)` is called:
+When `theme.apply(name)` is called:
 
 1. **Save plugin highlights**: All highlight groups matching known plugin prefixes (Telescope, WhichKey, BufferLine, Noice, Notify, Dap, DapUI, Trouble, GitSigns, Mini, Oil, Heirline, Snacks, BlinkCmp) are saved.
 
@@ -102,20 +102,15 @@ The active theme is saved to `vim.fn.stdpath("state") .. "/theme.txt"`. On start
 
 ## Light Variant Detection
 
-The theme system tracks which variants are light:
+Each theme entry carries an `is_light` flag set in its variant definition
+(e.g., `lua/themes/catppuccin.lua`):
 
 ```lua
-light_variants = {
-  ["tokyonight-day"] = true,
-  ["kanagawa-lotus"] = true,
-  ["catppuccin-latte"] = true,
-  ["everforest-light"] = true,
-  ["github-light"] = true,
-  ["github-light-high-contrast"] = true,
-}
+{ name = "catppuccin-latte", flavour = "latte", is_light = true },
 ```
 
-This is used by `M.is_light_variant(name)` and consumed by theme configs that need different settings for light/dark backgrounds.
+This flag is consumed by individual theme setup functions to adjust options
+like `transparent_background` or `transparent` for light vs dark variants.
 
 ## Keymaps
 

@@ -35,7 +35,7 @@ sequenceDiagram
     participant T as Theme Plugin
     participant ST as Statusline
 
-    U->>M: Cycle / Select / load_theme("name")
+    U->>M: Cycle / Select / apply("name")
     M->>P: Save current plugin highlight groups
     M->>L: lazy.load({ plugins = theme.plugin })
     M->>T: theme.apply()
