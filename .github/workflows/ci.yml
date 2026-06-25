@@ -10,6 +10,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         neovim-version: [stable, nightly]
 
@@ -24,17 +25,13 @@ jobs:
 
       - name: Validate Lua syntax
         run: |
-          find lua -name '*.lua' -exec luac -p {} \;
+          nvim --headless -c 'lua local ok = true; for _, f in ipairs(vim.fn.glob("lua/**/*.lua", false, true)) do local r, e = loadfile(f); if not r then print("Syntax error: " .. f .. ": " .. e); ok = false end end; if not ok then vim.cmd("cquit") else print("All Lua files valid") end' -c 'qa!'
 
-      - name: Validate config loads
+      - name: Validate standalone modules
         run: |
-          nvim --headless -c 'lua vim.print("config loaded successfully")' -c 'qa!' 2>&1
+          nvim --headless -c 'lua local modules = {"managers.state", "managers.events", "managers.base", "managers.discover"}; for _, m in ipairs(modules) do local r, e = pcall(require, m); if not r then print("FAIL: " .. m .. ": " .. e); vim.cmd("cquit") else print("OK: " .. m) end end' -c 'qa!'
 
-      - name: Check for lazy-loading errors
-        run: |
-          nvim --headless -c 'lua vim.wait(2000, function() return false end)' -c 'lua vim.print("startup completed")' -c 'qa!' 2>&1
-
-  format:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
