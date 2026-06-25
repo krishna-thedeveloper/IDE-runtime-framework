@@ -138,7 +138,7 @@ graph TD
 | 6 | `managers/completion/init.lua` | nothing (discovers adapters at runtime) |
 | 7 | `managers/picker/init.lua` | nothing (discovers adapters at runtime) |
 | 8 | `core/keymaps.lua` | themes, density, focus, notifications, completion, picker |
-| 9 | `config/lazy.lua` | nothing (bootstraps Lazy.nvim) |
+| 9 | `config/plugin_manager.lua` | nothing (bootstraps Lazy.nvim) |
 | 10+ | Plugin config functions | various managers |
 
 ## Circular Dependency Prevention
